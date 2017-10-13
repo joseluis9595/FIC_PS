@@ -42,11 +42,7 @@ public class ArduinoCommunicationManager {
 
 
 	// TODO change int response codes to (int, String) type codes
-	public int ERR_NO_COMMUNICATION = -2;
-	public int ERR_NO_DEVICE = -1;
-	public int OK_CODE = 1;
-	public int CONNECTION_OPENED = 2;
-	public int CONNECTION_CLOSED = 3;
+	private ArduinoResponseCodes responseCodes;
 
 	// Reading via Serial port variables
 	private byte iNBbyte = 8;
@@ -87,14 +83,14 @@ public class ArduinoCommunicationManager {
 	 *
 	 * @return
 	 */
-	public int sendCommand(String command) {
+	public ArduinoResponseCodes sendCommand(String command) {
 		if (serialPort != null) {
 			serialPort.write(command.getBytes());
 			Log.d(TAG, "SENDCOMMAND : sending command");
-			return OK_CODE;
+			return ArduinoResponseCodes.RESPONSE_OK;
 		} else {
 			Log.e(TAG, "SENDCOMMAND : serialPort null");
-			return ERR_NO_COMMUNICATION;
+			return ArduinoResponseCodes.ERROR_NO_COMMUNICATION;
 		}
 	}
 
@@ -192,7 +188,7 @@ public class ArduinoCommunicationManager {
 	/**
 	 * Asks for permission to access usb device
 	 */
-	public int startCommunication() {
+	public ArduinoResponseCodes startCommunication() {
 		HashMap<String, UsbDevice> usbDevices = usbManager.getDeviceList();
 
 		if (!usbDevices.isEmpty()) {
@@ -212,13 +208,13 @@ public class ArduinoCommunicationManager {
 				}
 
 				if (found)
-					return OK_CODE;
+					return ArduinoResponseCodes.RESPONSE_OK;
 			}
 			Log.e(TAG, "STARTCOMM : Arduino not found");
-			return ERR_NO_DEVICE;
+			return ArduinoResponseCodes.ERROR_NO_DEVICE;
 		} else {
 			Log.e(TAG, "STARTCOMM : No USB devices");
-			return ERR_NO_DEVICE;
+			return ArduinoResponseCodes.ERROR_NO_DEVICE;
 		}
 	}
 
@@ -290,15 +286,15 @@ public class ArduinoCommunicationManager {
 	/**
 	 * Close serial communication with device
 	 */
-	public int closeConnection() {
+	public ArduinoResponseCodes closeConnection() {
 		if (serialPort != null) {
 			serialPort.close();
 			Log.d(TAG, "CLOSECONN : Serial connection closed");
 			arduinoSerialListener.connectionClosed();
-			return OK_CODE;
+			return ArduinoResponseCodes.RESPONSE_OK;
 		} else {
 			Log.d(TAG, "CLOSECONN : No connection to close");
-			return ERR_NO_COMMUNICATION;
+			return ArduinoResponseCodes.ERROR_NO_COMMUNICATION;
 		}
 
 

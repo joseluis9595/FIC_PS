@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import es.udc.psi1718.project.arduinomanager.ArduinoCommunicationManager;
+import es.udc.psi1718.project.arduinomanager.ArduinoResponseCodes;
 import es.udc.psi1718.project.arduinomanager.ArduinoSerialListener;
 
 public class MainActivity extends AppCompatActivity implements ArduinoSerialListener {
@@ -127,12 +128,20 @@ public class MainActivity extends AppCompatActivity implements ArduinoSerialList
 		disableUI();
 	}
 
+
+	/**
+	 * Disables UI, user can only start communication with arduino
+	 */
 	private void enableUI() {
 		buttonStartComm.setEnabled(false);
 		buttonSendCommand.setEnabled(true);
 		editText.setEnabled(true);
 	}
 
+
+	/**
+	 * Enables UI so that the user can interact with the application
+	 */
 	private void disableUI() {
 		buttonStartComm.setEnabled(true);
 		buttonSendCommand.setEnabled(false);
@@ -140,19 +149,24 @@ public class MainActivity extends AppCompatActivity implements ArduinoSerialList
 	}
 
 
+	/**
+	 * Start communication with Arduino
+	 */
 	private void startCommunication() {
-		// TODO handle error codes (show toast with error information)
-		int responseCode = arduinoCommunication.startCommunication();
-		if (responseCode <= 0) {
-			Toast.makeText(context, "Ha habido un error : " + responseCode, Toast.LENGTH_SHORT).show();
+		ArduinoResponseCodes responseCode = arduinoCommunication.startCommunication();
+		if (responseCode.getCode() <= 0) {
+			Toast.makeText(context, "Ha habido un error : " + responseCode.getDescription(), Toast.LENGTH_SHORT).show();
 		}
 	}
 
 
+	/**
+	 * End communication with Arduino
+	 */
 	private void endCommunication() {
-		int responseCode = arduinoCommunication.closeConnection();
-		if (responseCode <= 0) {
-			Toast.makeText(context, "No hay ninguna conexión abierta", Toast.LENGTH_SHORT).show();
+		ArduinoResponseCodes responseCode = arduinoCommunication.closeConnection();
+		if (responseCode.getCode() <= 0) {
+			Toast.makeText(context, "Ha habido un error : " + responseCode.getDescription(), Toast.LENGTH_SHORT).show();
 		}
 	}
 
@@ -160,18 +174,23 @@ public class MainActivity extends AppCompatActivity implements ArduinoSerialList
 	/**
 	 * Sends command via Serial Port
 	 *
-	 * @param command
+	 * @param command command you want to send to Arduino
 	 */
 	private void sendCommand(String command) {
-		int responseCode = arduinoCommunication.sendCommand(command);
-		if (responseCode > 0) {
+		ArduinoResponseCodes responseCode = arduinoCommunication.sendCommand(command);
+		if (responseCode.getCode() > 0) {
 			textView.append(command + "\n");
 		} else {
-			textView.append("Error " + responseCode + "\n");
+			textView.append("Ha habido un error : " + responseCode.getDescription() + "\n");
 		}
-
 	}
 
+
+	/**
+	 * Append data to Main Text view on UI thread
+	 *
+	 * @param data
+	 */
 	private void appendTextView(String data) {
 		final TextView ftv = textView;
 		final CharSequence ftext = data;
@@ -183,6 +202,9 @@ public class MainActivity extends AppCompatActivity implements ArduinoSerialList
 			}
 		});
 	}
+
+
+	/* ARDUINO SERIAL LISTENER FUNCTIONS */
 
 	@Override
 	public void receivedData(String data) {
