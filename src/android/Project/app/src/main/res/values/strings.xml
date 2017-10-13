@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">Project</string>
+
+    <!-- Main Activity layout Strings-->
+    <string name="string_btn_start_com">Start communication</string>
+    <string name="string_btn_send_command">Send Command</string>
+
+    <!-- New controller Alert Dialog Strings -->
+    <string name="pin_type_string">Pin type</string>
+    <string name="data_type_string">Data type</string>
+    <string name="pin_number_string">Arduino pin number</string>
+    <string name="new_controller_name_edit_text_hint">Name of the controller</string>
+    <string name="title_activity_controllers">ControllersActivity</string>
+
 </resources>
