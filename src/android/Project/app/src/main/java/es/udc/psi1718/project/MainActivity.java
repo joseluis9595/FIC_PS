@@ -2,6 +2,7 @@ package es.udc.psi1718.project;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -19,6 +20,9 @@ public class MainActivity extends AppCompatActivity implements ArduinoSerialList
 
 	private Context context = this;
 	private String TAG = "MainActivity";
+
+	// Intents
+	private Intent controllersIntent;
 
 	// Layout variables
 	private Button buttonSendCommand;
@@ -38,10 +42,15 @@ public class MainActivity extends AppCompatActivity implements ArduinoSerialList
 
 		Log.d(TAG, "ONCREATE");
 
+		// Intents
+		controllersIntent = new Intent(context, ControllersActivity.class);
+
+		// Arduino communication
 		arduinoCommunication = new ArduinoCommunicationManager(this);
 		// TODO eliminar la necesidad de usar un BroadcastReceiver
 		broadcastReceiver = arduinoCommunication.getBroadcastReceiver();
 
+		// Initialize layout
 		initializeLayout();
 	}
 
@@ -94,6 +103,8 @@ public class MainActivity extends AppCompatActivity implements ArduinoSerialList
 	private void initializeLayout() {
 		buttonSendCommand = (Button) findViewById(R.id.button_send_command);
 		buttonStartComm = (Button) findViewById(R.id.button_start_comm);
+		// TODO eliminar este texto
+		buttonStartComm.setText("Iniciar nueva actividad (Provisional)");
 		editText = (EditText) findViewById(R.id.editText);
 		textView = (TextView) findViewById(R.id.textView);
 
@@ -104,9 +115,8 @@ public class MainActivity extends AppCompatActivity implements ArduinoSerialList
 				switch (view.getId()) {
 					case R.id.button_start_comm:
 						Log.d(TAG, "ONCLICK : button start");
-						startCommunication();
-						//Intent intent = new Intent(context, ControllersActivity.class);
-						//startActivity(intent);
+						// TODO recuperar la función original startCommunication();
+						startActivity(controllersIntent);
 						break;
 
 					case R.id.button_send_command:
