@@ -52,6 +52,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 		Log.d(TAG, "ONCREATE");
 
 		// Intents
+		// TODO receive id of the pannel to retrieve previous controllers
 
 		// Arduino communication
 		arduinoCommunication = new ArduinoCommunicationManager(context);
@@ -118,6 +119,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	 * Function to initialize all layout variables
 	 */
 	private void initializeLayout() {
+		// TODO load previous controllers in this function
 		fab = (FloatingActionButton) findViewById(R.id.fab_new_controller);
 		mainLinearLayout = (LinearLayout) findViewById(R.id.controllers_main_layout);
 		loadingLayout = (RelativeLayout) findViewById(R.id.controllers_loading_layout);
@@ -148,6 +150,10 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 		fab.setOnClickListener(onClickListener);
 		buttonStartComm.setOnClickListener(onClickListener);
 
+		// TODO remove this line
+		// Create new Controller for test purposes
+		createNewController("Controller prueba", "8", "Digital", "Write");
+
 		// By default, layout is disabled
 		disableUI();
 		setLoading(false);
@@ -158,6 +164,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	 * Creates a new Controller layout
 	 */
 	private void createNewController(String name, String arduinoPin, String pinType, String dataType) {
+		// TODO Crear tipos distintos de Controllers dependiendo de los datos introducidos
 		ControllerSwitchView controllerSwitchView = new ControllerSwitchView(context, name, arduinoPin, pinType, dataType);
 		mainLinearLayout.addView(controllerSwitchView.getView());
 	}
