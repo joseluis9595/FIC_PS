@@ -18,6 +18,7 @@
     <dimen name="controller_card_view_margin_bottom">11dp</dimen>
     <dimen name="controller_card_view_margin_sides">18dp</dimen>
     <dimen name="controller_switch_padding">7dp</dimen>
+    <dimen name="controller_slider_padding">15dp</dimen>
 
 
     <!--

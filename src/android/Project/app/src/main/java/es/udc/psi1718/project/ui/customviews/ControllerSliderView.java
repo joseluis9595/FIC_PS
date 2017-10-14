@@ -3,25 +3,27 @@ package es.udc.psi1718.project.ui.customviews;
 import android.content.Context;
 import android.util.Log;
 import android.view.View;
-import android.widget.CompoundButton;
 import android.widget.LinearLayout;
-import android.widget.Switch;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import es.udc.psi1718.project.R;
 
+/**
+ * Created by jose on 14/10/17.
+ */
 
-public class ControllerSwitchView extends ControllerView {
+public class ControllerSliderView extends ControllerView {
 
 	private String TAG = "ControllerSwitchView";
 
 	private View view;
 	private TextView nameTextView;
-	private Switch mSwitch;
+	private SeekBar mSeekbar;
 	private LinearLayout cardViewLayout;
 
 
-	public ControllerSwitchView(Context context, String name, String arduinoPin, String pinType, String dataType) {
+	public ControllerSliderView(Context context, String name, String arduinoPin, String pinType, String dataType) {
 		super(context, name, arduinoPin, pinType, dataType);
 		initializeLayout(name, arduinoPin, pinType, dataType);
 	}
@@ -29,29 +31,43 @@ public class ControllerSwitchView extends ControllerView {
 
 	private void initializeLayout(String name, String arduinoPin, String pinType, String dataType) {
 		// Inflate view
-		view = inflate(getContext(), R.layout.controller_switch_layout, null);
+		view = inflate(getContext(), R.layout.controller_slider_layout, null);
 
 		// Initialize variables
 		cardViewLayout = (LinearLayout) view.findViewById(R.id.card_view_main_layout);
 		nameTextView = (TextView) view.findViewById(R.id.controller_name_text_view);
-		mSwitch = (Switch) view.findViewById(R.id.controller_switch);
+		mSeekbar = (SeekBar) view.findViewById(R.id.controller_seekbar);
 
 		// Create listeners
-		CompoundButton.OnCheckedChangeListener onCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
+		SeekBar.OnSeekBarChangeListener onSeekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
 			@Override
-			public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-				int data = (b) ? 1 : 0;
-				Log.d(TAG, "OnCheckedChange()");
-				ControllerSwitchView.super.controllerChangedState(data);
+			public void onProgressChanged(SeekBar seekBar, int progressValue, boolean b) {
+				if (b) {
+					Log.d(TAG, "OnSeekbarChange() : " + progressValue);
+				} else {
+					Log.d(TAG, "OnSeekbarChange() : Not from user");
+				}
+			}
+
+			@Override
+			public void onStartTrackingTouch(SeekBar seekBar) {
+				// TODO start a timer here, and every x milliseconds, allow onProgressChange to send command
+			}
+
+			@Override
+			public void onStopTrackingTouch(SeekBar seekBar) {
+				ControllerSliderView.super.controllerChangedState(seekBar.getProgress());
 			}
 		};
+
+
 		OnClickListener onClickListener = new OnClickListener() {
 			@Override
 			public void onClick(View view) {
 				switch (view.getId()) {
 					case R.id.card_view_main_layout:
 						// TODO edit cardView
-						ControllerSwitchView.super.editController();
+						ControllerSliderView.super.editController();
 						break;
 					default:
 						break;
@@ -61,7 +77,7 @@ public class ControllerSwitchView extends ControllerView {
 
 		// Modify layout
 		cardViewLayout.setOnClickListener(onClickListener);
-		mSwitch.setOnCheckedChangeListener(onCheckedChangeListener);
+		mSeekbar.setOnSeekBarChangeListener(onSeekBarChangeListener);
 		nameTextView.setText(name);
 	}
 
@@ -77,3 +93,4 @@ public class ControllerSwitchView extends ControllerView {
 	}
 
 }
+

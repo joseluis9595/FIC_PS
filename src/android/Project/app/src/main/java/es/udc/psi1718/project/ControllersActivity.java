@@ -140,7 +140,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 						break;
 					case R.id.controllers_start_comm_button:
 						// TODO DEBUG uncomment this when not debugging
-						//startCommunication();
+						startCommunication();
 						break;
 					default:
 						break;
@@ -159,9 +159,9 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 
 		// By default, layout is disabled
 		// TODO DEBUG uncomment this when not debugging
-//		disableUI();
-//		setLoading(false);
-		enableUI();
+		disableUI();
+		setLoading(false);
+//		enableUI();
 	}
 
 

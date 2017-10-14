@@ -159,6 +159,7 @@ public class ArduinoCommunicationManager {
 	 * @return
 	 */
 	public ArduinoResponseCodes sendCommand(int arduinoPin, int pinType, int dataType, int data) {
+		// TODO arduinoPin should not be just numerical (ex.: you can have A0)
 		if (serialPort != null) {
 			String command = createCommand(arduinoPin, pinType, dataType, data);
 			Log.d(TAG, "SENDCOMMAND : sending command - " + command);

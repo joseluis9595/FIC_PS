@@ -48,6 +48,7 @@ public abstract class ControllerView extends LinearLayout {
 	 * @param data int value to write to Arduino
 	 */
 	void controllerChangedState(int data) {
+		// TODO send pinType and dataType directly from the subclasses
 
 		// Convert variables to integers
 		int arduinoPintInt = Integer.parseInt(arduinoPin);
