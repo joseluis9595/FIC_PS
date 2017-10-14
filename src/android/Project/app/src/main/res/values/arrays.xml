@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="pin_type_array">
-        <item>Read</item>
-        <item>Write</item>
+        <item>Digital</item>
+        <item>Analog</item>
     </string-array>
     <string-array name="data_type_array">
-        <item>Analog</item>
-        <item>Digital</item>
+        <item>Read</item>
+        <item>Write</item>
     </string-array>
 </resources>

@@ -31,6 +31,18 @@ public class ArduinoCommunicationManager {
 
 	private IntentFilter filter;
 
+	// String command
+	private final char COMMAND_FIRST_BYTE = '*';
+	private final char COMMAND_SEPARATOR = '-';
+	private final int COMMAND_DATA_LENGTH = 4;
+	private final int COMMAND_ARDUINO_PIN_LENGTH = 2;
+	private final int COMMAND_LENGTH = 12;
+
+	public final static int PINTYPE_DIGITAL = 1;
+	public final static int PINTYPE_ANALOG = 2;
+	public final static int DATATYPE_READ = 3;
+	public final static int DATATYPE_WRITE = 4;
+
 	// Interface
 	private ArduinoSerialListener arduinoSerialListener;
 
@@ -41,11 +53,7 @@ public class ArduinoCommunicationManager {
 	private UsbDeviceConnection connection;
 
 
-	// TODO change int response codes to (int, String) type codes
-	private ArduinoResponseCodes responseCodes;
-
 	// Reading via Serial port variables
-	private byte iNBbyte = 8;
 	private byte[] buffer = new byte[0];
 	private int bufferSize;
 	private Boolean startbytefound = false;
@@ -76,17 +84,85 @@ public class ArduinoCommunicationManager {
 	}
 
 
+	private String createCommand(int arduinoPin, int pinType, int dataType, int data) {
+		String command = "";
+		command += COMMAND_FIRST_BYTE;
+
+		// PinType (Analog or Digital)
+		switch (pinType) {
+			case PINTYPE_ANALOG:
+				command += "A";
+				break;
+			case PINTYPE_DIGITAL:
+				command += "D";
+				break;
+			default:
+				// TODO handle errors
+				return "ERROR";
+		}
+		command += COMMAND_SEPARATOR;
+
+		// Command Type (Read or Write)
+		switch (dataType) {
+			case DATATYPE_READ:
+				command += "R";
+				break;
+			case DATATYPE_WRITE:
+				command += "W";
+				break;
+			default:
+				// TODO handle errors
+				return "ERROR";
+		}
+		command += COMMAND_SEPARATOR;
+
+		// arduinoPin
+		int arduinoPinLength = String.valueOf(arduinoPin).length();
+		if (arduinoPinLength == 1) {
+			command += "0";
+		} else if (arduinoPinLength > 2 || arduinoPinLength < 1) {
+			// TODO handle errors
+			return "ERROR";
+		}
+		command += arduinoPin;
+		command += COMMAND_SEPARATOR;
+
+		// Data (0-1024)
+		int dataLength = String.valueOf(data).length();
+		int dataZeroes = COMMAND_DATA_LENGTH - dataLength;
+		if (dataZeroes <= 0) dataZeroes = 0;
+		while (dataZeroes > 0) {
+			command += "0";
+			dataZeroes -= 1;
+		}
+		command += data;
+
+		// Check if it has the proper length
+		if (command.length() != COMMAND_LENGTH) {
+			// TODO handle errors
+			return "ERROR";
+		}
+
+		return command;
+
+	}
+
+
 	/**
-	 * Sends command via Serial Port
+	 * Sends command via serial port
 	 *
-	 * @param command
+	 * @param arduinoPin
+	 * @param pinType
+	 * @param dataType
+	 * @param data
 	 *
 	 * @return
 	 */
-	public ArduinoResponseCodes sendCommand(String command) {
+	public ArduinoResponseCodes sendCommand(int arduinoPin, int pinType, int dataType, int data) {
 		if (serialPort != null) {
+			String command = createCommand(arduinoPin, pinType, dataType, data);
+			Log.d(TAG, "SENDCOMMAND : sending command - " + command);
 			serialPort.write(command.getBytes());
-			Log.d(TAG, "SENDCOMMAND : sending command");
 			return ArduinoResponseCodes.RESPONSE_OK;
 		} else {
 			Log.e(TAG, "SENDCOMMAND : serialPort null");
@@ -103,6 +179,7 @@ public class ArduinoCommunicationManager {
 	 * @return
 	 */
 	private boolean isStartByte(byte firstChar) {
+		// TODO check if it works with constant
 		if (firstChar == '*') { // check if it works
 			return true;
 		} else {
@@ -115,6 +192,7 @@ public class ArduinoCommunicationManager {
 	 * 'UsbReadCallback' auxiliary function
 	 */
 	private void clearBytes() {
+		// TODO correct buffer size?
 		buffer = new byte[40];
 		bufferSize = 0;
 	}
@@ -134,11 +212,11 @@ public class ArduinoCommunicationManager {
 	/**
 	 * Crops the RAW data read via Serial port and sends it through the interface
 	 */
-	private void sendData() {
+	private void notifyReceivedData() {
 		try {
 
 			String aux = new String(buffer, "UTF-8");    // Creating String with the read buffer
-			String finalData = aux.substring(0, 9);      // We just need the first 9 chars
+			String finalData = aux.substring(0, COMMAND_LENGTH);      // We just need the first 9 chars
 
 			// Sending data through interface
 			arduinoSerialListener.receivedData("Received : " + finalData + "\n");
@@ -170,14 +248,14 @@ public class ArduinoCommunicationManager {
 						appendBytes(arg0);
 					}
 
-					if (bufferSize >= iNBbyte && startbytefound) {
+					if (bufferSize >= COMMAND_LENGTH - 1 && startbytefound) {
 						startbytefound = false;
 						Log.d(TAG, "mCalback : FOUND WORD");
-						bufferSize = iNBbyte;
-						byte[] buf = new byte[iNBbyte];
+						bufferSize = COMMAND_LENGTH;
+						byte[] buf = new byte[COMMAND_LENGTH];
 						System.arraycopy(buffer, 0, buf, 0, bufferSize);
 
-						sendData(); //process the data
+						notifyReceivedData(); //process the data
 					}
 				}
 			}
@@ -225,13 +303,17 @@ public class ArduinoCommunicationManager {
 	private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
+			// TODO comprobar por que no se activa el Broadcast Receiver cuando se quiere iniciar una conexión (tarda mucho)
 			String action = intent.getAction();
+
+			Log.d(TAG, "BROADCAST : is called : " + action);
 
 			if (action.equals(ACTION_USB_PERMISSION)) {
 				boolean granted = intent.getExtras().getBoolean(UsbManager.EXTRA_PERMISSION_GRANTED);
 				if (granted) {
 					Log.d(TAG, "BROADCAST : Permission Granted");
 					openConnection(device, 9600);
+					Log.d(TAG, "BROADCAST : Open connection is called");
 				} else {
 					Log.e(TAG, "BROADCAST : Permission not granted");
 				}
@@ -253,10 +335,13 @@ public class ArduinoCommunicationManager {
 	 * Open a new Serial communication with device
 	 */
 	private void openConnection(UsbDevice device, int baudioRate) {
+		Log.d(TAG, "OPENCONN : IS CALLED");
 		if (device == null) {
 			Log.e(TAG, "OPENCONN : Device is null");
 			return;
 		}
+
+		Log.d(TAG, "OPENCONN : Device is not null");
 
 		connection = usbManager.openDevice(device);
 		serialPort = UsbSerialDevice.createUsbSerialDevice(device, connection);
@@ -272,14 +357,14 @@ public class ArduinoCommunicationManager {
 				arduinoSerialListener.connectionOpened();
 				//tvAppend(textView, "Serial Connection Opened!\n");
 				Log.d(TAG, "OPENCONNECTION : Connection opened");
+				return;
 			} else {
-				// TODO display error
 				Log.e(TAG, "OPENCONNECTION : Serial port is not opened");
 			}
 		} else {
-			// TODO display error
 			Log.e(TAG, "OPENCONNECTION : Port is null");
 		}
+		arduinoSerialListener.connectionFailed(ArduinoResponseCodes.ERROR_NO_COMMUNICATION);
 	}
 
 
@@ -291,11 +376,11 @@ public class ArduinoCommunicationManager {
 			serialPort.close();
 			Log.d(TAG, "CLOSECONN : Serial connection closed");
 			arduinoSerialListener.connectionClosed();
-			return ArduinoResponseCodes.RESPONSE_OK;
 		} else {
 			Log.d(TAG, "CLOSECONN : No connection to close");
-			return ArduinoResponseCodes.ERROR_NO_COMMUNICATION;
+			//return ArduinoResponseCodes.ERROR_NO_COMMUNICATION;
 		}
+		return ArduinoResponseCodes.RESPONSE_OK;
 
 
 	}

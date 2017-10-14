@@ -19,4 +19,9 @@ public interface ArduinoSerialListener {
 	 * Called when the connection is closed
 	 */
 	public void connectionClosed();
+
+	/**
+	 * Called when connection can´t start
+	 */
+	public void connectionFailed(ArduinoResponseCodes arduinoResponseCode);
 }

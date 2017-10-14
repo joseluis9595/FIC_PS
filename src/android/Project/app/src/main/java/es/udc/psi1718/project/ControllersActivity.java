@@ -1,43 +1,65 @@
 package es.udc.psi1718.project;
 
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
 
-public class ControllersActivity extends AppCompatActivity {
+import es.udc.psi1718.project.arduinomanager.ArduinoCommunicationManager;
+import es.udc.psi1718.project.arduinomanager.ArduinoResponseCodes;
+import es.udc.psi1718.project.arduinomanager.ArduinoSerialListener;
+import es.udc.psi1718.project.ui.customviews.ControllerSwitchView;
+import es.udc.psi1718.project.ui.customviews.ControllerViewEventListener;
+
+public class ControllersActivity extends AppCompatActivity implements ArduinoSerialListener, ControllerViewEventListener {
 
 	private Context context = this;
 	private String TAG = "ControllersActivity";
 
 	// Layout variables
 	private FloatingActionButton fab;
+	private Button buttonStartComm;
+	private TextView loadingTextView;
+	private ProgressBar progressBar;
 	private LinearLayout mainLinearLayout;
+	private RelativeLayout loadingLayout;
+	private RelativeLayout normalLayout;
+
+	// Arduino communication Manager
+	private ArduinoCommunicationManager arduinoCommunication;
+	private BroadcastReceiver broadcastReceiver;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_controllers);
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-		setSupportActionBar(toolbar);
+
+		Log.d(TAG, "ONCREATE");
 
 		// Intents
 
-		// Other initializations
+		// Arduino communication
+		arduinoCommunication = new ArduinoCommunicationManager(context);
+		// TODO eliminar la necesidad de usar un BroadcastReceiver
+		broadcastReceiver = arduinoCommunication.getBroadcastReceiver();
 
 		// Initialize layout
 		initializeLayout();
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 
 	@Override
@@ -49,6 +71,48 @@ public class ControllersActivity extends AppCompatActivity {
 		return true;
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		Log.d(TAG, "ONRESUME");
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		Log.d(TAG, "ONDESTROY");
+		endCommunication();
+	}
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+		registerReceiver(broadcastReceiver, arduinoCommunication.getBroadcastFilter());
+		Log.d(TAG, "Receiver registered");
+		Log.d(TAG, "ONSTART");
+	}
+
+	@Override
+	protected void onRestart() {
+		super.onRestart();
+		Log.d(TAG, "ONRESTART");
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		unregisterReceiver(broadcastReceiver);
+		Log.d(TAG, "Receiver unregistered");
+		Log.d(TAG, "ONSTOP");
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		Log.d(TAG, "ONPAUSE");
+
+	}
+
 
 	/**
 	 * Function to initialize all layout variables
@@ -56,6 +120,11 @@ public class ControllersActivity extends AppCompatActivity {
 	private void initializeLayout() {
 		fab = (FloatingActionButton) findViewById(R.id.fab_new_controller);
 		mainLinearLayout = (LinearLayout) findViewById(R.id.controllers_main_layout);
+		loadingLayout = (RelativeLayout) findViewById(R.id.controllers_loading_layout);
+		normalLayout = (RelativeLayout) findViewById(R.id.controllers_parent_layout);
+		loadingTextView = (TextView) findViewById(R.id.controllers_loading_text_view);
+		buttonStartComm = (Button) findViewById(R.id.controllers_start_comm_button);
+		progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
 		// Create one common listener
 		View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -65,14 +134,23 @@ public class ControllersActivity extends AppCompatActivity {
 					case R.id.fab_new_controller:
 						createNewControllerDialog();
 						break;
+					case R.id.controllers_start_comm_button:
+						startCommunication();
+						break;
 					default:
 						break;
 				}
 			}
 		};
 
+
 		// Add listener to different layout items
 		fab.setOnClickListener(onClickListener);
+		buttonStartComm.setOnClickListener(onClickListener);
+
+		// By default, layout is disabled
+		disableUI();
+		setLoading(false);
 	}
 
 
@@ -80,9 +158,8 @@ public class ControllersActivity extends AppCompatActivity {
 	 * Creates a new Controller layout
 	 */
 	private void createNewController(String name, String arduinoPin, String pinType, String dataType) {
-		// TODO create new Controller
-		//View controllerView = this.getLayoutInflater().inflate(R.layout.layout_controller, null);
-		//mainLinearLayout.addView(controllerView);
+		ControllerSwitchView controllerSwitchView = new ControllerSwitchView(context, name, arduinoPin, pinType, dataType);
+		mainLinearLayout.addView(controllerSwitchView.getView());
 	}
 
 
@@ -110,7 +187,6 @@ public class ControllersActivity extends AppCompatActivity {
 				.setPositiveButton("Create", new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int id) {
-						// TODO añadir CardView al linearLayout con los datos introducidos
 						createNewController(
 								newControllerEditText.getText().toString(),
 								pinNumberEditText.getText().toString(),
@@ -132,4 +208,153 @@ public class ControllersActivity extends AppCompatActivity {
 		Log.d(TAG, "createNewControllerDialog : created AlertDialog");
 	}
 
+
+	/**
+	 * Disables UI, user can only start communication with arduino
+	 */
+	private void enableUI() {
+		loadingLayout.setVisibility(View.GONE);
+		normalLayout.setVisibility(View.VISIBLE);
+		//buttonStartComm.setEnabled(false);
+		//buttonSendCommand.setEnabled(true);
+		//editText.setEnabled(true);
+	}
+
+
+	/**
+	 * Display loading layout
+	 *
+	 * @param loading Boolean to indicate whether it's loading or not
+	 */
+	private void setLoading(Boolean loading) {
+		String loadingText = loading ? "Loading..." : "Connect Arduino now";
+		int progressBarVisibility = loading ? View.VISIBLE : View.GONE;
+
+		buttonStartComm.setEnabled(!loading);
+		loadingTextView.setText(loadingText);
+		progressBar.setVisibility(progressBarVisibility);
+	}
+
+
+	/**
+	 * Enables UI so that the user can interact with the application
+	 */
+	private void disableUI() {
+		loadingLayout.setVisibility(View.VISIBLE);
+		normalLayout.setVisibility(View.GONE);
+		//buttonStartComm.setEnabled(true);
+		//buttonSendCommand.setEnabled(false);
+		//editText.setEnabled(false);
+	}
+
+
+	/**
+	 * Start communication with Arduino
+	 */
+	private void startCommunication() {
+		Log.d(TAG, "StartCommunication");
+
+		ArduinoResponseCodes responseCode = arduinoCommunication.startCommunication();
+		if (responseCode.getCode() <= 0) {
+			displayMessage("Ha habido un error : " + responseCode.getDescription());
+		} else {
+			Log.d(TAG, "StartCommunication : OK");
+			setLoading(true);
+		}
+	}
+
+
+	/**
+	 * End communication with Arduino
+	 */
+	private void endCommunication() {
+		ArduinoResponseCodes responseCode = arduinoCommunication.closeConnection();
+		if (responseCode.getCode() <= 0) {
+			displayMessage("Ha habido un error : " + responseCode.getDescription());
+		}
+	}
+
+
+	/**
+	 * Sends command via Serial Port
+	 */
+	private void sendCommand(int arduinoPin, int pinType, int dataType, int data) {
+		ArduinoResponseCodes responseCode = arduinoCommunication.sendCommand(arduinoPin, pinType, dataType, data);
+		if (responseCode.getCode() > 0) {
+			// TODO decidir que hacer después de mandar un mensaje
+		} else {
+			displayMessage("Ha habido un error : " + responseCode.getDescription());
+		}
+	}
+
+
+	/**
+	 * Displays a message on UI thread
+	 *
+	 * @param message
+	 */
+	private void displayMessage(final String message) {
+		Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+	}
+
+
+
+	/* ARDUINO SERIAL LISTENER FUNCTIONS */
+
+	@Override
+	public void receivedData(String data) {
+		Log.d(TAG, "RECEIVEDDATA : Data received - " + data);
+		displayMessage(data);
+	}
+
+	@Override
+	public void connectionOpened() {
+		Log.d(TAG, "connectionOpened : OK");
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				// TODO comprobar si se ha cancelado la comunicación
+				enableUI();
+				displayMessage("Connection opened!");
+			}
+		});
+	}
+
+	@Override
+	public void connectionClosed() {
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				disableUI();
+				displayMessage("Connection closed");
+				setLoading(false);
+			}
+		});
+	}
+
+	@Override
+	public void connectionFailed(final ArduinoResponseCodes arduinoResponseCode) {
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				disableUI();
+				displayMessage(arduinoResponseCode.getDescription());
+				setLoading(false);
+			}
+		});
+	}
+
+
+	/* CONTROLLER VIEW LISTENER FUNCTIONS */
+
+	@Override
+	public void controllerChangedState(final int arduinoPin, final int pinType, final int dataType, final int data) {
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				Log.d(TAG, "ControllerChangeState : Sending command to Arduino");
+				sendCommand(arduinoPin, pinType, dataType, data);
+			}
+		});
+	}
 }
