@@ -46,30 +46,42 @@ void loop() {
   if (myString.length() >0) {
     myString.remove(0,1);
     //Serial.println(myString); //see what was received
-    String firstValue = getValue(myString, '-', 0);
-    String secondValue = getValue(myString, '-', 1);
+    String firstValueString = getValue(myString, '-', 0);
+    char firstValue = firstValueString.charAt(0);
+    String secondValueString = getValue(myString, '-', 1);
+    char secondValue = secondValueString.charAt(0);
     String thirdValue = getValue(myString, '-', 2);
-    int secondValueInt = secondValue.toInt();
-
-    // Read from pin
-    if (thirdValue.equals("")){
-      pinMode(secondValueInt, INPUT);
-      return;
-    }
-
-    // Write to a pin
+    String fourthValue = getValue(myString, '-', 3);
+    
     int thirdValueInt = thirdValue.toInt();
-    pinMode(secondValueInt, OUTPUT);
+    int fourthValueInt = fourthValue.toInt();
 
-    if (firstValue.equals("D")){
-      digitalWrite(secondValueInt, thirdValueInt);
-      //Serial.println("digitalWrite(" + String(secondValueInt) + ", " + String(thirdValueInt) + ")");
-    } else if (firstValue.equals("A")){
-      analogWrite(secondValueInt, thirdValueInt);
-      //Serial.println("analogWrite(" + String(secondValueInt) + ", " + String(thirdValueInt) + ")");
+
+    switch (secondValue){
+      case 'R':
+        pinMode(thirdValueInt, INPUT);
+        if (firstValue =='D'){
+          digitalRead(thirdValueInt);
+          //Serial.println("digitalRead(" + String(thirdValueInt) + ")");
+        } else if (firstValue == 'A'){
+          analogRead(thirdValueInt);
+          //Serial.println("analogRead(" + String(thirdValueInt) + ")");
+        }
+        break;
+
+      case 'W':
+        pinMode(thirdValueInt, OUTPUT);
+        if (firstValue == 'D'){
+          digitalWrite(thirdValueInt, fourthValueInt);
+          //Serial.println("digitalWrite(" + String(thirdValueInt) + ", " + String(fourthValueInt) + ")");
+        } else if (firstValue == 'A'){
+          analogWrite(thirdValueInt, fourthValueInt);
+          //Serial.println("analogWrite(" + String(thirdValueInt) + ", " + String(fourthValueInt) + ")");
+        }
+        break;
     }
 
-    Serial.println("*" + firstValue + "-" + secondValue + "-" + thirdValue);
+    //Serial.println("*" + String(firstValue) + "-" + secondValue + "-" + thirdValue);
     //Serial.println(firstValue + " " + secondValueInt + " " + thirdValueInt);
     delay(10);
   }
