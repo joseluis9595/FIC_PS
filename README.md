@@ -10,13 +10,13 @@ Esta app nos permitirá controlar una serie de componentes tales como LEDs, serv
    * [Comunicación Android-Arduino](README.md#comunicación-android-arduino)
    * [Almacenamiento de datos](README.md#almacenamiento-de-datos)
    * [Otras características](README.md#otras-caracter%C3%ADsticas)
-1. [Funcionalidades extra](README.md#posibles-funcionalidades-extras)
-1. [Primera itearción](README.md#primera-iteración)
+1. [Funcionalidades extra](README.md#posibles-funcionalidades-extra)
+1. [Primera iteración](README.md#primera-iteración)
 
 
 <br><br><br>
 
-## Diseño de la aplicación
+## DISEÑO DE LA APLICACIÓN
 
 Nuestra aplicación dispondrá de dos elementos principales, a los que llamaremos paneles y controladores. 
 Los paneles podemos entenderlos como mandos a distancia que incluyen diversos botones. Los controladores serían en ese caso cada uno de los botones, permitiéndonos interactuar con los distintos componentes que estén conectados al Arduino.
@@ -38,7 +38,7 @@ El usuario podrá crear distintos paneles con distintos controladores en cada un
 
 <br><br><br>
 
-## Funcionamiento de la aplicación
+## FUNCIONAMIENTO DE LA APLICACIÓN
 
 ### Comunicación Android-Arduino
 Para comunicarse, nuestro dispositivo Android mandará mensajes por puerto serie al Arduino, quien los interpretará y llevará a cabo las acciones necesarias. Dichos mensajes se regirán por el siguiente formato:
@@ -93,7 +93,7 @@ La aplicación se iniciará automáticamente cuando se conecte un Arduino median
 
 <br><br><br>
 
-## Posibles funcionalidades extras
+## POSIBLES FUNCIONALIDADES EXTRA
 
 ### Layouts
 Crear gráficas para monitorizar en tiempo real los valores de los sensores. Solo contendrán los valores recibidos desde que se creó la gráfica, no se almacenarán datos en el dispositivo Android.
@@ -106,7 +106,7 @@ Para ello, descargar el archivo en el propio teléfono Android no tendría mucho
 <br><br><br>
 
 
-## Primera iteración
+## PRIMERA ITERACIÓN
 Para la primera iteración de la práctica crearemos una aproximación inicial a la aplicación. Se desarrollará el API de la comunicación serie con Arduino, pero el resto de funcionalidades quedarán a la espera. 
 En cuanto al layout, se usará uno provisional que no representará al definitivo.
 
@@ -117,5 +117,5 @@ En cuanto al layout, se usará uno provisional que no representará al definitiv
 <br><br>
 ****
 
-## Ideas
+## IDEAS
 * Fragment para representar gráficas
