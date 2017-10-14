@@ -19,6 +19,7 @@ Esta app nos permitirá controlar una serie de componentes tales como LEDs, serv
 
 Nuestra aplicación dispondrá de dos elementos principales, a los que llamaremos paneles y controladores. 
 Los paneles podemos entenderlos como mandos a distancia que incluyen diversos botones. Los controladores serían en ese caso cada uno de los botones, permitiéndonos interactuar con los distintos componentes que estén conectados al Arduino.
+
 A continuación se muestra un prototipo de la aplicación donde podemos ver dos paneles, el de la izquierda con dos controladores, y del de la derecha con tres controladores:
 
 <p align="center">
