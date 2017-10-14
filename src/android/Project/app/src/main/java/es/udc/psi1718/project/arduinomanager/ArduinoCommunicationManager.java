@@ -179,8 +179,8 @@ public class ArduinoCommunicationManager {
 	 * @return
 	 */
 	private boolean isStartByte(byte firstChar) {
-		// TODO check if it works with constant
-		if (firstChar == '*') { // check if it works
+		// TODO Comprobar si funciona bien cambiando '*' por la constante COMMAND_FIRST_BYTE
+		if (firstChar == '*') {
 			return true;
 		} else {
 			return false;
@@ -192,7 +192,7 @@ public class ArduinoCommunicationManager {
 	 * 'UsbReadCallback' auxiliary function
 	 */
 	private void clearBytes() {
-		// TODO correct buffer size?
+		// TODO corregir el tamaño del buffer?
 		buffer = new byte[40];
 		bufferSize = 0;
 	}

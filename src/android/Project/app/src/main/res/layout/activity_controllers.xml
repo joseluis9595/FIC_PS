@@ -8,10 +8,12 @@
     android:orientation="vertical"
     tools:context="es.udc.psi1718.project.ControllersActivity">
 
+    <!-- TODO DEBUG eliminar android:visibility="gone" -->
     <RelativeLayout
         android:id="@+id/controllers_loading_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="gone">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -48,7 +50,9 @@
     <RelativeLayout
         android:id="@+id/controllers_parent_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:paddingBottom="@dimen/main_margin"
+        android:paddingTop="@dimen/main_margin">
 
         <ScrollView
             android:layout_width="match_parent"
@@ -64,7 +68,10 @@
         </ScrollView>
 
 
-        <!-- TODO change the FAB icon -->
+        <!-- TODO MATIAS 1
+             Buscar un icono nuevo para este botón (signo + en color blanco)
+             Añadirlo como ic_input_add_white.png en la carpeta /res/mipmap
+        -->
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab_new_controller"
             android:layout_width="wrap_content"

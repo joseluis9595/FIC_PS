@@ -2,7 +2,12 @@
 <resources>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#26a69a</color>
+
+    <color name="background_color">#eeeeee</color>
+
+    <color name="card_view_background_color">#e0e0e0</color>
+    <!--<color name="colorAccent">#FF4081</color>-->
 
 
     <!--
@@ -10,7 +15,7 @@
     <color name="color_primary_dark">#262626</color>
     <color name="background_color">#333333</color>
     <color name="foreground_color">#FF0000</color>
-    <color name="color_accent">#709e97</color>
+
 
 
     <color name="buttonEnabled">#aa80CBC4</color>

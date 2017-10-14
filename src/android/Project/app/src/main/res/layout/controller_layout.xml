@@ -9,31 +9,39 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/controller_card_view_margin_bottom"
+        android:layout_marginLeft="@dimen/controller_card_view_margin_sides"
+        android:layout_marginRight="@dimen/controller_card_view_margin_sides"
         android:layout_marginTop="@dimen/controller_card_view_margin_top"
+        app:cardBackgroundColor="@color/card_view_background_color"
         app:cardCornerRadius="@dimen/controller_card_view_corner_radius"
-        app:cardElevation="@dimen/controller_card_view_elevation"
-        app:contentPadding="@dimen/controller_card_view_content_padding">
+        app:cardElevation="@dimen/controller_card_view_elevation">
 
 
         <LinearLayout
+            android:id="@+id/card_view_main_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:orientation="vertical"
+            android:padding="@dimen/controller_card_view_content_padding">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/controller_vertical_inside_margin"
                 android:orientation="horizontal">
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1">
+                    android:layout_weight="7">
 
                     <TextView
                         android:id="@+id/controller_name_text_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:text="Titulo"
                         android:textAllCaps="true"
                         android:textColor="@color/colorAccent"
                         android:textSize="@dimen/controller_title_size"/>
@@ -57,7 +65,10 @@
                 <Switch
                     android:id="@+id/controller_switch"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/controller_switch_padding"
+                    android:scaleX="1.2"
+                    android:scaleY="1.2"/>
             </LinearLayout>
 
         </LinearLayout>

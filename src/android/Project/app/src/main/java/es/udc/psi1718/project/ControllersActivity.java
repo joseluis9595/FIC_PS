@@ -49,6 +49,8 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_controllers);
 
+		// TODO create a tutorial for first time opening
+
 		Log.d(TAG, "ONCREATE");
 
 		// Intents
@@ -137,7 +139,8 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 						createNewControllerDialog();
 						break;
 					case R.id.controllers_start_comm_button:
-						startCommunication();
+						// TODO DEBUG uncomment this when not debugging
+						//startCommunication();
 						break;
 					default:
 						break;
@@ -150,13 +153,15 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 		fab.setOnClickListener(onClickListener);
 		buttonStartComm.setOnClickListener(onClickListener);
 
-		// TODO remove this line
+		// TODO DEBUG remove this line when not debugging
 		// Create new Controller for test purposes
 		createNewController("Controller prueba", "8", "Digital", "Write");
 
 		// By default, layout is disabled
-		disableUI();
-		setLoading(false);
+		// TODO DEBUG uncomment this when not debugging
+//		disableUI();
+//		setLoading(false);
+		enableUI();
 	}
 
 
@@ -164,7 +169,17 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	 * Creates a new Controller layout
 	 */
 	private void createNewController(String name, String arduinoPin, String pinType, String dataType) {
-		// TODO Crear tipos distintos de Controllers dependiendo de los datos introducidos
+		/* TODO MATÍAS 3
+		 * Esta es la función que se llama desde el 'AlertDialog' que tuviste que corregir antes en el paso 2.
+		 *
+		 * Comprobar lo siguiente : (puede que las clases aún no estén creadas, pero el constructor
+		 * va a ser el mismo que el de 'ControllerSwitchView'. Deja la línea comentada si da error)
+		 *     Si pinType == DIGITAL && dataType == WRITE ControllerView view = new ControllerSwitchView
+		 *     Si pinType == ANALOG && dataType == WRITE ControllerView view = new ControllerSliderView
+		 *     Si dataType == READ ControllerView view = new ControllerDataDisplayView
+		 *
+		 * Después de todos los ifs dejar escrita la línea de mainLinearLayout.addView(controllerSwitchView.getView());
+		 */
 		ControllerSwitchView controllerSwitchView = new ControllerSwitchView(context, name, arduinoPin, pinType, dataType);
 		mainLinearLayout.addView(controllerSwitchView.getView());
 	}
@@ -194,6 +209,15 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 				.setPositiveButton("Create", new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int id) {
+						/*
+						 * TODO MATÍAS 2
+						 * Este diálogo se abre en la actividad 'ControllersActivity' cuando pulsas el botón
+						 * con el símbolo '+' que acabas de crear tú en el layout.
+						 * Estamos en la función que se llama cuando le das a aceptar en el 'AlertDialog'.
+						 * Hay que comprobar que ninguno de los dos EditTexts está vacío. Si no hay ninguno vacío,
+						 * llamar a la función de aquí debajo ('createNewController'). Si alguno está vacío
+						 * mostrar error y NO cerrar el alertDialog (busca en internet como hacer esto último)
+						 */
 						createNewController(
 								newControllerEditText.getText().toString(),
 								pinNumberEditText.getText().toString(),

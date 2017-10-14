@@ -45,8 +45,8 @@ public class MainActivity extends AppCompatActivity {
 	private void initializeLayout() {
 		//buttonSendCommand = (Button) findViewById(R.id.button_send_command);
 		buttonStartComm = (Button) findViewById(R.id.button_start_comm);
-		// TODO eliminar este texto
-		buttonStartComm.setText("Iniciar nueva actividad (Provisional)");
+		// TODO DEBUG eliminar este texto
+		buttonStartComm.setText("Abrir panel 1 (provisional)");
 		//editText = (EditText) findViewById(R.id.editText);
 		//textView = (TextView) findViewById(R.id.textView);
 
@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
 				switch (view.getId()) {
 					case R.id.button_start_comm:
 						Log.d(TAG, "ONCLICK : button start");
-						// TODO recuperar la función original startCommunication();
+						// TODO DEBUG recuperar la función original startCommunication();
 						startActivity(controllersIntent);
 						break;
 

@@ -15,10 +15,12 @@ public abstract class ControllerView extends LinearLayout {
 	ControllerViewEventListener listener;
 
 	// Command variables
-	private String name;
 	private String arduinoPin;
 	private String pinType;
 	private String dataType;
+
+	// Layout variables
+	private String name;
 
 	public ControllerView(Context context, String name, String arduinoPin, String pinType, String dataType) {
 		super(context);
@@ -27,10 +29,25 @@ public abstract class ControllerView extends LinearLayout {
 		this.pinType = pinType;
 		this.dataType = dataType;
 		listener = (ControllerViewEventListener) context;
+
 	}
 
 
-	void sendCommand(int data) {
+	/**
+	 * Allows the user to modify controller's data
+	 */
+	void editController() {
+		// TODO display alertDialog to modify the values
+		setName("Modificar Controller");
+	}
+
+
+	/**
+	 * Sends command via 'ControllerViewEventListener'
+	 *
+	 * @param data int value to write to Arduino
+	 */
+	void controllerChangedState(int data) {
 
 		// Convert variables to integers
 		int arduinoPintInt = Integer.parseInt(arduinoPin);
@@ -66,7 +83,6 @@ public abstract class ControllerView extends LinearLayout {
 	 *
 	 * @return View
 	 */
-
 	public abstract View getView();
 
 	/**
@@ -74,5 +90,5 @@ public abstract class ControllerView extends LinearLayout {
 	 *
 	 * @param newName the new name you want for the Controller
 	 */
-	public abstract void setNameTextView(String newName);
+	public abstract void setName(String newName);
 }
