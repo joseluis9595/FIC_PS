@@ -11,6 +11,7 @@ Esta app nos permitirá controlar una serie de componentes tales como LEDs, serv
    * [Almacenamiento de datos](README.md#almacenamiento-de-datos)
    * [Otras características](README.md#otras-caracter%C3%ADsticas)
 1. [Funcionalidades extra](README.md#posibles-funcionalidades-extras)
+1. [Primera itearción](README.md#primera-iteración)
 
 
 <br><br><br>
