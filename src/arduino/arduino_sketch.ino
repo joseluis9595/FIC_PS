@@ -61,11 +61,13 @@ void loop() {
       case 'R':
         pinMode(thirdValueInt, INPUT);
         if (firstValue =='D'){
-          digitalRead(thirdValueInt);
-          //Serial.println("digitalRead(" + String(thirdValueInt) + ")");
+          //digitalRead(thirdValueInt);
+          Serial.println("digitalRead(" + String(thirdValueInt) + ")");
+          Serial.println(digitalRead(thirdValueInt));
         } else if (firstValue == 'A'){
-          analogRead(thirdValueInt);
-          //Serial.println("analogRead(" + String(thirdValueInt) + ")");
+          //analogRead(thirdValueInt);
+          Serial.println("analogRead(" + String(thirdValueInt) + ")");
+          Serial.println(analogRead(thirdValueInt));
         }
         break;
 
@@ -73,10 +75,10 @@ void loop() {
         pinMode(thirdValueInt, OUTPUT);
         if (firstValue == 'D'){
           digitalWrite(thirdValueInt, fourthValueInt);
-          //Serial.println("digitalWrite(" + String(thirdValueInt) + ", " + String(fourthValueInt) + ")");
+          Serial.println("digitalWrite(" + String(thirdValueInt) + ", " + String(fourthValueInt) + ")");
         } else if (firstValue == 'A'){
           analogWrite(thirdValueInt, fourthValueInt);
-          //Serial.println("analogWrite(" + String(thirdValueInt) + ", " + String(fourthValueInt) + ")");
+          Serial.println("analogWrite(" + String(thirdValueInt) + ", " + String(fourthValueInt) + ")");
         }
         break;
     }
