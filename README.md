@@ -17,20 +17,22 @@ Esta app nos permitirá controlar una serie de componentes tales como LEDs, serv
 
 ## Diseño de la aplicación
 
-La aplicación dispondrá de un menú principal con una serie de paneles. Podemos entender cada uno de estos paneles como una especie de mando a distancia, que contendrá distintos botones para controlar distintos componentes del Arduino. A continuación se muestran dos paneles de prueba a modo de ejemplo:
+Nuestra aplicación dispondrá de dos elementos principales, a los que llamaremos paneles y controladores. 
+Los paneles podemos entenderlos como mandos a distancia que incluyen diversos botones. Los controladores serían en ese caso cada uno de los botones, permitiéndonos interactuar con los distintos componentes que estén conectados al Arduino.
+A continuación se muestra un prototipo de la aplicación donde podemos ver dos paneles, el de la izquierda con dos controladores, y del de la derecha con tres controladores:
 
 <p align="center">
   <img src="documentation/images/pannel_1.jpg" width="250" alt="Example of a simple pannel"/>
   <img src="documentation/images/pannel_2.jpg" width="250" alt="Example of a simple pannel"/>
 </p>
 
-Después de crear uno de dichos paneles, y elegir con qué componentes va a querer interactuar, al usuario se le dispondrán una serie de layouts que contendrán, por ejemplo, un botón para encender un LED, un cuadro de texto donde se mostrará el valor en tiempo real de un sensor de temperatura, etc...
+Al crear uno de dichos paneles, y elegir con qué componentes va a querer interactuar, al usuario se le dispondrán una serie de layouts (controladores) que contendrán, por ejemplo, un botón para encender un LED, un cuadro de texto donde se mostrará el valor en tiempo real de un sensor de temperatura, etc...
 
-El usuario podrá crear distintos paneles con distintos ítems en cada uno, así como renombrarlos, o eliminarlos.
+El usuario podrá crear distintos paneles con distintos controladores en cada uno, así como renombrarlos, o eliminarlos.
 
 <br>
 
-> **Nota:** Hemos creado un pequeño esquema con una aproximación general del diseño de la aplicación en [design_ideas.jpg](documentation/images/design_ideas.jpg), donde se representan dos casos de uso, 'añadir nuevo panel' y 'añadir nuevo ítem'.
+> **Nota:** Hemos creado un pequeño esquema con una aproximación general del diseño de la aplicación en [design_ideas.jpg](documentation/images/design_ideas.jpg), donde se representan dos casos de uso, 'añadir nuevo panel' y 'añadir nuevo controlador'.
 
 <br><br><br>
 
@@ -39,17 +41,23 @@ El usuario podrá crear distintos paneles con distintos ítems en cada uno, así
 ### Comunicación Android-Arduino
 Para comunicarse, nuestro dispositivo Android mandará mensajes por puerto serie al Arduino, quien los interpretará y llevará a cabo las acciones necesarias. Dichos mensajes se regirán por el siguiente formato:
 
-    COMPONENTE-PinArduino-Data
+    *PINTYPE-COMMANDTYPE-ARDUINOPIN-DATA
+    
+    *            Carácter que marca el inicio de la instrucción
+    PINTYPE      (Analog o Digital)   1 carácter
+    COMMANDTYPE  (Read o Write)       1 carácter
+    ARDUINOPIN   (Pin del arduino)    2 caracteres
+    DATA         (Valor a escribir)   4 caracteres
 
 Por ejemplo, para encender un led que se encuentra en el pin 9 del arduino, el comando que recibirá el Arduino será el siguiente:
 
-    LED-9-HIGH
+    *D-W-08-0001
 
 Usando como ejemplo un servo motor que se encuentre conectado al pin 3 del Arduino, para girar dicho servo motor un ángulo de 130º, el comando utilizado sería el siguiente:
     
-    SERVO-3-130
+    *A-W-03-0130
 
-> **Nota:** Para obtener datos en tiempo real del Arduino, como por ejemplo con sensores de temperatura o similares, en el comando se omitirá la parte de "Data".
+> **Nota:** Para obtener datos en tiempo real del Arduino, como por ejemplo con sensores de temperatura o similares, en el comando, la parte de "Data" tomará el valor '0000'.
 
 ### Almacenamiento de datos
 La aplicación no almacenará los datos leídos del Arduino. Sin embargo, los paneles creados por el usuario con todos sus ítems sí se guardarán. 
@@ -97,8 +105,8 @@ Para ello, descargar el archivo en el propio teléfono Android no tendría mucho
 
 
 ## Primera iteración
-Para la primera iteración de la aplicación crearemos el API necesario para llevar a cabo la conexión del dispositivo Android con el Arduino.
-Crearemos un layout simple que permita encender y apagar un LED.
+Para la primera iteración de la práctica crearemos una aproximación inicial a la aplicación. Se desarrollará el API de la comunicación serie con Arduino, pero el resto de funcionalidades quedarán a la espera. 
+En cuanto al layout, se usará uno provisional que no representará al definitivo.
 
 
 
@@ -108,4 +116,4 @@ Crearemos un layout simple que permita encender y apagar un LED.
 ****
 
 ## Ideas
-* Fragment para represetnar gráfica
+* Fragment para representar gráficas
