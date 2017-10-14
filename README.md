@@ -61,14 +61,14 @@ Usando como ejemplo un servo motor que se encuentre conectado al pin 3 del Ardui
 > **Nota:** Para obtener datos en tiempo real del Arduino, como por ejemplo con sensores de temperatura o similares, en el comando, la parte de "Data" tomará el valor '0000'.
 
 ### Almacenamiento de datos
-La aplicación no almacenará los datos leídos del Arduino. Sin embargo, los paneles creados por el usuario con todos sus ítems sí se guardarán. 
+La aplicación no almacenará los datos leídos del Arduino. Sin embargo, los paneles creados por el usuario con todos sus controladores sí se guardarán. 
 
 Para guardar los datos de cada panel, se almacenará en la memoria del teléfono un json con el siguiente esquema:
 
 ```json
 {
   "pannel_1":{
-      "items":[
+      "controllers":[
         {
           "name":"LED_1",
           "arduinoPin":8,
