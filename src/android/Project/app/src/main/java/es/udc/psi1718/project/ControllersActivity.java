@@ -31,6 +31,8 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	private Context context = this;
 	private String TAG = "ControllersActivity";
 
+	private final Boolean DEBUG = true;
+
 	// Layout variables
 	private FloatingActionButton fab;
 	private Button buttonStartComm;
@@ -140,7 +142,9 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 						break;
 					case R.id.controllers_start_comm_button:
 						// TODO DEBUG uncomment this when not debugging
-//						startCommunication();
+						if (!DEBUG) {
+							startCommunication();
+						}
 						break;
 					default:
 						break;
@@ -156,12 +160,19 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 		// TODO DEBUG remove this line when not debugging
 		// Create new Controller for test purposes
 		createNewController("Controller prueba", "8", "Digital", "Write");
+//		ControllerSliderView controllerSwitchView = new ControllerSliderView(context, "Prueba", "3", "Analog", "Write");
+//		mainLinearLayout.addView(controllerSwitchView.getView());
 
 		// By default, layout is disabled
 		// TODO DEBUG uncomment this when not debugging
-//		disableUI();
-//		setLoading(false);
-		enableUI();
+		if (DEBUG) {
+			enableUI();
+		} else {
+			disableUI();
+			setLoading(false);
+		}
+
+
 	}
 
 
