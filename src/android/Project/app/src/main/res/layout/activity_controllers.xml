@@ -67,11 +67,6 @@
             </LinearLayout>
         </ScrollView>
 
-
-        <!-- TODO MATIAS 1
-             Buscar un icono nuevo para este botón (signo + en color blanco)
-             Añadirlo como ic_input_add_white.png en la carpeta /res/mipmap
-        -->
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab_new_controller"
             android:layout_width="wrap_content"
