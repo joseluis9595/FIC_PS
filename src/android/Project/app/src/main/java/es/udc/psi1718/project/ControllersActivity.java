@@ -220,21 +220,18 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 				.setPositiveButton("Create", new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int id) {
-						/*
-						 * TODO MATÍAS 2
-						 * Este diálogo se abre en la actividad 'ControllersActivity' cuando pulsas el botón
-						 * con el símbolo '+' que acabas de crear tú en el layout.
-						 * Estamos en la función que se llama cuando le das a aceptar en el 'AlertDialog'.
-						 * Hay que comprobar que ninguno de los dos EditTexts está vacío. Si no hay ninguno vacío,
-						 * llamar a la función de aquí debajo ('createNewController'). Si alguno está vacío
-						 * mostrar error y NO cerrar el alertDialog (busca en internet como hacer esto último)
-						 */
-						createNewController(
-								newControllerEditText.getText().toString(),
-								pinNumberEditText.getText().toString(),
-								pinTypeSpinner.getSelectedItem().toString(),
-								dataTypeSpinner.getSelectedItem().toString()
-						);
+					
+						String aux1 = newControllerEditText.getText().toString().replace(" ", "");
+						String aux2 = pinNumberEditText.getText().toString().replace(" ", "");
+
+						if(!(aux1.matches("") || aux2.matches(""))) {
+							createNewController(
+									newControllerEditText.getText().toString(),
+									pinNumberEditText.getText().toString(),
+									pinTypeSpinner.getSelectedItem().toString(),
+									dataTypeSpinner.getSelectedItem().toString()
+							);
+						} //Mirar como meter un dialogo de error
 					}
 				})
 				.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
