@@ -1,7 +1,7 @@
 # App para controlar dinámicamente circuitos con Arduino
 
 Esta app permitirá controlar una serie de componentes tales como LEDs, servo motores, diversos sensores, etc... conectados a un Arduino. Para ello, se mandarán comandos por puerto serie a través de USB desde nuestro dispositivo Android.
-<br>
+<br> 
 
 ## Tabla de contenidos
 
