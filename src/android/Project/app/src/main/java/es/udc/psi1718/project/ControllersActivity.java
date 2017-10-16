@@ -184,26 +184,25 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	private void createNewController(String name, String arduinoPin, String pinType, String dataType) {
 
 		// Pin de escritura digital
-		if (pinType.equalsIgnoreCase("digital") && dataType.equalsIgnoreCase("write")){
+		if (pinType.equalsIgnoreCase("digital") && dataType.equalsIgnoreCase("write")) {
 			ControllerSwitchView controllerSwitchView = new ControllerSwitchView(context, name, arduinoPin, pinType, dataType);
 			mainLinearLayout.addView(controllerSwitchView.getView());
 			return;
 		}
 
 		// Pin de escritura analógica
-		if (pinType.equalsIgnoreCase("analog") && dataType.equalsIgnoreCase("write")){
+		if (pinType.equalsIgnoreCase("analog") && dataType.equalsIgnoreCase("write")) {
 			ControllerSliderView controllerSliderView = new ControllerSliderView(context, name, arduinoPin, pinType, dataType);
-			mainLinearLayout.addView(ControllerSliderView.getView());
+			mainLinearLayout.addView(controllerSliderView.getView());
 			return;
 		}
 
 		// Pin de lectura
-		if (dataType.equalsIgnoreCase("read")){
+		if (dataType.equalsIgnoreCase("read")) {
 			// TODO Crear un cardview de lectura de valores
 			return;
 		}
 	}
-
 
 
 	/**
@@ -227,25 +226,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 		// Set the rest of the options
 		dialogBuilder
 				.setCancelable(false)
-				.setPositiveButton("Create", new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int id) {
-
-						String aux1 = newControllerEditText.getText().toString().replace(" ", "");
-						String aux2 = pinNumberEditText.getText().toString().replace(" ", "");
-
-						if (!(aux1.matches("") || aux2.matches(""))) {
-							createNewController(
-									newControllerEditText.getText().toString(),
-									pinNumberEditText.getText().toString(),
-									pinTypeSpinner.getSelectedItem().toString(),
-									dataTypeSpinner.getSelectedItem().toString()
-							);
-						} else {
-							Toast.makeText(context, "Completa todos los campos", Toast.LENGTH_SHORT).show();
-						}
-					}
-				})
+				.setPositiveButton("Create", null)
 				.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialogInterface, int i) {
@@ -254,12 +235,13 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 				});
 
 		// Display AlertDialog
-		AlertDialog alertDialog = dialogBuilder.create();
+		final AlertDialog alertDialog = dialogBuilder.create();
 		alertDialog.show();
 		Log.d(TAG, "createNewControllerDialog : created AlertDialog");
 
 
-		dialog
+		// Override onClickListener so that we can control when alertDialog closes
+		alertDialog
 				.getButton(AlertDialog.BUTTON_POSITIVE)
 				.setOnClickListener(new View.OnClickListener() {
 					@Override
@@ -268,7 +250,16 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 						String arduinoPinString = pinNumberEditText.getText().toString();
 
 						// Check if the user completed all the fields
-						if ((!Util.isEmpty(controllerNameString)) && (!Util.isEmpty(arduinoPinString))){
+						if ((!Util.isEmptyString(controllerNameString)) && (!Util.isEmptyString(arduinoPinString))) {
+
+							// TODO remove this line when readData controllers have been created
+							if (dataTypeSpinner.getSelectedItem().toString().equalsIgnoreCase("read")) {
+								Toast.makeText(context
+										, "Error creating 'Read' controller, " + getString(R.string.err_not_implemented_yet)
+										, Toast.LENGTH_SHORT).show();
+								return;
+							}
+
 							// Create a new controller
 							createNewController(
 									controllerNameString,
@@ -278,7 +269,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 							);
 
 							// Dismiss the dialog
-							dialog.dismiss();
+							alertDialog.dismiss();
 						} else {
 							// Don't dismiss the dialog
 							Toast.makeText(context, "Completa todos los campos", Toast.LENGTH_SHORT).show();
