@@ -220,18 +220,18 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 				.setPositiveButton("Create", new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int id) {
-					
+
 						String aux1 = newControllerEditText.getText().toString().replace(" ", "");
 						String aux2 = pinNumberEditText.getText().toString().replace(" ", "");
 
-						if(!(aux1.matches("") || aux2.matches(""))) {
+						if (!(aux1.matches("") || aux2.matches(""))) {
 							createNewController(
 									newControllerEditText.getText().toString(),
 									pinNumberEditText.getText().toString(),
 									pinTypeSpinner.getSelectedItem().toString(),
 									dataTypeSpinner.getSelectedItem().toString()
 							);
-						} //Mirar como meter un dialogo de error
+						} // TODO Mirar como meter un dialogo de error
 					}
 				})
 				.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
