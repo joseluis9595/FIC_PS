@@ -23,6 +23,7 @@ import android.widget.Toast;
 import es.udc.psi1718.project.arduinomanager.ArduinoCommunicationManager;
 import es.udc.psi1718.project.arduinomanager.ArduinoResponseCodes;
 import es.udc.psi1718.project.arduinomanager.ArduinoSerialListener;
+import es.udc.psi1718.project.ui.customviews.ControllerSliderView;
 import es.udc.psi1718.project.ui.customviews.ControllerSwitchView;
 import es.udc.psi1718.project.ui.customviews.ControllerViewEventListener;
 import es.udc.psi1718.project.util.Util;
@@ -181,20 +182,28 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	 * Creates a new Controller layout
 	 */
 	private void createNewController(String name, String arduinoPin, String pinType, String dataType) {
-		/* TODO MATÍAS 3
-		 * Esta es la función que se llama desde el 'AlertDialog' que tuviste que corregir antes en el paso 2.
-		 *
-		 * Comprobar lo siguiente : (puede que las clases aún no estén creadas, pero el constructor
-		 * va a ser el mismo que el de 'ControllerSwitchView'. Deja la línea comentada si da error)
-		 *     Si pinType == DIGITAL && dataType == WRITE ControllerView view = new ControllerSwitchView
-		 *     Si pinType == ANALOG && dataType == WRITE ControllerView view = new ControllerSliderView
-		 *     Si dataType == READ ControllerView view = new ControllerDataDisplayView
-		 *
-		 * Después de todos los ifs dejar escrita la línea de mainLinearLayout.addView(controllerSwitchView.getView());
-		 */
-		ControllerSwitchView controllerSwitchView = new ControllerSwitchView(context, name, arduinoPin, pinType, dataType);
-		mainLinearLayout.addView(controllerSwitchView.getView());
+
+		// Pin de escritura digital
+		if (pinType.equalsIgnoreCase("digital") && dataType.equalsIgnoreCase("write")){
+			ControllerSwitchView controllerSwitchView = new ControllerSwitchView(context, name, arduinoPin, pinType, dataType);
+			mainLinearLayout.addView(controllerSwitchView.getView());
+			return;
+		}
+
+		// Pin de escritura analógica
+		if (pinType.equalsIgnoreCase("analog") && dataType.equalsIgnoreCase("write")){
+			ControllerSliderView controllerSliderView = new ControllerSliderView(context, name, arduinoPin, pinType, dataType);
+			mainLinearLayout.addView(ControllerSliderView.getView());
+			return;
+		}
+
+		// Pin de lectura
+		if (dataType.equalsIgnoreCase("read")){
+			// TODO Crear un cardview de lectura de valores
+			return;
+		}
 	}
+
 
 
 	/**
