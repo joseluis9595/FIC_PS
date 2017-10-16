@@ -25,6 +25,7 @@ import es.udc.psi1718.project.arduinomanager.ArduinoResponseCodes;
 import es.udc.psi1718.project.arduinomanager.ArduinoSerialListener;
 import es.udc.psi1718.project.ui.customviews.ControllerSwitchView;
 import es.udc.psi1718.project.ui.customviews.ControllerViewEventListener;
+import es.udc.psi1718.project.util.Util;
 
 public class ControllersActivity extends AppCompatActivity implements ArduinoSerialListener, ControllerViewEventListener {
 
@@ -232,7 +233,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 									dataTypeSpinner.getSelectedItem().toString()
 							);
 						} else {
-							// TODO MATÍAS Mirar como meter un dialogo de error, acordarse de no cerrar dialog
+							Toast.makeText(context, "Completa todos los campos", Toast.LENGTH_SHORT).show();
 						}
 					}
 				})
@@ -247,6 +248,34 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 		AlertDialog alertDialog = dialogBuilder.create();
 		alertDialog.show();
 		Log.d(TAG, "createNewControllerDialog : created AlertDialog");
+
+
+		dialog
+				.getButton(AlertDialog.BUTTON_POSITIVE)
+				.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						String controllerNameString = newControllerEditText.getText().toString();
+						String arduinoPinString = pinNumberEditText.getText().toString();
+
+						// Check if the user completed all the fields
+						if ((!Util.isEmpty(controllerNameString)) && (!Util.isEmpty(arduinoPinString))){
+							// Create a new controller
+							createNewController(
+									controllerNameString,
+									arduinoPinString,
+									pinTypeSpinner.getSelectedItem().toString(),
+									dataTypeSpinner.getSelectedItem().toString()
+							);
+
+							// Dismiss the dialog
+							dialog.dismiss();
+						} else {
+							// Don't dismiss the dialog
+							Toast.makeText(context, "Completa todos los campos", Toast.LENGTH_SHORT).show();
+						}
+					}
+				});
 	}
 
 
