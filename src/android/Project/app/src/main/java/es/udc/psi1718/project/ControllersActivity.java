@@ -31,7 +31,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	private Context context = this;
 	private String TAG = "ControllersActivity";
 
-	private final Boolean DEBUG = true;
+	private final Boolean DEBUG = true;        // TODO DEBUG remove this constant
 
 	// Layout variables
 	private FloatingActionButton fab;
@@ -160,8 +160,8 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 		// TODO DEBUG remove this line when not debugging
 		// Create new Controller for test purposes
 		createNewController("Controller prueba", "8", "Digital", "Write");
-//		ControllerSliderView controllerSwitchView = new ControllerSliderView(context, "Prueba", "3", "Analog", "Write");
-//		mainLinearLayout.addView(controllerSwitchView.getView());
+		// ControllerSliderView controllerSwitchView = new ControllerSliderView(context, "Prueba", "3", "Analog", "Write");
+		// mainLinearLayout.addView(controllerSwitchView.getView());
 
 		// By default, layout is disabled
 		// TODO DEBUG uncomment this when not debugging
@@ -231,7 +231,9 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 									pinTypeSpinner.getSelectedItem().toString(),
 									dataTypeSpinner.getSelectedItem().toString()
 							);
-						} // TODO Mirar como meter un dialogo de error
+						} else {
+							// TODO MATÍAS Mirar como meter un dialogo de error, acordarse de no cerrar dialog
+						}
 					}
 				})
 				.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
