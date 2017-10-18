@@ -50,7 +50,7 @@ public class ControllerSwitchView extends ControllerView {
 			public void onClick(View view) {
 				switch (view.getId()) {
 					case R.id.card_view_main_layout:
-						// TODO edit cardView
+						// TODO IT4 edit cardView
 						ControllerSwitchView.super.editController();
 						break;
 					default:

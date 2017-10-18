@@ -97,7 +97,7 @@ public class ArduinoCommunicationManager {
 				command += "D";
 				break;
 			default:
-				// TODO handle errors
+				// TODO IT1 handle errors
 				return "ERROR";
 		}
 		command += COMMAND_SEPARATOR;
@@ -111,7 +111,7 @@ public class ArduinoCommunicationManager {
 				command += "W";
 				break;
 			default:
-				// TODO handle errors
+				// TODO IT1 handle errors
 				return "ERROR";
 		}
 		command += COMMAND_SEPARATOR;
@@ -121,7 +121,7 @@ public class ArduinoCommunicationManager {
 		if (arduinoPinLength == 1) {
 			command += "0";
 		} else if (arduinoPinLength > 2 || arduinoPinLength < 1) {
-			// TODO handle errors
+			// TODO IT1 handle errors
 			return "ERROR";
 		}
 		command += arduinoPin;
@@ -139,7 +139,7 @@ public class ArduinoCommunicationManager {
 
 		// Check if it has the proper length
 		if (command.length() != COMMAND_LENGTH) {
-			// TODO handle errors
+			// TODO IT1 handle errors
 			return "ERROR";
 		}
 
@@ -159,7 +159,7 @@ public class ArduinoCommunicationManager {
 	 * @return
 	 */
 	public ArduinoResponseCodes sendCommand(int arduinoPin, int pinType, int dataType, int data) {
-		// TODO arduinoPin should not be just numerical (ex.: you can have A0)
+		// TODO IT1 arduinoPin should not be just numerical (ex.: you can have A0)
 		if (serialPort != null) {
 			String command = createCommand(arduinoPin, pinType, dataType, data);
 			Log.d(TAG, "SENDCOMMAND : sending command - " + command);
@@ -180,7 +180,7 @@ public class ArduinoCommunicationManager {
 	 * @return
 	 */
 	private boolean isStartByte(byte firstChar) {
-		// TODO Comprobar si funciona bien cambiando '*' por la constante COMMAND_FIRST_BYTE
+		// TODO IT3 Comprobar si funciona bien cambiando '*' por la constante COMMAND_FIRST_BYTE
 		if (firstChar == '*') {
 			return true;
 		} else {
@@ -193,7 +193,7 @@ public class ArduinoCommunicationManager {
 	 * 'UsbReadCallback' auxiliary function
 	 */
 	private void clearBytes() {
-		// TODO corregir el tamaño del buffer?
+		// TODO IT3 corregir el tamaño del buffer?
 		buffer = new byte[40];
 		bufferSize = 0;
 	}
@@ -304,7 +304,7 @@ public class ArduinoCommunicationManager {
 	private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			// TODO comprobar por que no se activa el Broadcast Receiver cuando se quiere iniciar una conexión (tarda mucho)
+			// TODO IT1 comprobar por que no se activa el Broadcast Receiver cuando se quiere iniciar una conexión (tarda mucho)
 			String action = intent.getAction();
 
 			Log.d(TAG, "BROADCAST : is called : " + action);

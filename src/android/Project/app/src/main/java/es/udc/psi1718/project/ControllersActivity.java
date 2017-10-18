@@ -53,17 +53,20 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_controllers);
 
-		// TODO create a tutorial for first time opening
+		// TODO IT1-2 create a tutorial for first time opening
 
 		Log.d(TAG, "ONCREATE");
 
 		// Intents
-		// TODO receive id of the pannel to retrieve previous controllers
+		// TODO IT2 receive id of the pannel to retrieve previous controllers
 
 		// Arduino communication
 		arduinoCommunication = new ArduinoCommunicationManager(context);
-		// TODO eliminar la necesidad de usar un BroadcastReceiver
+		// TODO IT1 eliminar la necesidad de usar un BroadcastReceiver
 		broadcastReceiver = arduinoCommunication.getBroadcastReceiver();
+
+		// Restore previous Controllers
+		createPreviousControllers();
 
 		// Initialize layout
 		initializeLayout();
@@ -120,12 +123,16 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 
 	}
 
+	private void createPreviousControllers() {
+		// TODO IT2 load previous controllers in this function
+	}
+
 
 	/**
 	 * Function to initialize all layout variables
 	 */
 	private void initializeLayout() {
-		// TODO load previous controllers in this function
+		// Initialize layout variables
 		fab = (FloatingActionButton) findViewById(R.id.fab_new_controller);
 		mainLinearLayout = (LinearLayout) findViewById(R.id.controllers_main_layout);
 		loadingLayout = (RelativeLayout) findViewById(R.id.controllers_loading_layout);
@@ -199,7 +206,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 
 		// Pin de lectura
 		if (dataType.equalsIgnoreCase("read")) {
-			// TODO Crear un cardview de lectura de valores
+			// TODO IT3 Crear un cardview de lectura de valores
 			return;
 		}
 	}
@@ -251,7 +258,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 						// Check if the user completed all the fields
 						if ((!Util.isEmptyString(controllerNameString)) && (!Util.isEmptyString(arduinoPinString))) {
 
-							// TODO remove this line when readData controllers have been created
+							// TODO IT3 remove this line when readData controllers have been created
 							if (dataTypeSpinner.getSelectedItem().toString().equalsIgnoreCase("read")) {
 								Toast.makeText(context
 										, "Error creating 'Read' controller, " + getString(R.string.err_not_implemented_yet)
@@ -350,7 +357,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	private void sendCommand(int arduinoPin, int pinType, int dataType, int data) {
 		ArduinoResponseCodes responseCode = arduinoCommunication.sendCommand(arduinoPin, pinType, dataType, data);
 		if (responseCode.getCode() > 0) {
-			// TODO decidir que hacer después de mandar un mensaje
+			// TODO IT1 decidir que hacer después de mandar un mensaje
 		} else {
 			displayMessage("Ha habido un error : " + responseCode.getDescription());
 		}
@@ -382,7 +389,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				// TODO comprobar si se ha cancelado la comunicación
+				// TODO IT1 comprobar si se ha cancelado la comunicación
 				enableUI();
 				displayMessage("Connection opened!");
 			}

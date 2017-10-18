@@ -51,7 +51,7 @@ public class ControllerSliderView extends ControllerView {
 
 			@Override
 			public void onStartTrackingTouch(SeekBar seekBar) {
-				// TODO start a timer here, and every x milliseconds, allow onProgressChange to send command
+				// TODO IT1 start a timer here, and every x milliseconds, allow onProgressChange to send command
 			}
 
 			@Override
@@ -66,7 +66,7 @@ public class ControllerSliderView extends ControllerView {
 			public void onClick(View view) {
 				switch (view.getId()) {
 					case R.id.card_view_main_layout:
-						// TODO edit cardView
+						// TODO IT4 edit cardView
 						ControllerSliderView.super.editController();
 						break;
 					default:

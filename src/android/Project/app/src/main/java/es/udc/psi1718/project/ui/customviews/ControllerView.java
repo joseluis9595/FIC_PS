@@ -37,7 +37,7 @@ public abstract class ControllerView extends LinearLayout {
 	 * Allows the user to modify controller's data
 	 */
 	void editController() {
-		// TODO display alertDialog to modify the values
+		// TODO IT4 display alertDialog to modify the values
 		setName("Modificar Controller");
 	}
 
@@ -48,10 +48,10 @@ public abstract class ControllerView extends LinearLayout {
 	 * @param data int value to write to Arduino
 	 */
 	void controllerChangedState(int data) {
-		// TODO send pinType and dataType directly from the subclasses
+		// TODO IT1 send pinType and dataType directly from the subclasses
 
 		// Convert variables to integers
-		// TODO change this to String
+		// TODO IT1 change this to String
 		int arduinoPintInt = Integer.parseInt(arduinoPin);
 
 		int pinTypeInt;
