@@ -239,7 +239,6 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 		alertDialog.show();
 		Log.d(TAG, "createNewControllerDialog : created AlertDialog");
 
-
 		// Override onClickListener so that we can control when alertDialog closes
 		alertDialog
 				.getButton(AlertDialog.BUTTON_POSITIVE)
