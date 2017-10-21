@@ -73,28 +73,6 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		//Overriding the home button behaviour so that the animation feels more natural
-		int id = item.getItemId();
-		if (id == android.R.id.home)
-			this.finish();
-		return true;
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		Log.d(TAG, "ONRESUME");
-	}
-
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		Log.d(TAG, "ONDESTROY");
-		endCommunication();
-	}
-
-	@Override
 	protected void onStart() {
 		super.onStart();
 		registerReceiver(broadcastReceiver, arduinoCommunication.getBroadcastFilter());
@@ -105,7 +83,20 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	@Override
 	protected void onRestart() {
 		super.onRestart();
-		Log.d(TAG, "ONRESTART");
+		Log.d(TAG, "onRestart");
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		Log.d(TAG, "onResume");
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		Log.d(TAG, "onPause");
+
 	}
 
 	@Override
@@ -113,14 +104,23 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 		super.onStop();
 		unregisterReceiver(broadcastReceiver);
 		Log.d(TAG, "Receiver unregistered");
-		Log.d(TAG, "ONSTOP");
+		Log.d(TAG, "onStop");
 	}
 
 	@Override
-	protected void onPause() {
-		super.onPause();
-		Log.d(TAG, "ONPAUSE");
+	protected void onDestroy() {
+		super.onDestroy();
+		Log.d(TAG, "onDestroy");
+		endCommunication();
+	}
 
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		//Overriding the home button behaviour so that the animation feels more natural
+		int id = item.getItemId();
+		if (id == android.R.id.home)
+			this.finish();
+		return true;
 	}
 
 	private void createPreviousControllers() {
