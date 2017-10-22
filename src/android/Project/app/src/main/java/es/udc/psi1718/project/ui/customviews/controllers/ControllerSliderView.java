@@ -1,4 +1,4 @@
-package es.udc.psi1718.project.ui.customviews;
+package es.udc.psi1718.project.ui.customviews.controllers;
 
 import android.content.Context;
 import android.util.Log;
@@ -8,28 +8,31 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import es.udc.psi1718.project.R;
+import es.udc.psi1718.project.arduinomanager.ArduinoCommunicationManager;
+import es.udc.psi1718.project.util.Constants;
 
-/**
- * Created by jose on 14/10/17.
- */
 
 public class ControllerSliderView extends ControllerView {
 
 	private String TAG = "ControllerSwitchView";
 
+	// Layout variables
 	private View view;
 	private TextView nameTextView;
 	private SeekBar mSeekbar;
 	private LinearLayout cardViewLayout;
 
+	//
+	private long timeInMillis;
 
-	public ControllerSliderView(Context context, String name, String arduinoPin, String pinType, String dataType) {
-		super(context, name, arduinoPin, pinType, dataType);
-		initializeLayout(name, arduinoPin, pinType, dataType);
+
+	public ControllerSliderView(Context context, String name, String arduinoPin, String pinType, String commandType) {
+		super(context, name, arduinoPin, pinType, commandType);
+		initializeLayout(name, arduinoPin, pinType, commandType);
 	}
 
 
-	private void initializeLayout(String name, String arduinoPin, String pinType, String dataType) {
+	private void initializeLayout(String name, String arduinoPin, String pinType, String commandType) {
 		// Inflate view
 		view = inflate(getContext(), R.layout.controller_slider_layout, null);
 
@@ -41,22 +44,31 @@ public class ControllerSliderView extends ControllerView {
 		// Create listeners
 		SeekBar.OnSeekBarChangeListener onSeekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
 			@Override
-			public void onProgressChanged(SeekBar seekBar, int progressValue, boolean b) {
-				if (b) {
-					Log.d(TAG, "OnSeekbarChange() : " + progressValue);
-				} else {
-					Log.d(TAG, "OnSeekbarChange() : Not from user");
+			public void onProgressChanged(SeekBar seekBar, int progressValue, boolean fromUser) {
+				if (fromUser) {
+					if (System.currentTimeMillis() - timeInMillis >= Constants.MAX_DELAY_TIME_SLIDER) {
+						Log.d(TAG, "Can send data");
+						ControllerSliderView.super.sendCommand(
+								progressValue,
+								ArduinoCommunicationManager.PINTYPE_ANALOG,
+								ArduinoCommunicationManager.COMMANDTYPE_WRITE);
+						timeInMillis = System.currentTimeMillis();
+					}
 				}
 			}
 
 			@Override
 			public void onStartTrackingTouch(SeekBar seekBar) {
-				// TODO IT1 start a timer here, and every x milliseconds, allow onProgressChange to send command
+				timeInMillis = System.currentTimeMillis();
 			}
 
 			@Override
 			public void onStopTrackingTouch(SeekBar seekBar) {
-				ControllerSliderView.super.controllerChangedState(seekBar.getProgress());
+				// TODO IT2-3-4 still not working properly when the seekbar is moved quickly
+				ControllerSliderView.super.sendCommand(
+						seekBar.getProgress(),
+						ArduinoCommunicationManager.PINTYPE_ANALOG,
+						ArduinoCommunicationManager.COMMANDTYPE_WRITE);
 			}
 		};
 

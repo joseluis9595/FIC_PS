@@ -53,6 +53,7 @@ void loop() {
     String thirdValue = getValue(myString, '-', 2);
     String fourthValue = getValue(myString, '-', 3);
     
+    // TODO not possible to use Analog pins yet
     int thirdValueInt = thirdValue.toInt();
     int fourthValueInt = fourthValue.toInt();
 

@@ -1,4 +1,4 @@
-package es.udc.psi1718.project.ui.customviews;
+package es.udc.psi1718.project.ui.customviews.controllers;
 
 import android.content.Context;
 import android.util.Log;
@@ -9,6 +9,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import es.udc.psi1718.project.R;
+import es.udc.psi1718.project.arduinomanager.ArduinoCommunicationManager;
 
 
 public class ControllerSwitchView extends ControllerView {
@@ -21,13 +22,13 @@ public class ControllerSwitchView extends ControllerView {
 	private LinearLayout cardViewLayout;
 
 
-	public ControllerSwitchView(Context context, String name, String arduinoPin, String pinType, String dataType) {
-		super(context, name, arduinoPin, pinType, dataType);
-		initializeLayout(name, arduinoPin, pinType, dataType);
+	public ControllerSwitchView(Context context, String name, String arduinoPin, String pinType, String commandType) {
+		super(context, name, arduinoPin, pinType, commandType);
+		initializeLayout(name, arduinoPin, pinType, commandType);
 	}
 
 
-	private void initializeLayout(String name, String arduinoPin, String pinType, String dataType) {
+	private void initializeLayout(String name, String arduinoPin, String pinType, String commandType) {
 		// Inflate view
 		view = inflate(getContext(), R.layout.controller_switch_layout, null);
 
@@ -42,7 +43,7 @@ public class ControllerSwitchView extends ControllerView {
 			public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
 				int data = (b) ? 1 : 0;
 				Log.d(TAG, "OnCheckedChange()");
-				ControllerSwitchView.super.controllerChangedState(data);
+				ControllerSwitchView.super.sendCommand(data, ArduinoCommunicationManager.PINTYPE_DIGITAL, ArduinoCommunicationManager.COMMANDTYPE_WRITE);
 			}
 		};
 		OnClickListener onClickListener = new OnClickListener() {

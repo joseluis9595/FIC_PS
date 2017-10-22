@@ -1,11 +1,15 @@
 package es.udc.psi1718.project.util;
 
 import android.content.Context;
+import android.view.View;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+
+import es.udc.psi1718.project.R;
 
 /**
  * Some useful functions
@@ -17,6 +21,28 @@ public final class Util {
 	 * Private constructor to prevent instantiation
 	 */
 	private Util() {
+	}
+
+	/**
+	 * Displays a message on UI thread
+	 *
+	 * @param context context
+	 * @param message message to display
+	 */
+	public static void displayMessage(Context context, String message) {
+		Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+	}
+
+	/**
+	 * Displays an error on the UI thread
+	 *
+	 * @param context context
+	 * @param error   error to display
+	 */
+	public static void displayError(Context context, String error) {
+		String message = context.getString(R.string.err_main_text, error);
+		Toast toast = Toast.makeText(context, message, Toast.LENGTH_SHORT);
+		toast.show();
 	}
 
 

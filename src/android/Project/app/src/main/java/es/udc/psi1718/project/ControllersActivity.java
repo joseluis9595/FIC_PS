@@ -23,9 +23,9 @@ import android.widget.Toast;
 import es.udc.psi1718.project.arduinomanager.ArduinoCommunicationManager;
 import es.udc.psi1718.project.arduinomanager.ArduinoResponseCodes;
 import es.udc.psi1718.project.arduinomanager.ArduinoSerialListener;
-import es.udc.psi1718.project.ui.customviews.ControllerSliderView;
-import es.udc.psi1718.project.ui.customviews.ControllerSwitchView;
-import es.udc.psi1718.project.ui.customviews.ControllerViewEventListener;
+import es.udc.psi1718.project.ui.customviews.controllers.ControllerSliderView;
+import es.udc.psi1718.project.ui.customviews.controllers.ControllerSwitchView;
+import es.udc.psi1718.project.ui.customviews.controllers.ControllerViewEventListener;
 import es.udc.psi1718.project.util.Util;
 
 public class ControllersActivity extends AppCompatActivity implements ArduinoSerialListener, ControllerViewEventListener {
@@ -33,7 +33,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	private Context context = this;
 	private String TAG = "ControllersActivity";
 
-	private final Boolean DEBUG = true;        // TODO DEBUG remove this constant
+	private final Boolean DEBUG = false;        // TODO DEBUG remove this constant
 
 	// Layout variables
 	private FloatingActionButton fab;
@@ -112,14 +112,27 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 		super.onDestroy();
 		Log.d(TAG, "onDestroy");
 		endCommunication();
+		setResult(RESULT_OK, null);
+		finish();
+	}
+
+	@Override
+	public void onBackPressed() {
+		// super.onBackPressed();
+		// TODO IT2 remove this when mainActivity is implemented
+		Log.e(TAG, "onBackPressed");
+		setResult(RESULT_OK, null);
+		finish();
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		//Overriding the home button behaviour so that the animation feels more natural
 		int id = item.getItemId();
-		if (id == android.R.id.home)
-			this.finish();
+		if (id == android.R.id.home) {
+			setResult(RESULT_OK, null);
+			finish();
+		}
 		return true;
 	}
 
@@ -168,7 +181,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 
 		// TODO DEBUG remove this line when not debugging
 		// Create new Controller for test purposes
-		createNewController("Controller prueba", "8", "Digital", "Write");
+		createNewController("Controller prueba", "3", "Analog", "Write");
 		// ControllerSliderView controllerSwitchView = new ControllerSliderView(context, "Prueba", "3", "Analog", "Write");
 		// mainLinearLayout.addView(controllerSwitchView.getView());
 
@@ -278,7 +291,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 							alertDialog.dismiss();
 						} else {
 							// Don't dismiss the dialog
-							Toast.makeText(context, "Completa todos los campos", Toast.LENGTH_SHORT).show();
+							Util.displayMessage(context, "Completa todos los campos");
 						}
 					}
 				});
@@ -332,7 +345,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 
 		ArduinoResponseCodes responseCode = arduinoCommunication.startCommunication();
 		if (responseCode.getCode() <= 0) {
-			displayMessage("Ha habido un error : " + responseCode.getDescription());
+			Util.displayError(context, responseCode.getDescription());
 		} else {
 			Log.d(TAG, "StartCommunication : OK");
 			setLoading(true);
@@ -346,7 +359,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	private void endCommunication() {
 		ArduinoResponseCodes responseCode = arduinoCommunication.closeConnection();
 		if (responseCode.getCode() <= 0) {
-			displayMessage("Ha habido un error : " + responseCode.getDescription());
+			Util.displayError(context, responseCode.getDescription());
 		}
 	}
 
@@ -354,24 +367,14 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	/**
 	 * Sends command via Serial Port
 	 */
-	private void sendCommand(int arduinoPin, int pinType, int dataType, int data) {
+	private void sendCommand(String arduinoPin, int pinType, int dataType, int data) {
 		ArduinoResponseCodes responseCode = arduinoCommunication.sendCommand(arduinoPin, pinType, dataType, data);
-		if (responseCode.getCode() > 0) {
-			// TODO IT1 decidir que hacer después de mandar un mensaje
-		} else {
-			displayMessage("Ha habido un error : " + responseCode.getDescription());
+		if (responseCode.getCode() <= 0) {
+			Util.displayError(context, responseCode.getDescription());
 		}
 	}
 
 
-	/**
-	 * Displays a message on UI thread
-	 *
-	 * @param message
-	 */
-	private void displayMessage(final String message) {
-		Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
-	}
 
 
 
@@ -380,7 +383,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	@Override
 	public void receivedData(String data) {
 		Log.d(TAG, "RECEIVEDDATA : Data received - " + data);
-		displayMessage(data);
+		Util.displayMessage(context, data);
 	}
 
 	@Override
@@ -391,7 +394,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 			public void run() {
 				// TODO IT1 comprobar si se ha cancelado la comunicación
 				enableUI();
-				displayMessage("Connection opened!");
+				Util.displayMessage(context, "Connection opened!");
 			}
 		});
 	}
@@ -402,7 +405,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 			@Override
 			public void run() {
 				disableUI();
-				displayMessage("Connection closed");
+				Util.displayMessage(context, "Connection closed");
 				setLoading(false);
 			}
 		});
@@ -414,7 +417,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 			@Override
 			public void run() {
 				disableUI();
-				displayMessage(arduinoResponseCode.getDescription());
+				Util.displayError(context, arduinoResponseCode.getDescription());
 				setLoading(false);
 			}
 		});
@@ -424,13 +427,8 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	/* CONTROLLER VIEW LISTENER FUNCTIONS */
 
 	@Override
-	public void controllerChangedState(final int arduinoPin, final int pinType, final int dataType, final int data) {
-		runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				Log.d(TAG, "ControllerChangeState : Sending command to Arduino");
-				sendCommand(arduinoPin, pinType, dataType, data);
-			}
-		});
+	public void controllerSentCommand(final String arduinoPin, final int pinType, final int dataType, final int data) {
+		Log.d(TAG, "ControllerChangeState : Sending command to Arduino");
+		sendCommand(arduinoPin, pinType, dataType, data);
 	}
 }

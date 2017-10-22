@@ -11,6 +11,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <!-- TODO IT1 change app icon and roundIcon -->
         <activity android:name=".MainActivity">
             <intent-filter>
@@ -27,6 +28,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="es.udc.psi1718.project.MainActivity"/>
         </activity>
+
+        <service
+            android:name=".arduinomanager.ArduinoBroadcastReceiverService"
+            android:exported="false">
+        </service>
     </application>
 
 </manifest>
