@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Project</string>
+    <string name="app_name">Easy Arduino</string>
 
     <!-- Error and debugging Strings -->
     <string name="err_main_text">There was an error : %1$s</string>

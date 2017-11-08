@@ -17,6 +17,9 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
 	private ArduinoCommunicationManager arduinoCommunicationManager;
 	private ControllersActivity controllersActivity;
 
+	public MyBroadcastReceiver() {
+	}
+
 	public MyBroadcastReceiver(ControllersActivity controllersActivity, ArduinoCommunicationManager arduinoCommunicationManager) {
 		super();
 		this.controllersActivity = controllersActivity;
