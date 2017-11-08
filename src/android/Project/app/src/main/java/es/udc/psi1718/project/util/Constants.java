@@ -21,4 +21,7 @@ public final class Constants {
 
 	// Slider Controller
 	public final static long MAX_DELAY_TIME_SLIDER = 50;
+
+	// Intent communication
+	public final static String INTENTCOMM_CONTACTIV_LAUNCHEDFROMBR = "intentcomm_launchedfrombroadcastreceiver";
 }

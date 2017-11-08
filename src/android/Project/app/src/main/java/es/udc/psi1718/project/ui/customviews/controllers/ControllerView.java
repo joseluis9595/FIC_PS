@@ -2,9 +2,10 @@ package es.udc.psi1718.project.ui.customviews.controllers;
 
 
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
+
+import es.udc.psi1718.project.util.Util;
 
 public abstract class ControllerView extends LinearLayout {
 
@@ -35,8 +36,8 @@ public abstract class ControllerView extends LinearLayout {
 	 * Allows the user to modify controller's data
 	 */
 	void editController() {
-		// TODO IT4 display alertDialog to modify the values
-		setName("Modificar Controller");
+		// TODO IT2 display alertDialog to modify the values
+		setName("Controller modificado");
 	}
 
 
@@ -46,30 +47,6 @@ public abstract class ControllerView extends LinearLayout {
 	 * @param data int value to write to Arduino
 	 */
 	void sendCommand(int data, int pinType, int commandType) {
-		// Convert variables to integers
-		// TODO IT1 check if its properly formed
-		// int arduinoPintInt = Integer.parseInt(arduinoPin);
-
-		// int pinTypeInt;
-		// if (pinType.equalsIgnoreCase("DIGITAL")) {
-		// 	Log.d(TAG, "DIGITAL equals " + pinType);
-		// 	pinTypeInt = ArduinoCommunicationManager.PINTYPE_DIGITAL;
-		// } else {
-		// 	Log.d(TAG, "ANALOG equals " + pinType);
-		// 	pinTypeInt = ArduinoCommunicationManager.PINTYPE_ANALOG;
-		// }
-		//
-		// int dataTypeInt;
-		// if (dataType.equalsIgnoreCase("READ")) {
-		// 	dataTypeInt = ArduinoCommunicationManager.COMMANDTYPE_READ;
-		// } else {
-		// 	dataTypeInt = ArduinoCommunicationManager.COMMANDTYPE_WRITE;
-		// }
-
-		// Log.d(TAG, "Comprobación tipos de dato : ");
-		// Log.d(TAG, "PinType : " + pinType);
-		// Log.d(TAG, "DataType : " + commandType);
-
 		// Send command via interface
 		listener.controllerSentCommand(arduinoPin, pinType, commandType, data);
 	}

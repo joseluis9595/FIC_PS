@@ -29,10 +29,15 @@
                 android:value="es.udc.psi1718.project.MainActivity"/>
         </activity>
 
-        <service
-            android:name=".arduinomanager.ArduinoBroadcastReceiverService"
-            android:exported="false">
-        </service>
+        <receiver
+            android:name=".MyBroadcastReceiver"
+            android:label="MyBroadcastReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.ACTION_USB_DEVICE_ATTACHED"/>
+                <action android:name="android.intent.action.ACTION_USB_DEVICE_DETTACHED"/>
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

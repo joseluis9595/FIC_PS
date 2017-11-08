@@ -46,22 +46,24 @@ public class ControllerSwitchView extends ControllerView {
 				ControllerSwitchView.super.sendCommand(data, ArduinoCommunicationManager.PINTYPE_DIGITAL, ArduinoCommunicationManager.COMMANDTYPE_WRITE);
 			}
 		};
-		OnClickListener onClickListener = new OnClickListener() {
+
+		OnLongClickListener onClickListener = new OnLongClickListener() {
 			@Override
-			public void onClick(View view) {
+			public boolean onLongClick(View view) {
 				switch (view.getId()) {
 					case R.id.card_view_main_layout:
-						// TODO IT4 edit cardView
+						// TODO IT2 edit cardView
 						ControllerSwitchView.super.editController();
-						break;
+						return true;
 					default:
 						break;
 				}
+				return false;
 			}
 		};
 
 		// Modify layout
-		cardViewLayout.setOnClickListener(onClickListener);
+		cardViewLayout.setOnLongClickListener(onClickListener);
 		mSwitch.setOnCheckedChangeListener(onCheckedChangeListener);
 		nameTextView.setText(name);
 	}

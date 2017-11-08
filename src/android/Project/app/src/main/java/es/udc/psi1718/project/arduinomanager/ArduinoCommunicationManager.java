@@ -18,9 +18,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
-import es.udc.psi1718.project.util.Constants;
-
 import static android.content.Context.USB_SERVICE;
+import static es.udc.psi1718.project.util.Constants.ACTION_USB_PERMISSION;
 
 /**
  * In this class we implement all the USB connection and communication with Arduino
@@ -30,11 +29,11 @@ public class ArduinoCommunicationManager {
 	private final String TAG = "ArduinoCommunication";
 	private Context fromContext;
 
-	private IntentFilter filter;
-	private BroadcastReceiver broadcastReceiver;
+	// Constants
+	private final int ARDUINO_VENDORID = 0x2341;
 
-	// Intents
-	private Intent broadcastServiceIntent;
+	// private IntentFilter filter;
+	// private BroadcastReceiver broadcastReceiver;
 
 	// String command
 	private final char COMMAND_FIRST_BYTE = '*';
@@ -53,7 +52,6 @@ public class ArduinoCommunicationManager {
 
 	// USB communication
 	private UsbManager usbManager;
-	private UsbDevice device;
 	private UsbSerialDevice serialPort;
 	private UsbDeviceConnection connection;
 
@@ -73,68 +71,53 @@ public class ArduinoCommunicationManager {
 		this.fromContext = fromContext;
 		usbManager = (UsbManager) fromContext.getSystemService(USB_SERVICE);
 		arduinoSerialListener = (ArduinoSerialListener) fromContext;
-		createBroadcastReceiver();
-
-		// Create a local service with a Broadcast Receiver
-		// Log.e(TAG, "Creating BRservice");
-		// TODO IT1 mirar como crear el broadcast receiver de una forma mejor
-		// broadcastServiceIntent = new Intent(fromContext, ArduinoBroadcastReceiverService.class);
-		// fromContext.startService(broadcastServiceIntent);
-
+		// createBroadcastReceiver();
 	}
 
-	public BroadcastReceiver getBroadcastReceiver() {
-		return this.broadcastReceiver;
-	}
+	// private void createBroadcastReceiver() {
+	// 	filter = new IntentFilter();
+	// 	filter.addAction(ACTION_USB_PERMISSION);
 
-	public IntentFilter getBroadcastFilter() {
-		return this.filter;
-	}
+	private final BroadcastReceiver mPermissionReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			// TODO IT1 comprobar por que no se activa el Broadcast Receiver cuando se quiere iniciar una conexión (tarda mucho)
+			String action = intent.getAction();
 
-	private void createBroadcastReceiver(){
-		filter = new IntentFilter();
-		filter.addAction(Constants.ACTION_USB_PERMISSION);
-		filter.addAction(UsbManager.ACTION_USB_DEVICE_ATTACHED);
-		filter.addAction(UsbManager.ACTION_USB_DEVICE_DETACHED);
+			Log.d(TAG, "mPermissionReceiver : is called : " + action);
 
-		broadcastReceiver = new BroadcastReceiver() {
-			@Override
-			public void onReceive(Context context, Intent intent) {
-				// TODO IT1 comprobar por que no se activa el Broadcast Receiver cuando se quiere iniciar una conexión (tarda mucho)
-				// TODO IT1 implementar mejor este broadcastReceiver (moverlo a una clase a parte?)
-				String action = intent.getAction();
-
-				Log.d(TAG, "BROADCAST : is called : " + action);
-
-				switch (action) {
-					case Constants.ACTION_USB_PERMISSION:
-						boolean granted = intent.getExtras().getBoolean(UsbManager.EXTRA_PERMISSION_GRANTED);
-						if (granted) {
-							Log.d(TAG, "BROADCAST : Permission Granted");
-							openConnection(device, 9600);
-							Log.d(TAG, "BROADCAST : Open connection is called");
-						} else {
-							Log.e(TAG, "BROADCAST : Permission not granted");
-						}
-						break;
-					case UsbManager.ACTION_USB_DEVICE_DETACHED:
-						UsbDevice device = intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
-						if (device != null) {
-							int deviceID = device.getVendorId();
-							if (deviceID == 0x2341) {
-								Log.d(TAG, "BROADCAST : USB device detached");
-								closeConnection();
+			switch (action) {
+				case ACTION_USB_PERMISSION:
+					boolean granted = intent.getExtras().getBoolean(UsbManager.EXTRA_PERMISSION_GRANTED);
+					if (!granted) {
+						Log.e(TAG, "mPermissionReceiver : Permission not granted");
+						arduinoSerialListener.connectionFailed(ArduinoResponseCodes.ERROR_PERMISSION_DENIED);
+					} else {
+						Log.d(TAG, "mPermissionReceiver : Permission Granted");
+						UsbDevice dev = (UsbDevice) intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
+						if (dev != null) {
+							if (dev.getVendorId() == ARDUINO_VENDORID) {
+								openConnection(dev, 9600);
+								Log.d(TAG, "mPermissionReceiver : Open connection is called");
+								return;
+							} else {
+								arduinoSerialListener.connectionFailed(ArduinoResponseCodes.ERROR_NO_ARDUINO_DEVICE);
 							}
+						} else {
+							Log.e(TAG, "mPermissionReceiver : device not present!");
+							arduinoSerialListener.connectionFailed(ArduinoResponseCodes.ERROR_NO_DEVICE);
 						}
-						break;
-					default:
-						break;
-				}
 
+					}
+					Log.e(TAG, "mPermissionReceiver : UNREGISTER RECEIVER PERMISSION");
+					fromContext.unregisterReceiver(mPermissionReceiver);
+					break;
+				default:
+					break;
 			}
-		};
 
-	}
+		}
+	};
 
 
 	private String createCommand(String arduinoPin, int pinType, int commandType, int data) {
@@ -215,6 +198,10 @@ public class ArduinoCommunicationManager {
 	public ArduinoResponseCodes sendCommand(String arduinoPin, int pinType, int commandType, int data) {
 		if (serialPort != null) {
 			String command = createCommand(arduinoPin, pinType, commandType, data);
+
+			// If malformed command send error via interface
+			if (command == "ERROR") return ArduinoResponseCodes.ERROR_INVALID_COMMAND;
+
 			Log.d(TAG, "SENDCOMMAND : sending command - " + command);
 			serialPort.write(command.getBytes());
 			return ArduinoResponseCodes.RESPONSE_OK;
@@ -289,9 +276,11 @@ public class ArduinoCommunicationManager {
 		//Defining a Callback which triggers whenever data is read.
 		@Override
 		public void onReceivedData(byte[] arg0) {
-			Log.d(TAG, "Received data");
+			// Log.d(TAG, "Received data");
 			if (arg0 != null) {
+				// Log.e(TAG, "Data received is null");
 				if (arg0.length > 0) {
+					// Log.e(TAG, "Data received has length > 0");
 					if (isStartByte(arg0[0]) && !startbytefound) { //look if its a new frame
 						Log.d(TAG, "mCallback : starting word");
 						startbytefound = true;
@@ -311,7 +300,11 @@ public class ArduinoCommunicationManager {
 
 						notifyReceivedData(); //process the data
 					}
+				} else {
+					// Log.e(TAG, "Data received has no length");
 				}
+			} else {
+				// Log.e(TAG, "Data received is null");
 			}
 		}
 	};
@@ -321,26 +314,41 @@ public class ArduinoCommunicationManager {
 	 * Asks for permission to access usb device
 	 */
 	public ArduinoResponseCodes startCommunication() {
+		Log.d(TAG, "startCommunication called");
 		HashMap<String, UsbDevice> usbDevices = usbManager.getDeviceList();
+		PendingIntent pi = PendingIntent.getBroadcast(fromContext, 0, new Intent(ACTION_USB_PERMISSION), 0);
+
+		// TODO allow only one call to this function at a time
 
 		if (!usbDevices.isEmpty()) {
-			boolean found = false;
 			for (Map.Entry<String, UsbDevice> entry : usbDevices.entrySet()) {
-				device = entry.getValue();
-				int deviceID = device.getVendorId();
-				if (deviceID == 0x2341) { //Arduino Vendor ID
-					PendingIntent pi = PendingIntent.getBroadcast(fromContext, 0, new Intent(Constants.ACTION_USB_PERMISSION), 0);
-					usbManager.requestPermission(device, pi);
+				UsbDevice device = entry.getValue();
+				if (device.getVendorId() == ARDUINO_VENDORID) { //TODO Arduino Vendor ID
+
+					Log.e(TAG, "startCommunication : REGISTER RECEIVER PERMISSION");
+					fromContext.registerReceiver(mPermissionReceiver, new IntentFilter(
+							ACTION_USB_PERMISSION));
+
+					if (usbManager.hasPermission(device)) {
+						Log.d(TAG, "startCommunication : Already has permission");
+						// usbManager.requestPermission(device, pi);
+						openConnection(device, 9600);
+						// Log.e(TAG, "startCommunication : UNREGISTER RECEIVER PERMISSION");
+						// fromContext.unregisterReceiver(mPermissionReceiver);
+					} else {
+						Log.d(TAG, "startCommunication : Does not have permission");
+						usbManager.requestPermission(device, pi);
+						Log.d(TAG, "startCommunication : Se ejecuta justo después");
+					}
+
 					Log.d(TAG, "STARTCOMM : Found Arduino device");
-					found = true;
+					return ArduinoResponseCodes.RESPONSE_OK;
+
 				} else {
 					Log.d(TAG, "STARTCOMM : Not Arduino device");
 					//connection = null;
 					device = null;
 				}
-
-				if (found)
-					return ArduinoResponseCodes.RESPONSE_OK;
 			}
 			Log.e(TAG, "STARTCOMM : Arduino not found");
 			return ArduinoResponseCodes.ERROR_NO_DEVICE;
@@ -351,11 +359,15 @@ public class ArduinoCommunicationManager {
 	}
 
 
-
 	/**
 	 * Open a new Serial communication with device
 	 */
 	private void openConnection(UsbDevice device, int baudioRate) {
+
+		// Unregister the permissions receiver
+		Log.e(TAG, "startCommunication : UNREGISTER RECEIVER PERMISSION");
+		fromContext.unregisterReceiver(mPermissionReceiver);
+
 		Log.d(TAG, "OPENCONN : IS CALLED");
 		if (device == null) {
 			Log.e(TAG, "OPENCONN : Device is null");
@@ -364,6 +376,7 @@ public class ArduinoCommunicationManager {
 
 		Log.d(TAG, "OPENCONN : Device is not null");
 
+		// Start connection
 		connection = usbManager.openDevice(device);
 		serialPort = UsbSerialDevice.createUsbSerialDevice(device, connection);
 		if (serialPort != null) {
@@ -393,17 +406,16 @@ public class ArduinoCommunicationManager {
 	/**
 	 * Close serial communication with device
 	 */
-	public ArduinoResponseCodes closeConnection() {
+	public void closeConnection() {
 		if (serialPort != null) {
 			serialPort.close();
 			Log.d(TAG, "CLOSECONN : Serial connection closed");
-			arduinoSerialListener.connectionClosed();
+			arduinoSerialListener.connectionClosed(ArduinoResponseCodes.RESPONSE_OK);
 		} else {
 			Log.d(TAG, "CLOSECONN : No connection to close");
+			arduinoSerialListener.connectionClosed(ArduinoResponseCodes.ERROR_NO_COMMUNICATION);
 			//return ArduinoResponseCodes.ERROR_NO_COMMUNICATION;
 		}
-		return ArduinoResponseCodes.RESPONSE_OK;
-
 
 	}
 }

@@ -49,7 +49,6 @@ public class MainActivity extends AppCompatActivity {
 		Log.d(TAG, "onStart");
 		// TODO IT2 remove this implementation
 		// Don't allow to start this activity yet
-		Toast.makeText(context, R.string.err_not_implemented_yet, Toast.LENGTH_SHORT).show();
 		// startActivity(controllersIntent);
 		startActivityForResult(controllersIntent, Constants.ACTIVITYRESULT_REQUESTEXIT);
 	}

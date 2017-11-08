@@ -14,6 +14,7 @@
     <string name="data_type_string">Data type</string>
     <string name="pin_number_string">Arduino pin number</string>
     <string name="new_controller_name_edit_text_hint">Name of the controller</string>
+    <string name="newcontroller_pinnumber_hint">Pin number</string>
 
     <!-- Controllers Strings -->
     <string name="title_activity_controllers">ControllersActivity</string>

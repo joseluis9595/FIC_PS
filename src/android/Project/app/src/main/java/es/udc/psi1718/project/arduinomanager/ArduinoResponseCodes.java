@@ -8,7 +8,10 @@ public enum ArduinoResponseCodes {
 
 	// Error responses (code < 0)
 	ERROR_NO_DEVICE(-1, "No devices found"),
-	ERROR_NO_COMMUNICATION(-2, "No serial communication available");
+	ERROR_NO_ARDUINO_DEVICE(-2, "Not an Arduino device"),
+	ERROR_NO_COMMUNICATION(-3, "No serial communication available"),
+	ERROR_INVALID_COMMAND(-4, "Invalid command"),
+	ERROR_PERMISSION_DENIED(-5, "Permission denied");
 
 	// Internal variables
 	private final int code;

@@ -1,0 +1,15 @@
+
+## Conexión Arduino-Android
+* Comprobar los itemas uqe tiene un arduino al conectarlo y crear layout accordingly
+* Comprobar si el arduino tiene nuestro código o no
+	- Mandar un mensaje en el setup de Arduino
+	- Crear una variable para indicar si ha sido PAIRED
+
+
+## Funcionalidades aplicación
+* Agrupar los items del Menú para cuando se quiera editar un controller
+	- Sustituir los items del menú por 'editar', 'eliminar'
+* Mostrar alguna notificación
+	- Para indicar que la conexión está activa o algo por el estilo
+* Snackbar cuando falle la conexión (+desactivar layout)
+* Cambiar color del action bar dependiendo del resultado

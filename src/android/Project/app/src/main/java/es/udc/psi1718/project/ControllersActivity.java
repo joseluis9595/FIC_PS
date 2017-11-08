@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -26,12 +27,17 @@ import es.udc.psi1718.project.arduinomanager.ArduinoSerialListener;
 import es.udc.psi1718.project.ui.customviews.controllers.ControllerSliderView;
 import es.udc.psi1718.project.ui.customviews.controllers.ControllerSwitchView;
 import es.udc.psi1718.project.ui.customviews.controllers.ControllerViewEventListener;
+import es.udc.psi1718.project.util.Constants;
 import es.udc.psi1718.project.util.Util;
+
+import static android.hardware.usb.UsbManager.ACTION_USB_DEVICE_ATTACHED;
+import static android.hardware.usb.UsbManager.ACTION_USB_DEVICE_DETACHED;
 
 public class ControllersActivity extends AppCompatActivity implements ArduinoSerialListener, ControllerViewEventListener {
 
 	private Context context = this;
 	private String TAG = "ControllersActivity";
+	public static Boolean active = false;
 
 	private final Boolean DEBUG = false;        // TODO DEBUG remove this constant
 
@@ -47,11 +53,15 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	// Arduino communication Manager
 	private ArduinoCommunicationManager arduinoCommunication;
 	private BroadcastReceiver broadcastReceiver;
+	private IntentFilter intentFilter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_controllers);
+
+		// Set active flag to true
+		// active = true;
 
 		// TODO IT1-2 create a tutorial for first time opening
 
@@ -62,11 +72,12 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 
 		// Arduino communication
 		arduinoCommunication = new ArduinoCommunicationManager(context);
-		// TODO IT1 eliminar la necesidad de usar un BroadcastReceiver
-		broadcastReceiver = arduinoCommunication.getBroadcastReceiver();
 
-		// Restore previous Controllers
-		createPreviousControllers();
+		// USB attached/detached broadacast Receiver
+		broadcastReceiver = new MyBroadcastReceiver(this, arduinoCommunication);
+		intentFilter = new IntentFilter();
+		intentFilter.addAction(ACTION_USB_DEVICE_ATTACHED);
+		intentFilter.addAction(ACTION_USB_DEVICE_DETACHED);
 
 		// Initialize layout
 		initializeLayout();
@@ -75,9 +86,23 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	@Override
 	protected void onStart() {
 		super.onStart();
-		registerReceiver(broadcastReceiver, arduinoCommunication.getBroadcastFilter());
-		Log.d(TAG, "Receiver registered");
 		Log.d(TAG, "ONSTART");
+
+		// Register USB receiver
+		Log.e(TAG, "onStart : REGISTER RECEIVER USB");
+		registerReceiver(broadcastReceiver, new IntentFilter());
+
+		// Set active flag to true
+		active = true;
+
+		// Check if the activity was called from the broadcast receiver
+		Bundle extras = getIntent().getExtras();
+		if (extras == null) return;
+		Boolean fromBroadcastReceiver = extras.getBoolean(Constants.INTENTCOMM_CONTACTIV_LAUNCHEDFROMBR, false);
+		if (fromBroadcastReceiver) {
+			Log.d(TAG, "Starting activity from broadcasReceiver");
+			startCommunication();
+		}
 	}
 
 	@Override
@@ -96,22 +121,29 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	protected void onPause() {
 		super.onPause();
 		Log.d(TAG, "onPause");
-
 	}
 
 	@Override
 	protected void onStop() {
 		super.onStop();
-		unregisterReceiver(broadcastReceiver);
-		Log.d(TAG, "Receiver unregistered");
 		Log.d(TAG, "onStop");
+		// Set active flag to false
+		active = false;
 	}
 
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
 		Log.d(TAG, "onDestroy");
+		Log.e(TAG, "onDestroy : UNREGISTER RECEIVER USB");
+
+		// Unregister broadcast receiver
+		unregisterReceiver(broadcastReceiver);
+
+		// End communication with Arduino
 		endCommunication();
+
+		// TODO IT2 remove - Set result for the activity (only for IT1)
 		setResult(RESULT_OK, null);
 		finish();
 	}
@@ -119,8 +151,9 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	@Override
 	public void onBackPressed() {
 		// super.onBackPressed();
-		// TODO IT2 remove this when mainActivity is implemented
 		Log.e(TAG, "onBackPressed");
+
+		// TODO IT2 remove this when mainActivity is implemented
 		setResult(RESULT_OK, null);
 		finish();
 	}
@@ -136,8 +169,15 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 		return true;
 	}
 
-	private void createPreviousControllers() {
-		// TODO IT2 load previous controllers in this function
+	/**
+	 * Gets previous saved controllers and displays them on the sc
+	 */
+	private void loadPreviousControllers() {
+		// TODO IT2 load previous controllers from internal memory in this function
+
+		// TODO DEBUG remove this line when not debugging
+		// Create new Controller for test purposes
+		createNewController("Controller prueba", "8", "Digital", "Write");
 	}
 
 
@@ -179,11 +219,8 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 		fab.setOnClickListener(onClickListener);
 		buttonStartComm.setOnClickListener(onClickListener);
 
-		// TODO DEBUG remove this line when not debugging
-		// Create new Controller for test purposes
-		createNewController("Controller prueba", "3", "Analog", "Write");
-		// ControllerSliderView controllerSwitchView = new ControllerSliderView(context, "Prueba", "3", "Analog", "Write");
-		// mainLinearLayout.addView(controllerSwitchView.getView());
+		// Restore previous Controllers
+		loadPreviousControllers();
 
 		// By default, layout is disabled
 		// TODO DEBUG uncomment this when not debugging
@@ -340,7 +377,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	/**
 	 * Start communication with Arduino
 	 */
-	private void startCommunication() {
+	public void startCommunication() {
 		Log.d(TAG, "StartCommunication");
 
 		ArduinoResponseCodes responseCode = arduinoCommunication.startCommunication();
@@ -357,10 +394,10 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	 * End communication with Arduino
 	 */
 	private void endCommunication() {
-		ArduinoResponseCodes responseCode = arduinoCommunication.closeConnection();
-		if (responseCode.getCode() <= 0) {
-			Util.displayError(context, responseCode.getDescription());
-		}
+		arduinoCommunication.closeConnection();
+		// if (responseCode.getCode() <= 0) {
+		// 	Util.displayError(context, responseCode.getDescription());
+		// }
 	}
 
 
@@ -383,7 +420,14 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	@Override
 	public void receivedData(String data) {
 		Log.d(TAG, "RECEIVEDDATA : Data received - " + data);
-		Util.displayMessage(context, data);
+		final String auxData = data;
+
+		// runOnUiThread(new Runnable() {
+		// 	@Override
+		// 	public void run() {
+		// 		Util.displayMessage(context, auxData);
+		// 	}
+		// });
 	}
 
 	@Override
@@ -392,7 +436,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				// TODO IT1 comprobar si se ha cancelado la comunicación
+				// TODO IT2 comprobar si se ha cancelado la comunicación
 				enableUI();
 				Util.displayMessage(context, "Connection opened!");
 			}
@@ -400,12 +444,17 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	}
 
 	@Override
-	public void connectionClosed() {
+	public void connectionClosed(ArduinoResponseCodes responseCode) {
+		// TODO IT2-3 delete all saved state values (like switches or sliders state)
+		Log.d(TAG, "Connection closed");
+		final ArduinoResponseCodes finalCode = responseCode;
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
+				if (finalCode.getCode() > 0) {
+					Util.displayMessage(context, "Connection closed");
+				}
 				disableUI();
-				Util.displayMessage(context, "Connection closed");
 				setLoading(false);
 			}
 		});
