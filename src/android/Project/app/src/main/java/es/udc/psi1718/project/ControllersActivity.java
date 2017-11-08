@@ -90,7 +90,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 
 		// Register USB receiver
 		Log.e(TAG, "onStart : REGISTER RECEIVER USB");
-		registerReceiver(broadcastReceiver, new IntentFilter());
+		registerReceiver(broadcastReceiver, intentFilter);
 
 		// Set active flag to true
 		active = true;
