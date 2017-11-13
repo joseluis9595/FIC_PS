@@ -15,6 +15,7 @@ Esta app permitirá controlar una serie de componentes tales como LEDs, servo mo
 
 
 <br><br><br>
+
 ## DISEÑO DE LA APLICACIÓN
 
 Esta app permitir  controlar una serie de componentes tales como LEDs, servo motores, diversos sensores, etc... conectados a un Arduino. Para ello, se mandar n comandos por puerto serie a trav s de USB desde nuestro dispositivo Android.
