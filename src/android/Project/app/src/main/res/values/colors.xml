@@ -7,16 +7,17 @@
     <color name="background_color">#eeeeee</color>
 
     <color name="card_view_background_color">#e0e0e0</color>
-    <!--<color name="colorAccent">#FF4081</color>-->
+
+    <!-- About activity -->
+    <color name="aboutactiv_textcolor_main">#dddddd</color>
+    <color name="aboutactiv_textcolor_secondary">#bbbbbb</color>
 
 
-    <!--
+    <!-- Previous color palette
     <color name="color_primary">#262626</color>
     <color name="color_primary_dark">#262626</color>
     <color name="background_color">#333333</color>
     <color name="foreground_color">#FF0000</color>
-
-
 
     <color name="buttonEnabled">#aa80CBC4</color>
     <color name="buttonPressed">#774db6ac</color>
@@ -26,9 +27,5 @@
 
     <color name="mainElementColor">#424242</color>
     <color name="secondaryElementColor">#505050</color>
-
-
-
-
     -->
 </resources>

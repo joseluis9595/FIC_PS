@@ -17,5 +17,30 @@
     </style>
     -->
 
+    <style name="AboutActivText">
+        <item name="android:textAlignment">center</item>
+        <item name="android:textColor">@color/aboutactiv_textcolor_main</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+
+    <style name="AboutActivText.appname">
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">25sp</item>
+        <item name="android:layout_marginBottom">24dp</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="AboutActivText.titles">
+        <item name="android:textAllCaps">true</item>
+        <item name="android:layout_marginTop">24dp</item>
+        <item name="android:layout_marginBottom">6dp</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="AboutActivText.normal">
+        <item name="android:textColor">@color/aboutactiv_textcolor_secondary</item>
+    </style>
+
 
 </resources>

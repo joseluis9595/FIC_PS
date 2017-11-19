@@ -28,6 +28,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="es.udc.psi1718.project.MainActivity"/>
         </activity>
+        <activity
+            android:name=".AboutActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar">
+        </activity>
 
         <receiver
             android:name=".MyBroadcastReceiver"
@@ -37,6 +41,7 @@
                 <action android:name="android.intent.action.ACTION_USB_DEVICE_DETTACHED"/>
             </intent-filter>
         </receiver>
+
 
     </application>
 
