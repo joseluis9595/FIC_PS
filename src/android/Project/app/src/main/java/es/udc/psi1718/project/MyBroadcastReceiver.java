@@ -8,21 +8,20 @@ import android.hardware.usb.UsbManager;
 import android.util.Log;
 
 import es.udc.psi1718.project.arduinomanager.ArduinoCommunicationManager;
-import es.udc.psi1718.project.util.Constants;
 
 
 public class MyBroadcastReceiver extends BroadcastReceiver {
 	private final String TAG = "MyBroadcastReceiver";
 
+	// TODO solucionar esto...
 	private ArduinoCommunicationManager arduinoCommunicationManager;
 	private ControllersActivity controllersActivity;
 
-	public MyBroadcastReceiver() {
+	private MyBroadcastReceiver() {
 	}
 
 	public MyBroadcastReceiver(ControllersActivity controllersActivity, ArduinoCommunicationManager arduinoCommunicationManager) {
 		super();
-		this.controllersActivity = controllersActivity;
 		this.arduinoCommunicationManager = arduinoCommunicationManager;
 	}
 
@@ -56,11 +55,11 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
 						// If activity is active, call startComm method, else, start activity with extras
 						if (ControllersActivity.active) {
 							controllersActivity.startCommunication();
-						} else {
-							Intent controllersActivityIntent = new Intent(context, ControllersActivity.class);
-							controllersActivityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-							controllersActivityIntent.putExtra(Constants.INTENTCOMM_CONTACTIV_LAUNCHEDFROMBR, true);
-							context.startActivity(controllersActivityIntent);
+						} else if (!MainActivity.active) {
+							Intent mainActivityIntent = new Intent(context, MainActivity.class);
+							mainActivityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+							// mainActivityIntent.putExtra(Constants.INTENTCOMM_CONTACTIV_LAUNCHEDFROMBR, true);
+							context.startActivity(mainActivityIntent);
 						}
 					}
 				}

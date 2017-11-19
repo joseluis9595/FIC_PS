@@ -7,12 +7,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import es.udc.psi1718.project.util.Constants;
+import es.udc.psi1718.project.util.MyJSONfileReader;
 
 public class MainActivity extends AppCompatActivity {
 
+	public static Boolean active = false;
 	private Context context = this;
 	private String TAG = "MainActivity";
 
@@ -32,14 +33,18 @@ public class MainActivity extends AppCompatActivity {
 		setContentView(R.layout.activity_main);
 		Log.d(TAG, "onCreate");
 
+		// TODO IT1-2 create a tutorial for first time opening
+
 		// TODO IT2 implement the whole class
+
+		// Prepare JSON file
+		MyJSONfileReader.getInstance().loadJsonFileAsync(this);
 
 		// Intents
 		controllersIntent = new Intent(context, ControllersActivity.class);
 
-
 		// Initialize layout
-		//initializeLayout();
+		initializeLayout();
 	}
 
 
@@ -47,10 +52,7 @@ public class MainActivity extends AppCompatActivity {
 	protected void onStart() {
 		super.onStart();
 		Log.d(TAG, "onStart");
-		// TODO IT2 remove this implementation
-		// Don't allow to start this activity yet
-		// startActivity(controllersIntent);
-		startActivityForResult(controllersIntent, Constants.ACTIVITYRESULT_REQUESTEXIT);
+		active = true;
 	}
 
 	@Override
@@ -58,7 +60,8 @@ public class MainActivity extends AppCompatActivity {
 		// TODO IT2 remove this function
 		if (requestCode == Constants.ACTIVITYRESULT_REQUESTEXIT) {
 			if (resultCode == RESULT_OK) {
-				this.finish();
+				Log.d(TAG, "Result from startActivityForResult was OK");
+				// this.finish();
 			}
 		}
 	}
@@ -79,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
 	protected void onStop() {
 		super.onStop();
 		Log.d(TAG, "onStop");
+		active = false;
 	}
 
 	@Override

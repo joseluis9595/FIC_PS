@@ -1,0 +1,17 @@
+{
+  "led": {
+    "common_name": "LED",
+    "datatype": "write",
+    "pintype": null
+  },
+  "servo": {
+    "common_name": "Servo motor",
+    "datatype": "write",
+    "pintype": "analog"
+  },
+  "tempsensor_dht11": {
+    "common_name": "Temperature sensor DHT-11",
+    "datatype": "read",
+    "pintype": "analog"
+  }
+}

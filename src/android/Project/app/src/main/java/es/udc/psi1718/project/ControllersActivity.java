@@ -27,7 +27,6 @@ import es.udc.psi1718.project.arduinomanager.ArduinoSerialListener;
 import es.udc.psi1718.project.ui.customviews.controllers.ControllerSliderView;
 import es.udc.psi1718.project.ui.customviews.controllers.ControllerSwitchView;
 import es.udc.psi1718.project.ui.customviews.controllers.ControllerViewEventListener;
-import es.udc.psi1718.project.util.Constants;
 import es.udc.psi1718.project.util.Util;
 
 import static android.hardware.usb.UsbManager.ACTION_USB_DEVICE_ATTACHED;
@@ -63,8 +62,6 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 		// Set active flag to true
 		// active = true;
 
-		// TODO IT1-2 create a tutorial for first time opening
-
 		Log.d(TAG, "ONCREATE");
 
 		// Intents
@@ -92,17 +89,20 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 		Log.e(TAG, "onStart : REGISTER RECEIVER USB");
 		registerReceiver(broadcastReceiver, intentFilter);
 
+		// Start communication
+		startCommunication();
+
 		// Set active flag to true
 		active = true;
 
 		// Check if the activity was called from the broadcast receiver
-		Bundle extras = getIntent().getExtras();
-		if (extras == null) return;
-		Boolean fromBroadcastReceiver = extras.getBoolean(Constants.INTENTCOMM_CONTACTIV_LAUNCHEDFROMBR, false);
-		if (fromBroadcastReceiver) {
-			Log.d(TAG, "Starting activity from broadcasReceiver");
-			startCommunication();
-		}
+		// Bundle extras = getIntent().getExtras();
+		// if (extras == null) return;
+		// Boolean fromBroadcastReceiver = extras.getBoolean(Constants.INTENTCOMM_CONTACTIV_LAUNCHEDFROMBR, false);
+		// if (fromBroadcastReceiver) {
+		// 	Log.d(TAG, "Starting activity from broadcasReceiver");
+		// 	startCommunication();
+		// }
 	}
 
 	@Override
@@ -163,7 +163,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 		//Overriding the home button behaviour so that the animation feels more natural
 		int id = item.getItemId();
 		if (id == android.R.id.home) {
-			setResult(RESULT_OK, null);
+			// setResult(RESULT_OK, null);
 			finish();
 		}
 		return true;
