@@ -10,14 +10,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-import es.udc.psi1718.project.util.Constants;
 import es.udc.psi1718.project.util.MyJSONfileReader;
+import es.udc.psi1718.project.util.UserPreferencesManager;
 
 public class MainActivity extends AppCompatActivity {
 
 	public static Boolean active = false;
 	private Context context = this;
 	private String TAG = "MainActivity";
+
+	private int SETTINGSACTIV_REQUESTCODE = 2;
 
 	// Intents
 	private Intent controllersIntent;
@@ -32,6 +34,9 @@ public class MainActivity extends AppCompatActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		//Change theme of the activity according to user's preferences
+		setTheme(UserPreferencesManager.getInstance(this).getAppTheme());
 		setContentView(R.layout.activity_main);
 		Log.d(TAG, "onCreate");
 
@@ -60,11 +65,21 @@ public class MainActivity extends AppCompatActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// TODO IT2 remove this function
-		if (requestCode == Constants.ACTIVITYRESULT_REQUESTEXIT) {
-			if (resultCode == RESULT_OK) {
-				Log.d(TAG, "Result from startActivityForResult was OK");
-				// this.finish();
-			}
+		// if (requestCode == Constants.ACTIVITYRESULT_REQUESTEXIT) {
+		// 	if (resultCode == RESULT_OK) {
+		// 		Log.d(TAG, "Result from startActivityForResult was OK");
+		// 		// this.finish();
+		// 	}
+		// }
+		Log.e(TAG, "onActivityResult");
+		if (requestCode == SETTINGSACTIV_REQUESTCODE) {
+			this.recreate();
+			// // Make sure the request was successful
+			// Log.e(TAG, "onActivityResult from settings act");
+			// if (resultCode == Constants.ACTIVITYRESULT_CHANGEDPREFS) {
+			//
+			// 	Log.e(TAG, "onActivityResult changed prefs");
+			// }
 		}
 	}
 
@@ -107,11 +122,13 @@ public class MainActivity extends AppCompatActivity {
 				Intent aboutIntent = new Intent(this, AboutActivity.class);
 				startActivity(aboutIntent);
 				return true;
+			case R.id.action_settings:
+				Intent settingsIntent = new Intent(this, SettingsActivity.class);
+				startActivityForResult(settingsIntent, SETTINGSACTIV_REQUESTCODE);
 			default:
 				return super.onOptionsItemSelected(item);
 		}
 	}
-
 
 	/**
 	 * Function to initialize all layout variables

@@ -10,9 +10,10 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme.Light">
 
         <!-- TODO IT1 change app icon and roundIcon -->
+        <!-- TODO move labels to string resources -->
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -23,6 +24,14 @@
         <activity
             android:name=".ControllersActivity"
             android:label="@string/title_activity_controllers"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="es.udc.psi1718.project.MainActivity"/>
+        </activity>
+        <activity
+            android:name=".SettingsActivity"
+            android:label="Settings"
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -41,7 +50,6 @@
                 <action android:name="android.intent.action.ACTION_USB_DEVICE_DETTACHED"/>
             </intent-filter>
         </receiver>
-
 
     </application>
 

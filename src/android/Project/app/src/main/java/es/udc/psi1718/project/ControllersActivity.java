@@ -27,6 +27,7 @@ import es.udc.psi1718.project.arduinomanager.ArduinoSerialListener;
 import es.udc.psi1718.project.ui.customviews.controllers.ControllerSliderView;
 import es.udc.psi1718.project.ui.customviews.controllers.ControllerSwitchView;
 import es.udc.psi1718.project.ui.customviews.controllers.ControllerViewEventListener;
+import es.udc.psi1718.project.util.UserPreferencesManager;
 import es.udc.psi1718.project.util.Util;
 
 import static android.hardware.usb.UsbManager.ACTION_USB_DEVICE_ATTACHED;
@@ -57,6 +58,8 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		//Change theme of the activity according to user's preferences
+		setTheme(UserPreferencesManager.getInstance(this).getAppTheme());
 		setContentView(R.layout.activity_controllers);
 
 		// Set active flag to true
@@ -150,12 +153,9 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 
 	@Override
 	public void onBackPressed() {
-		// super.onBackPressed();
+		super.onBackPressed();
 		Log.e(TAG, "onBackPressed");
-
-		// TODO IT2 remove this when mainActivity is implemented
-		setResult(RESULT_OK, null);
-		finish();
+		// finish();
 	}
 
 	@Override

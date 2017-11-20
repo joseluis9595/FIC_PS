@@ -2,14 +2,32 @@ package es.udc.psi1718.project.util;
 
 
 import android.content.Context;
+import android.content.SharedPreferences;
 
 public class MySharedPrefsManager {
-
 	private final String TAG = "MySharedPrefsManager";
-	private Context context;
+	private static final String SHAREDPREFS_FILENAME = "es.udc.psi1718.easyarduino.";
+
+	private final String SHAREDPREFS_TIMESOPENED = SHAREDPREFS_FILENAME + "times_opened";
+
+	private SharedPreferences sharedPrefs;
 
 	public MySharedPrefsManager(Context context) {
-		this.context = context;
+		this.sharedPrefs = context.getSharedPreferences(SHAREDPREFS_FILENAME, Context.MODE_PRIVATE);
+	}
+
+
+	/**
+	 * Check if it is the first time opening the app
+	 *
+	 * @return Boolean
+	 */
+	public Boolean isFirstTimeOpening() {
+		if (sharedPrefs.getInt(SHAREDPREFS_TIMESOPENED, -1) == -1) {
+			sharedPrefs.edit().putInt(SHAREDPREFS_TIMESOPENED, 1).apply();
+			return true;
+		}
+		return false;
 	}
 
 	/* TODO IT2-3

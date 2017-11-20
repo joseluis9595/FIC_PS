@@ -1,0 +1,14 @@
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="@string/userprefs_customization_title">
+        <ListPreference
+            android:defaultValue="0"
+            android:dialogTitle="@string/userprefs_customization_theme_dialogtitle"
+            android:entries="@array/userprefs_theme_entries"
+            android:entryValues="@array/userprefs_theme_entryvalues"
+            android:key="@string/userprefs_theme"
+            android:summary="@string/userprefs_customization_theme_summary"
+            android:title="@string/userprefs_customization_theme_title"/>
+    </PreferenceCategory>
+</PreferenceScreen>

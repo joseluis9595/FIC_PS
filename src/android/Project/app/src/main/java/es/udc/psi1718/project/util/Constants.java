@@ -14,7 +14,7 @@ public final class Constants {
 
 	// TODO IT2 remove this variable
 	public final static int ACTIVITYRESULT_REQUESTEXIT = 690;
-	public final static int ACTIVITYCODE_OK = 12357;
+	public final static int ACTIVITYRESULT_CHANGEDPREFS = 100;
 
 	// Broadcast receiver
 	public final static String ACTION_USB_PERMISSION = "es.udc.psi1718.project.USB_PERMISSION";
