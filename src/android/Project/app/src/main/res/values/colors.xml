@@ -1,8 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#26a69a</color>
+
+    <!-- Default theme -->
+    <color name="colorPrimary">#3f51b5</color>
+    <color name="colorPrimaryDark">#303f9f</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <!-- Dark theme -->
+    <color name="colorPrimary_dark">#FF212121</color>
+    <color name="colorPrimaryDark_dark">#FF000000</color>
+    <color name="colorAccent_dark">#26a69a</color>
+
+    <!-- Dark theme -->
+    <color name="colorPrimary_light">#FFF5F5F5</color>
+    <color name="colorPrimaryDark_light">#FF757575</color>
+    <color name="colorAccent_light">#26a69a</color>
+
+    <!-- Arduino based theme -->
+    <color name="colorPrimary_custom">#016666</color>
+    <color name="colorPrimaryDark_custom">#014949</color>
+    <color name="colorAccent_custom">#d84315</color>
 
     <color name="background_color">#eeeeee</color>
 

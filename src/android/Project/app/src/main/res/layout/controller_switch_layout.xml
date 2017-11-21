@@ -12,9 +12,9 @@
         android:layout_marginLeft="@dimen/controller_card_view_margin_sides"
         android:layout_marginRight="@dimen/controller_card_view_margin_sides"
         android:layout_marginTop="@dimen/controller_card_view_margin_top"
-        app:cardBackgroundColor="@color/card_view_background_color"
         app:cardCornerRadius="@dimen/controller_card_view_corner_radius"
         app:cardElevation="@dimen/controller_card_view_elevation">
+        <!--app:cardBackgroundColor="@color/card_view_background_color"-->
 
 
         <LinearLayout
@@ -43,7 +43,7 @@
                         android:layout_height="wrap_content"
                         android:text="Titulo"
                         android:textAllCaps="true"
-                        android:textColor="@color/colorAccent"
+                        android:textColor="?attr/themeColorAccent"
                         android:textSize="@dimen/controller_title_size"/>
 
                 </LinearLayout>

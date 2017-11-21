@@ -8,6 +8,7 @@ import android.hardware.usb.UsbManager;
 import android.util.Log;
 
 import es.udc.psi1718.project.arduinomanager.ArduinoCommunicationManager;
+import es.udc.psi1718.project.util.UserPreferencesManager;
 
 
 public class MyBroadcastReceiver extends BroadcastReceiver {
@@ -22,6 +23,7 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
 
 	public MyBroadcastReceiver(ControllersActivity controllersActivity, ArduinoCommunicationManager arduinoCommunicationManager) {
 		super();
+		this.controllersActivity = controllersActivity;
 		this.arduinoCommunicationManager = arduinoCommunicationManager;
 	}
 
@@ -46,20 +48,24 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
 				break;
 
 			case UsbManager.ACTION_USB_DEVICE_ATTACHED:
-				device = intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
-				if (device != null) {
-					int deviceID = device.getVendorId();
-					if (deviceID == 0x2341) {
-						Log.d(TAG, "BROADCAST : USB device attached");
+				// Check if user wants to start connection automatically
+				if (UserPreferencesManager.getInstance(context).getStartConnectionAutomatically()) {
+					Log.d(TAG, "StartCommunicationAuto : True");
+					device = intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
+					if (device != null) {
+						int deviceID = device.getVendorId();
+						if (deviceID == 0x2341) {
+							Log.d(TAG, "BROADCAST : USB device attached");
 
-						// If activity is active, call startComm method, else, start activity with extras
-						if (ControllersActivity.active) {
-							controllersActivity.startCommunication();
-						} else if (!MainActivity.active) {
-							Intent mainActivityIntent = new Intent(context, MainActivity.class);
-							mainActivityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-							// mainActivityIntent.putExtra(Constants.INTENTCOMM_CONTACTIV_LAUNCHEDFROMBR, true);
-							context.startActivity(mainActivityIntent);
+							// If activity is active, call startComm method, else, start activity with extras
+							if (ControllersActivity.active) {
+								controllersActivity.startCommunication();
+							} else if (!MainActivity.active) {
+								Intent mainActivityIntent = new Intent(context, MainActivity.class);
+								mainActivityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+								// mainActivityIntent.putExtra(Constants.INTENTCOMM_CONTACTIV_LAUNCHEDFROMBR, true);
+								context.startActivity(mainActivityIntent);
+							}
 						}
 					}
 				}
