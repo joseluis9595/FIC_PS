@@ -1,0 +1,12 @@
+Useful information used for this project.
+
+Drag & Drop gridLayout for the controllers:
+	https://github.com/patrick-iv/DragNDropApp
+
+USBserial communication library
+	https://github.com/felHR85/UsbSerial
+
+
+
+Another useful resources:
+https://stackoverflow.com/questions/7146639/android-gridview-reorder-elements-via-drag-and-drop

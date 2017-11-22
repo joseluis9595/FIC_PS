@@ -15,6 +15,9 @@ import java.io.Writer;
 
 import es.udc.psi1718.project.R;
 
+/**
+ * Singleton class JSONfileReader, used to read JSON files specific from our application
+ */
 public class MyJSONfileReader {
 	private final String TAG = "MyJSONfileReader";
 	private static MyJSONfileReader INSTANCE = new MyJSONfileReader();
@@ -25,6 +28,7 @@ public class MyJSONfileReader {
 	 */
 	private MyJSONfileReader() {
 	}
+
 
 	/**
 	 * Get instance to be able to have a singleton class
@@ -44,6 +48,7 @@ public class MyJSONfileReader {
 	public void loadJsonFileAsync(Context context) {
 		new JSONFileReaderAsyncTask().execute(context);
 	}
+
 
 	/**
 	 * AsyncTask to load a JSON file asynchronously

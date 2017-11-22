@@ -22,18 +22,28 @@ import es.udc.psi1718.project.R;
 import es.udc.psi1718.project.ui.customviews.controllers.ControllerView;
 
 
+/**
+ * Custom GridLayout with {@link ControllerView} objects in each cell
+ * Based on https://github.com/patrick-iv/DragNDropApp
+ */
 public class ControllersGridLayout extends ScrollView {
-
 	private static final String TAG = "CustomView";
-	private static final int NBR_ITEMS = 4;
+	private Context context;
+
+	// Layout variables
 	private GridLayout mGrid;
 	private ScrollView mScrollView;
 	private ValueAnimator mAnimator;
-	private AtomicBoolean mIsScrolling = new AtomicBoolean(false);
+
+	// Indexes for the movement
 	private int index;
 	private int initialIndex = -1;
-	private Context context;
 
+	// Using AtomicBoolean for thread-safe operation
+	private AtomicBoolean mIsScrolling = new AtomicBoolean(false);
+
+
+	/* BUILDERS */
 	public ControllersGridLayout(Context context) {
 		super(context);
 		init(context);
@@ -49,29 +59,28 @@ public class ControllersGridLayout extends ScrollView {
 		init(context);
 	}
 
+	/**
+	 * Initializes the layout of our custom view
+	 *
+	 * @param context context
+	 */
 	private void init(Context context) {
 		this.context = context;
 		LayoutInflater.from(context).inflate(R.layout.customgrid_layout, this);
 
-
+		// Initialize scrollView
 		mScrollView = (ScrollView) findViewById(R.id.scroll_view);
 		mScrollView.setSmoothScrollingEnabled(true);
 
+		// Initialize gridLayout
 		mGrid = (GridLayout) findViewById(R.id.grid_layout);
 		mGrid.setOnDragListener(new DragListener());
-
-		// final LayoutInflater inflater = LayoutInflater.from(context);
-		// for (int i = 0; i < NBR_ITEMS; i++) {
-		// 	final View itemView = inflater.inflate(R.layout.grid_item, mGrid, false);
-		// 	final TextView text = (TextView) itemView.findViewById(R.id.text);
-		// 	text.setText(String.valueOf(i + 1));
-		//
-		// 	itemView.setOnLongClickListener(new LongPressListener());
-		// 	mGrid.addView(itemView);
-		// }
 	}
 
 
+	/**
+	 * Long press listener to start the Drag&Drop animation
+	 */
 	static class LongPressListener implements View.OnLongClickListener {
 		@Override
 		public boolean onLongClick(View view) {
@@ -79,17 +88,14 @@ public class ControllersGridLayout extends ScrollView {
 			View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
 			view.startDrag(data, shadowBuilder, view, 0);
 			view.setVisibility(View.INVISIBLE);
-
-			// // TODO ya tengo la estructura itemView.customItem
-			// LinearLayout linearLayout = (LinearLayout) view;
-			// CustomGridItem childView = (CustomGridItem) linearLayout.getChildAt(0);
-			// childView.testFunction();
-
-			// Log.e(TAG, "Id es : " + view.getId());
 			return true;
 		}
 	}
 
+
+	/**
+	 * Drag listener to manage the Drag&Drop animation
+	 */
 	class DragListener implements View.OnDragListener {
 		@Override
 		public boolean onDrag(View v, DragEvent event) {
@@ -195,21 +201,22 @@ public class ControllersGridLayout extends ScrollView {
 	 * @return int new index inside the gridlayout
 	 */
 	private int calculateNewIndex(float x, float y) {
-		// calculate which column to move to
+		// Calculate which column to move to
 		final float cellWidth = mGrid.getWidth() / mGrid.getColumnCount();
 		final int column = (int) (x / cellWidth);
 
-		// calculate which row to move to
+		// Calculate which row to move to
 		final float cellHeight = mGrid.getHeight() / mGrid.getRowCount();
 		final int row = (int) Math.floor(y / cellHeight);
 
-		// the items in the GridLayout is organized as a wrapping list
+		// the items in the GridLayout are organized as a wrapping list
 		// and not as an actual grid, so this is how to get the new index
 		int index = row * mGrid.getColumnCount() + column;
 		if (index >= mGrid.getChildCount()) {
 			index = mGrid.getChildCount() - 1;
 		}
 
+		// Return the new index
 		return index;
 	}
 
@@ -226,22 +233,10 @@ public class ControllersGridLayout extends ScrollView {
 			View view = mGrid.getChildAt(i);
 			LinearLayout linearLayout = (LinearLayout) view;
 			ControllersGridItem childView = (ControllersGridItem) linearLayout.getChildAt(0);
-			childView.testFunction(i);
+			childView.setPosition(i);
 		}
 	}
 
-	// public void addCard(View view) {
-	// LayoutInflater inflater = LayoutInflater.from(context);
-	// final View itemView = inflater.inflate(R.layout.customgrid_items, mGrid, false);
-	// LinearLayout containerLayout = (LinearLayout) itemView.findViewById(R.id.customgrid_container_layout);
-	// containerLayout.addView(view);
-	//
-	// // final TextView text = (TextView) itemView.findViewById(R.id.text);
-	// // text.setText(String.valueOf(99));
-	// //
-	// itemView.setOnLongClickListener(new LongPressListener());
-	// mGrid.addView(itemView);
-	// }
 
 	/**
 	 * Add a new controller to the layout
@@ -249,27 +244,24 @@ public class ControllersGridLayout extends ScrollView {
 	 * @param controllerView any implementation of the abstract class {@link ControllerView}
 	 */
 	public void addController(ControllerView controllerView) {
-		// TODO CustomGridItem item = new CustomGridItem(context, controllerView);
-		// View view = item.getView(mGrid);
-		// mGrid.addView(view);
-		// CustomGridItem item = new CustomGridItem(context, controllerView, mGrid);
-		// mGrid.addView(item);
-
-		// TODO nueva implementacion
+		// We are using a container for every item to be able to inflate the layout with mGrid as parent
+		// Doing so, allows us to have the property 'columnWeight' in our xml
 		final LayoutInflater inflater = LayoutInflater.from(context);
 		final LinearLayout itemView = (LinearLayout) inflater.inflate(R.layout.customgrid_items_container, mGrid, false);
+
+		// Create new ControllerGridItem
 		ControllersGridItem item = new ControllersGridItem(context, controllerView);
+
+		// Add ControllerGridItem to our item container
 		itemView.addView(item);
+
+		// Set long click listener to be able to drag and drop later
 		itemView.setOnLongClickListener(new ControllersGridLayout.LongPressListener());
+
+		// Add our newly create item to the main grid layout
 		mGrid.addView(itemView);
 
-		// Update the indexes of all views
+		// Finally, update the index of this view
 		updateIndexes(mGrid.getChildCount() - 1);
 	}
-
-
-	/* TODO drag and drop
-	 * Posibles soluciones al problema del drag and drop:
-	 * ... Crear otro layout personalizado, que tenga como campo el controllerView
-	 */
 }

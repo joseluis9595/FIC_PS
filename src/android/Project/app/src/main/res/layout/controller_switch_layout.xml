@@ -23,6 +23,8 @@
                 android:id="@+id/controller_name_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="2"
                 android:text="Titulo"
                 android:textAllCaps="true"
                 android:textColor="?attr/themeColorAccent"

@@ -27,7 +27,6 @@ public abstract class ControllerView extends LinearLayout {
 		this.pinType = pinType;
 		this.commandType = commandType;
 		listener = (ControllerViewEventListener) context;
-
 	}
 
 
@@ -66,5 +65,10 @@ public abstract class ControllerView extends LinearLayout {
 	 */
 	public abstract void setName(String newName);
 
-	public abstract void testFunction(int position);
+	/**
+	 * Sets the position of the view in the layout its placed
+	 *
+	 * @param position position
+	 */
+	public abstract void setPosition(int position);
 }

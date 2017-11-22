@@ -12,11 +12,15 @@ import android.view.MenuItem;
 import es.udc.psi1718.project.util.UserPreferencesManager;
 
 
+/**
+ * Activity that displays various settings for our application
+ */
 public class SettingsActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 	private final String TAG = "SettingsActivity";
 	private Context context = this;
+
+	// Shared Preferences variables
 	private SharedPreferences userPrefs;
-	private Boolean sharedPreferencesChanged = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -25,9 +29,12 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
 		Log.d(TAG, "onCreate");
 		setContentView(R.layout.activity_settings);
 
+		// Load user preferences
 		userPrefs = getSharedPreferences(getString(R.string.userprefs_filename), Context.MODE_PRIVATE);
-		Log.e(TAG, "Registering listener");
+
+		// Register sharedPreferencesChanged listener to userPrefs
 		userPrefs.registerOnSharedPreferenceChangeListener(this);
+		Log.e(TAG, "Registered userPrefs listener");
 	}
 
 	@Override
@@ -52,18 +59,15 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
 	protected void onDestroy() {
 		super.onDestroy();
 		Log.d(TAG, "onDestroy");
-		Log.e(TAG, "Unegistering listener");
+
+		// Unregister userPrefs' listener
 		userPrefs.unregisterOnSharedPreferenceChangeListener(this);
-		if (sharedPreferencesChanged) {
-			// setResult(Constants.ACTIVITYRESULT_CHANGEDPREFS);
-		}
+		Log.e(TAG, "Unregistered listener");
 	}
 
 	@Override
 	public void onBackPressed() {
-		// super.onBackPressed();
 		Log.e(TAG, "onBackPressed");
-		// setResult(Constants.ACTIVITYRESULT_CHANGEDPREFS);
 		finish();
 	}
 
@@ -72,7 +76,6 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
 		//Overriding the home button behaviour so that the animation feels more natural
 		int id = item.getItemId();
 		if (id == android.R.id.home) {
-			// setResult(RESULT_OK, null);
 			finish();
 		}
 		return true;
@@ -80,28 +83,14 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
 
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-		sharedPreferencesChanged = true;
 		Log.e(TAG, "userPrefs changed: " + sharedPreferences.toString());
 		Log.e(TAG, "key changed: " + key);
 		if (key.equals(getString(R.string.userprefs_theme))) {
-			//SettingsActivity.this.recreate();
-			// Intent intent = new Intent(context, SettingsActivity.class);
-			// startActivity(intent);
-			// finish();
-			this.recreate();
 			Log.e(TAG, "Changed theme");
+			// Recreate tha activity to apply new theme
+			this.recreate();
 		}
 	}
-
-	// @Override
-	// public void onBuildHeaders(List<Header> target) {
-	// 	loadHeadersFromResource(R.xml.headers_preference, target);
-	// }
-	//
-	// @Override
-	// protected boolean isValidFragment(String fragmentName) {
-	// 	return Prefs1Fragment.class.getName().equals(fragmentName);
-	// }
 
 
 	/**
@@ -112,12 +101,10 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
 		public void onCreate(Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
 
-			// Make sure default values are applied.  In a real app, you would
-			// want this in a shared function that is used to retrieve the
-			// SharedPreferences wherever they are needed.
-			// PreferenceManager.setDefaultValues(getActivity(),
-			// 		R.xml.advanced_preferences, false);
+			// Apply default values
+			// PreferenceManager.setDefaultValues(getActivity(), R.xml.advanced_preferences, false);
 
+			// Change sharedPreferences filename
 			getPreferenceManager().setSharedPreferencesName(this.getString(R.string.userprefs_filename));
 
 			// Load the preferences from an XML resource

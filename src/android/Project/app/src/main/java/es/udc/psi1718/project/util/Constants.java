@@ -1,7 +1,9 @@
 package es.udc.psi1718.project.util;
 
+/**
+ * Some constants used in our application
+ */
 public final class Constants {
-
 	/**
 	 * Private empty constructor to prevent instantiation
 	 */

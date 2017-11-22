@@ -117,9 +117,8 @@ public final class Util {
 		InputStream inputStream = context.getResources().openRawResource(resource);
 		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 
-
+		// Read line by line the text file
 		try {
-			// Read line by line the text file
 			while ((line = bufferedReader.readLine()) != null) {
 				stringBuilder.append(line);
 				stringBuilder.append('\n');

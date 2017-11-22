@@ -107,7 +107,7 @@ public class ControllerSliderView extends ControllerView {
 	}
 
 	@Override
-	public void testFunction(int position) {
+	public void setPosition(int position) {
 		positionTextView.setText("" + position);
 	}
 
