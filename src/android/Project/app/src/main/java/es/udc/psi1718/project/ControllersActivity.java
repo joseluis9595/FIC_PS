@@ -14,7 +14,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
@@ -24,9 +23,11 @@ import android.widget.Toast;
 import es.udc.psi1718.project.arduinomanager.ArduinoCommunicationManager;
 import es.udc.psi1718.project.arduinomanager.ArduinoResponseCodes;
 import es.udc.psi1718.project.arduinomanager.ArduinoSerialListener;
+import es.udc.psi1718.project.ui.customviews.CustomGridLayout;
 import es.udc.psi1718.project.ui.customviews.controllers.ControllerSliderView;
 import es.udc.psi1718.project.ui.customviews.controllers.ControllerSwitchView;
 import es.udc.psi1718.project.ui.customviews.controllers.ControllerViewEventListener;
+import es.udc.psi1718.project.util.Constants;
 import es.udc.psi1718.project.util.UserPreferencesManager;
 import es.udc.psi1718.project.util.Util;
 
@@ -39,14 +40,15 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	private String TAG = "ControllersActivity";
 	public static Boolean active = false;
 
-	private final Boolean DEBUG = false;        // TODO DEBUG remove this constant
+	private final Boolean DEBUG = true;        // TODO DEBUG remove this constant
 
 	// Layout variables
 	private FloatingActionButton fab;
 	private Button buttonStartComm;
 	private TextView loadingTextView;
 	private ProgressBar progressBar;
-	private LinearLayout mainLinearLayout;
+	// private LinearLayout mainLinearLayout;
+	private CustomGridLayout customGridLayout;
 	private RelativeLayout loadingLayout;
 	private RelativeLayout normalLayout;
 
@@ -62,13 +64,19 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 		setTheme(UserPreferencesManager.getInstance(this).getAppTheme());
 		setContentView(R.layout.activity_controllers);
 
+		// TODO cambiar el nombre del toolbar por el nombre del panel
+
 		// Set active flag to true
 		// active = true;
 
 		Log.d(TAG, "ONCREATE");
 
 		// Intents
-		// TODO IT2 receive id of the pannel to retrieve previous controllers
+		int pannelId = getIntent().getIntExtra(Constants.INTENTCOMM_PANNELID, -1);
+		if (pannelId == -1) {
+			Log.e(TAG, "Invalid pannel id");
+			this.finish();
+		}
 
 		// Arduino communication
 		arduinoCommunication = new ArduinoCommunicationManager(context);
@@ -177,7 +185,8 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 
 		// TODO DEBUG remove this line when not debugging
 		// Create new Controller for test purposes
-		createNewController("Controller prueba", "8", "Digital", "Write");
+		createNewController("Controller prueba con nombre muy largo que ocupe al menos dos líneas", "8", "Digital", "Write");
+		createNewController("Prueba2", "9", "Analog", "Write");
 	}
 
 
@@ -187,11 +196,12 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	private void initializeLayout() {
 		// Initialize layout variables
 		fab = (FloatingActionButton) findViewById(R.id.fab_new_controller);
-		mainLinearLayout = (LinearLayout) findViewById(R.id.controllers_main_layout);
+		// mainLinearLayout = (LinearLayout) findViewById(R.id.controllers_main_layout);
+		customGridLayout = (CustomGridLayout) findViewById(R.id.customgrid);
 		loadingLayout = (RelativeLayout) findViewById(R.id.controllers_loading_layout);
 		normalLayout = (RelativeLayout) findViewById(R.id.controllers_parent_layout);
 		loadingTextView = (TextView) findViewById(R.id.controllers_loading_text_view);
-		buttonStartComm = (Button) findViewById(R.id.controllers_start_comm_button);
+		buttonStartComm = (Button) findViewById(R.id.controllers_retry_button);
 		progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
 		// Create one common listener
@@ -202,7 +212,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 					case R.id.fab_new_controller:
 						createNewControllerDialog();
 						break;
-					case R.id.controllers_start_comm_button:
+					case R.id.controllers_retry_button:
 						// TODO DEBUG uncomment this when not debugging
 						if (!DEBUG) {
 							startCommunication();
@@ -243,14 +253,18 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 		// Pin de escritura digital
 		if (pinType.equalsIgnoreCase("digital") && dataType.equalsIgnoreCase("write")) {
 			ControllerSwitchView controllerSwitchView = new ControllerSwitchView(context, name, arduinoPin, pinType, dataType);
-			mainLinearLayout.addView(controllerSwitchView.getView());
+			// mainLinearLayout.addView(controllerSwitchView.getView());
+			// customGridLayout.addCard(controllerSwitchView.getView());
+			customGridLayout.addController(controllerSwitchView);
 			return;
 		}
 
 		// Pin de escritura analógica
 		if (pinType.equalsIgnoreCase("analog") && dataType.equalsIgnoreCase("write")) {
 			ControllerSliderView controllerSliderView = new ControllerSliderView(context, name, arduinoPin, pinType, dataType);
-			mainLinearLayout.addView(controllerSliderView.getView());
+			// mainLinearLayout.addView(controllerSliderView.getView());
+			// customGridLayout.addCard(controllerSliderView.getView());
+			customGridLayout.addController(controllerSliderView);
 			return;
 		}
 
@@ -328,7 +342,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 							alertDialog.dismiss();
 						} else {
 							// Don't dismiss the dialog
-							Util.displayMessage(context, "Completa todos los campos");
+							Util.displayMessage(context, getString(R.string.err_completeallfields));
 						}
 					}
 				});
@@ -353,7 +367,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	 * @param loading Boolean to indicate whether it's loading or not
 	 */
 	private void setLoading(Boolean loading) {
-		String loadingText = loading ? "Loading..." : "Connect Arduino now";
+		String loadingText = loading ? "Loading..." : "No devices found";
 		int progressBarVisibility = loading ? View.VISIBLE : View.GONE;
 
 		buttonStartComm.setEnabled(!loading);
@@ -381,8 +395,10 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 		Log.d(TAG, "StartCommunication");
 
 		ArduinoResponseCodes responseCode = arduinoCommunication.startCommunication();
-		if (responseCode.getCode() <= 0) {
+		if (responseCode.getCode() <= 0 && !responseCode.equals(ArduinoResponseCodes.ERROR_NO_DEVICE)) {
 			Util.displayError(context, responseCode.getDescription());
+		} else if (responseCode.equals(ArduinoResponseCodes.ERROR_NO_DEVICE)) {
+			Log.e(TAG, "No devices found");
 		} else {
 			Log.d(TAG, "StartCommunication : OK");
 			setLoading(true);
@@ -438,7 +454,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 			public void run() {
 				// TODO IT2 comprobar si se ha cancelado la comunicación
 				enableUI();
-				Util.displayMessage(context, "Connection opened!");
+				// TODO DEBUG Util.displayMessage(context, "Connection opened!");
 			}
 		});
 	}
@@ -452,7 +468,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 			@Override
 			public void run() {
 				if (finalCode.getCode() > 0) {
-					Util.displayMessage(context, "Connection closed");
+					// TODO DEBUG Util.displayMessage(context, "Connection closed");
 				}
 				disableUI();
 				setLoading(false);

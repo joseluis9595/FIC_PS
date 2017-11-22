@@ -47,23 +47,23 @@ public class ControllerSwitchView extends ControllerView {
 			}
 		};
 
-		OnLongClickListener onClickListener = new OnLongClickListener() {
-			@Override
-			public boolean onLongClick(View view) {
-				switch (view.getId()) {
-					case R.id.card_view_main_layout:
-						// TODO IT2 edit cardView
-						ControllerSwitchView.super.editController();
-						return true;
-					default:
-						break;
-				}
-				return false;
-			}
-		};
-
-		// Modify layout
-		cardViewLayout.setOnLongClickListener(onClickListener);
+		// OnLongClickListener onLongClickListener = new OnLongClickListener() {
+		// 	@Override
+		// 	public boolean onLongClick(View view) {
+		// 		switch (view.getId()) {
+		// 			case R.id.card_view_main_layout:
+		// 				// TODO IT2 edit cardView
+		// 				ControllerSwitchView.super.editController();
+		// 				return true;
+		// 			default:
+		// 				break;
+		// 		}
+		// 		return false;
+		// 	}
+		// };
+		//
+		// // Modify layout
+		// cardViewLayout.setOnLongClickListener(onLongClickListener);
 		mSwitch.setOnCheckedChangeListener(onCheckedChangeListener);
 		nameTextView.setText(name);
 	}

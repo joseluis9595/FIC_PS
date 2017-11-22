@@ -10,15 +10,19 @@
     <dimen name="fab_margin">16dp</dimen>
 
     <dimen name="controller_title_size">16sp</dimen>
+    <dimen name="controller_switch_padding">7dp</dimen>
+    <dimen name="controller_slider_padding">15dp</dimen>
+
+    <dimen name="customgrid_item_marginvertical">6dp</dimen>
+    <dimen name="customgrid_item_marginhorizontal">2dp</dimen>
+    <dimen name="customgrid_layout_padding">12dp</dimen>
+
     <dimen name="controller_vertical_inside_margin">6dp</dimen>
     <dimen name="controller_card_view_content_padding">16dp</dimen>
-    <dimen name="controller_card_view_elevation">4dp</dimen>
-    <dimen name="controller_card_view_corner_radius">1dp</dimen>
+
     <dimen name="controller_card_view_margin_top">3dp</dimen>
     <dimen name="controller_card_view_margin_bottom">11dp</dimen>
     <dimen name="controller_card_view_margin_sides">18dp</dimen>
-    <dimen name="controller_switch_padding">7dp</dimen>
-    <dimen name="controller_slider_padding">15dp</dimen>
 
 
     <!--

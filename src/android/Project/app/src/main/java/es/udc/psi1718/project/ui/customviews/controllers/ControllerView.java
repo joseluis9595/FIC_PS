@@ -2,10 +2,9 @@ package es.udc.psi1718.project.ui.customviews.controllers;
 
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
-
-import es.udc.psi1718.project.util.Util;
 
 public abstract class ControllerView extends LinearLayout {
 
@@ -37,6 +36,7 @@ public abstract class ControllerView extends LinearLayout {
 	 */
 	void editController() {
 		// TODO IT2 display alertDialog to modify the values
+		Log.d(TAG, "Modify controller");
 		setName("Controller modificado");
 	}
 

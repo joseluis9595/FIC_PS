@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import es.udc.psi1718.project.util.Constants;
 import es.udc.psi1718.project.util.MyJSONfileReader;
 import es.udc.psi1718.project.util.UserPreferencesManager;
 
@@ -26,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
 
 	// Layout variables
 	//private Button buttonSendCommand;
-	private Button buttonStartComm;
+	private Button examplePannelButton;
 	//private TextView textView;
 	//private EditText editText;
 
@@ -40,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
 		setContentView(R.layout.activity_main);
 		Log.d(TAG, "onCreate");
 
-		// TODO IT1-2 create a tutorial for first time opening
+		// TODO IT3 create a tutorial for first time opening
 
 		// TODO IT2 implement the whole class
 
@@ -64,22 +65,9 @@ public class MainActivity extends AppCompatActivity {
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// TODO IT2 remove this function
-		// if (requestCode == Constants.ACTIVITYRESULT_REQUESTEXIT) {
-		// 	if (resultCode == RESULT_OK) {
-		// 		Log.d(TAG, "Result from startActivityForResult was OK");
-		// 		// this.finish();
-		// 	}
-		// }
 		Log.e(TAG, "onActivityResult");
 		if (requestCode == SETTINGSACTIV_REQUESTCODE) {
 			this.recreate();
-			// // Make sure the request was successful
-			// Log.e(TAG, "onActivityResult from settings act");
-			// if (resultCode == Constants.ACTIVITYRESULT_CHANGEDPREFS) {
-			//
-			// 	Log.e(TAG, "onActivityResult changed prefs");
-			// }
 		}
 	}
 
@@ -135,9 +123,7 @@ public class MainActivity extends AppCompatActivity {
 	 */
 	private void initializeLayout() {
 		//buttonSendCommand = (Button) findViewById(R.id.button_send_command);
-		buttonStartComm = (Button) findViewById(R.id.button_start_comm);
-		// TODO DEBUG eliminar este texto
-		buttonStartComm.setText("Abrir panel 1 (provisional)");
+		examplePannelButton = (Button) findViewById(R.id.pannel_example);
 		//editText = (EditText) findViewById(R.id.editText);
 		//textView = (TextView) findViewById(R.id.textView);
 
@@ -146,9 +132,10 @@ public class MainActivity extends AppCompatActivity {
 			@Override
 			public void onClick(View view) {
 				switch (view.getId()) {
-					case R.id.button_start_comm:
+					case R.id.pannel_example:
 						Log.d(TAG, "ONCLICK : button start");
-						// TODO DEBUG recuperar la función original startCommunication();
+						// TODO get id of the pannel
+						controllersIntent.putExtra(Constants.INTENTCOMM_PANNELID, 2);
 						startActivity(controllersIntent);
 						break;
 
@@ -165,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
 
 		// Add listener to different layout items
 		//buttonSendCommand.setOnClickListener(onClickListener);
-		buttonStartComm.setOnClickListener(onClickListener);
+		examplePannelButton.setOnClickListener(onClickListener);
 
 
 	}

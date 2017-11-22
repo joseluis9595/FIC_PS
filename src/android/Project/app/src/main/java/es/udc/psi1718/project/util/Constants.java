@@ -1,9 +1,5 @@
 package es.udc.psi1718.project.util;
 
-/**
- * Created by jose on 22/10/17.
- */
-
 public final class Constants {
 
 	/**
@@ -11,10 +7,6 @@ public final class Constants {
 	 */
 	private Constants() {
 	}
-
-	// TODO IT2 remove this variable
-	public final static int ACTIVITYRESULT_REQUESTEXIT = 690;
-	public final static int ACTIVITYRESULT_CHANGEDPREFS = 100;
 
 	// Broadcast receiver
 	public final static String ACTION_USB_PERMISSION = "es.udc.psi1718.project.USB_PERMISSION";
@@ -24,4 +16,5 @@ public final class Constants {
 
 	// Intent communication
 	public final static String INTENTCOMM_CONTACTIV_LAUNCHEDFROMBR = "intentcomm_launchedfrombroadcastreceiver";
+	public final static String INTENTCOMM_PANNELID = "intentcomm_pannelid";
 }

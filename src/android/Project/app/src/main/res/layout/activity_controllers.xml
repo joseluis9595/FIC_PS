@@ -28,7 +28,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/main_margin"
-                android:text="@string/controllers_loading_string"/>
+                android:text="@string/err_nodevicefound"/>
 
             <ProgressBar
                 android:id="@+id/progressBar"
@@ -37,10 +37,10 @@
                 android:layout_marginBottom="@dimen/main_margin"/>
 
             <Button
-                android:id="@+id/controllers_start_comm_button"
+                android:id="@+id/controllers_retry_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/string_btn_start_com"/>
+                android:text="@string/btn_retry_text"/>
 
 
         </LinearLayout>
@@ -51,21 +51,27 @@
         android:id="@+id/controllers_parent_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="@dimen/main_margin"
-        android:paddingTop="@dimen/main_margin">
+        android:paddingBottom="@dimen/main_margin">
 
-        <ScrollView
+        <!--<ScrollView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent">-->
+
+        <!--<LinearLayout-->
+        <!--android:id="@+id/controllers_main_layout"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:orientation="vertical">-->
+
+        <!--</LinearLayout>-->
+        <!--</ScrollView>-->
+
+        <es.udc.psi1718.project.ui.customviews.CustomGridLayout
+            android:id="@+id/customgrid"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <LinearLayout
-                android:id="@+id/controllers_main_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-            </LinearLayout>
-        </ScrollView>
+        </es.udc.psi1718.project.ui.customviews.CustomGridLayout>
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab_new_controller"

@@ -1,76 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_view_main_layout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent"
+    android:clickable="false"
+    android:orientation="vertical"
+    android:padding="0dp">
 
-    <android.support.v7.widget.CardView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/controller_card_view_margin_bottom"
-        android:layout_marginLeft="@dimen/controller_card_view_margin_sides"
-        android:layout_marginRight="@dimen/controller_card_view_margin_sides"
-        android:layout_marginTop="@dimen/controller_card_view_margin_top"
-        app:cardCornerRadius="@dimen/controller_card_view_corner_radius"
-        app:cardElevation="@dimen/controller_card_view_elevation">
-        <!--app:cardBackgroundColor="@color/card_view_background_color"-->
-
+        android:layout_marginBottom="@dimen/controller_vertical_inside_margin"
+        android:orientation="horizontal">
 
         <LinearLayout
-            android:id="@+id/card_view_main_layout"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:orientation="vertical"
-            android:padding="@dimen/controller_card_view_content_padding">
+            android:layout_weight="7">
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/controller_name_text_view"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/controller_vertical_inside_margin"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="7">
-
-                    <TextView
-                        android:id="@+id/controller_name_text_view"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Titulo"
-                        android:textAllCaps="true"
-                        android:textColor="?attr/themeColorAccent"
-                        android:textSize="@dimen/controller_title_size"/>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1">
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/controller_vertical_inside_margin">
-
-                <Switch
-                    android:id="@+id/controller_switch"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="@dimen/controller_switch_padding"
-                    android:scaleX="1.2"
-                    android:scaleY="1.2"/>
-            </LinearLayout>
+                android:text="Titulo"
+                android:textAllCaps="true"
+                android:textColor="?attr/themeColorAccent"
+                android:textSize="@dimen/controller_title_size"/>
 
         </LinearLayout>
-    </android.support.v7.widget.CardView>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/controller_vertical_inside_margin">
+
+        <Switch
+            android:id="@+id/controller_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/controller_switch_padding"
+            android:scaleX="1.2"
+            android:scaleY="1.2"/>
+    </LinearLayout>
+
 </LinearLayout>

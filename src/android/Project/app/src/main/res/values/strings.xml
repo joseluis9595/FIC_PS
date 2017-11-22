@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name">Easy Arduino</string>
+    <string name="title_activity_controllers">Controllers Activity</string>
+    <string name="title_activity_main">Main Activity</string>
+    <string name="title_activity_about">About</string>
+    <string name="title_activity_settings">Settings</string>
 
     <!-- Menu strings -->
     <string name="action_about">About</string>
@@ -9,26 +13,27 @@
     <string name="text_aboutactivity_title">Developers</string>
     <string name="text_aboutactivity_developers">Jose Luis Álvarez Quiroga\nMatías Cubillas Currás</string>
     <string name="text_aboutactivity_versiontitle">Version</string>
-    <string name="text_aboutactivity_version">0.0.2</string>
 
     <!-- Error and debugging Strings -->
     <string name="err_main_text">There was an error : %1$s</string>
     <string name="err_not_implemented_yet">Not implemented yet</string>
+    <string name="err_nodevicefound">No device found…</string>
+    <string name="err_completeallfields">Complete all fields</string>
 
-    <!-- Main Activity layout Strings-->
-    <string name="string_btn_start_com">Start communication</string>
-    <string name="string_btn_send_command">Send Command</string>
+    <!-- Buttons -->
+    <string name="btn_startcomm_string">Start communication</string>
+    <string name="btn_sendcommand_string">Send Command</string>
+    <string name="btn_retry_text">Retry</string>
 
     <!-- New controller Alert Dialog Strings -->
     <string name="pin_type_string">Pin type</string>
     <string name="data_type_string">Data type</string>
     <string name="pin_number_string">Arduino pin number</string>
-    <string name="new_controller_name_edit_text_hint">Name of the controller</string>
+    <string name="newcontroller_nameedittext_hint">Name of the controller</string>
     <string name="newcontroller_pinnumber_hint">Pin number</string>
 
     <!-- Controllers Strings -->
-    <string name="title_activity_controllers">ControllersActivity</string>
-    <string name="controllers_loading_string">Connect Arduino now...</string>
+    <string name="controllers_loading_string">Connect Arduino now…</string>
     <string name="controllers_tv_pinnumber">Pin %1$d</string>
 
     <!-- Shared Preferences -->

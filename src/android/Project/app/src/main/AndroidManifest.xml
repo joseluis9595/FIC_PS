@@ -12,9 +12,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.Default">
 
-        <!-- TODO IT1 change app icon and roundIcon -->
+        <!-- TODO IT3 create widgets -->
         <!-- TODO move labels to string resources -->
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -31,7 +32,7 @@
         </activity>
         <activity
             android:name=".SettingsActivity"
-            android:label="Settings"
+            android:label="@string/title_activity_settings"
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

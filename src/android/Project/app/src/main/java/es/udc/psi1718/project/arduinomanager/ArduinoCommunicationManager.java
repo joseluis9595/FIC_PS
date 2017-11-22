@@ -124,6 +124,7 @@ public class ArduinoCommunicationManager {
 		String command = "";
 		command += COMMAND_FIRST_BYTE;
 
+		// TODO handle errors properly
 		// PinType (Analog or Digital)
 		switch (pinType) {
 			case PINTYPE_ANALOG:
@@ -133,7 +134,6 @@ public class ArduinoCommunicationManager {
 				command += "D";
 				break;
 			default:
-				// TODO IT1 handle errors
 				return "ERROR";
 		}
 		command += COMMAND_SEPARATOR;
@@ -147,7 +147,6 @@ public class ArduinoCommunicationManager {
 				command += "W";
 				break;
 			default:
-				// TODO IT1 handle errors
 				return "ERROR";
 		}
 		command += COMMAND_SEPARATOR;
@@ -157,7 +156,6 @@ public class ArduinoCommunicationManager {
 		if (arduinoPinLength == 1) {
 			command += "0";
 		} else if (arduinoPinLength > 2 || arduinoPinLength < 1) {
-			// TODO IT1 handle errors
 			return "ERROR";
 		}
 		command += arduinoPin;
@@ -175,7 +173,6 @@ public class ArduinoCommunicationManager {
 
 		// Check if it has the proper length
 		if (command.length() != COMMAND_LENGTH) {
-			// TODO IT1 handle errors
 			return "ERROR";
 		}
 		Log.d(TAG, "Command : " + command);
@@ -200,7 +197,7 @@ public class ArduinoCommunicationManager {
 			String command = createCommand(arduinoPin, pinType, commandType, data);
 
 			// If malformed command send error via interface
-			if (command == "ERROR") return ArduinoResponseCodes.ERROR_INVALID_COMMAND;
+			if (command.equals("ERROR")) return ArduinoResponseCodes.ERROR_INVALID_COMMAND;
 
 			Log.d(TAG, "SENDCOMMAND : sending command - " + command);
 			serialPort.write(command.getBytes());
@@ -323,7 +320,7 @@ public class ArduinoCommunicationManager {
 		if (!usbDevices.isEmpty()) {
 			for (Map.Entry<String, UsbDevice> entry : usbDevices.entrySet()) {
 				UsbDevice device = entry.getValue();
-				if (device.getVendorId() == ARDUINO_VENDORID) { //TODO Arduino Vendor ID
+				if (device.getVendorId() == ARDUINO_VENDORID) {
 
 					Log.e(TAG, "startCommunication : REGISTER RECEIVER PERMISSION");
 					fromContext.registerReceiver(mPermissionReceiver, new IntentFilter(

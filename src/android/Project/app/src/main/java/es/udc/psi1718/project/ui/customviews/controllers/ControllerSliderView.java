@@ -73,23 +73,23 @@ public class ControllerSliderView extends ControllerView {
 		};
 
 
-		OnLongClickListener onClickListener = new OnLongClickListener() {
-			@Override
-			public boolean onLongClick(View view) {
-				switch (view.getId()) {
-					case R.id.card_view_main_layout:
-						// TODO IT2 edit cardView
-						ControllerSliderView.super.editController();
-						return true;
-					default:
-						break;
-				}
-				return false;
-			}
-		};
+		// OnLongClickListener onLongClickListener = new OnLongClickListener() {
+		// 	@Override
+		// 	public boolean onLongClick(View view) {
+		// 		switch (view.getId()) {
+		// 			case R.id.card_view_main_layout:
+		// 				// TODO IT2 edit cardView
+		// 				ControllerSliderView.super.editController();
+		// 				return true;
+		// 			default:
+		// 				break;
+		// 		}
+		// 		return false;
+		// 	}
+		// };
 
 		// Modify layout
-		cardViewLayout.setOnLongClickListener(onClickListener);
+		// cardViewLayout.setOnLongClickListener(onLongClickListener);
 		mSeekbar.setOnSeekBarChangeListener(onSeekBarChangeListener);
 		nameTextView.setText(name);
 	}
