@@ -18,7 +18,7 @@ public class ControllerSliderView extends ControllerView {
 
 	// Layout variables
 	private View view;
-	private TextView nameTextView;
+	private TextView nameTextView, positionTextView;
 	private SeekBar mSeekbar;
 	private LinearLayout cardViewLayout;
 
@@ -39,6 +39,7 @@ public class ControllerSliderView extends ControllerView {
 		// Initialize variables
 		cardViewLayout = (LinearLayout) view.findViewById(R.id.card_view_main_layout);
 		nameTextView = (TextView) view.findViewById(R.id.controller_name_text_view);
+		positionTextView = (TextView) view.findViewById(R.id.tv_controller_position);
 		mSeekbar = (SeekBar) view.findViewById(R.id.controller_seekbar);
 
 		// Create listeners
@@ -103,6 +104,11 @@ public class ControllerSliderView extends ControllerView {
 	@Override
 	public void setName(String newName) {
 		nameTextView.setText(newName);
+	}
+
+	@Override
+	public void testFunction(int position) {
+		positionTextView.setText("" + position);
 	}
 
 }

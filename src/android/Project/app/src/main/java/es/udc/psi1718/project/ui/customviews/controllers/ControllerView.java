@@ -65,4 +65,6 @@ public abstract class ControllerView extends LinearLayout {
 	 * @param newName the new name you want for the Controller
 	 */
 	public abstract void setName(String newName);
+
+	public abstract void testFunction(int position);
 }

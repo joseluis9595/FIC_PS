@@ -13,6 +13,7 @@ import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.OvershootInterpolator;
+import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -21,7 +22,7 @@ import es.udc.psi1718.project.R;
 import es.udc.psi1718.project.ui.customviews.controllers.ControllerView;
 
 
-public class CustomGridLayout extends ScrollView {
+public class ControllersGridLayout extends ScrollView {
 
 	private static final String TAG = "CustomView";
 	private static final int NBR_ITEMS = 4;
@@ -30,19 +31,20 @@ public class CustomGridLayout extends ScrollView {
 	private ValueAnimator mAnimator;
 	private AtomicBoolean mIsScrolling = new AtomicBoolean(false);
 	private int index;
+	private int initialIndex = -1;
 	private Context context;
 
-	public CustomGridLayout(Context context) {
+	public ControllersGridLayout(Context context) {
 		super(context);
 		init(context);
 	}
 
-	public CustomGridLayout(Context context, AttributeSet attrs) {
+	public ControllersGridLayout(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		init(context);
 	}
 
-	public CustomGridLayout(Context context, AttributeSet attrs, int defStyleAttr) {
+	public ControllersGridLayout(Context context, AttributeSet attrs, int defStyleAttr) {
 		super(context, attrs, defStyleAttr);
 		init(context);
 	}
@@ -77,6 +79,12 @@ public class CustomGridLayout extends ScrollView {
 			View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
 			view.startDrag(data, shadowBuilder, view, 0);
 			view.setVisibility(View.INVISIBLE);
+
+			// // TODO ya tengo la estructura itemView.customItem
+			// LinearLayout linearLayout = (LinearLayout) view;
+			// CustomGridItem childView = (CustomGridItem) linearLayout.getChildAt(0);
+			// childView.testFunction();
+
 			// Log.e(TAG, "Id es : " + view.getId());
 			return true;
 		}
@@ -92,8 +100,11 @@ public class CustomGridLayout extends ScrollView {
 					if (view == v) return true;
 					// get the new list index
 					index = calculateNewIndex(event.getX(), event.getY());
+					if (initialIndex < 0) {
+						initialIndex = index;
+					}
 
-					Log.e(TAG, "Index : " + index);
+					// Log.e(TAG, "Index : " + index);
 
 					final Rect rect = new Rect();
 					mScrollView.getHitRect(rect);
@@ -116,8 +127,14 @@ public class CustomGridLayout extends ScrollView {
 					view.setVisibility(View.VISIBLE);
 					break;
 				case DragEvent.ACTION_DRAG_ENDED:
-					saveGridItemsPosition();
 					Log.e(TAG, "ACTION_DRAG_ENDED : " + index);
+
+					// Update index of every modified view
+					int firstModifiedIndex = (initialIndex < index) ? initialIndex : index;
+					updateIndexes(firstModifiedIndex);
+					initialIndex = -1;
+
+					// Stop the animation
 					stopScrolling();
 					if (!event.getResult()) {
 						view.setVisibility(View.VISIBLE);
@@ -128,6 +145,12 @@ public class CustomGridLayout extends ScrollView {
 		}
 	}
 
+	/**
+	 * Start scrolling animation
+	 *
+	 * @param from from position
+	 * @param to   to position
+	 */
 	private void startScrolling(int from, int to) {
 		if (from != to && mAnimator == null) {
 			mIsScrolling.set(true);
@@ -152,12 +175,25 @@ public class CustomGridLayout extends ScrollView {
 		}
 	}
 
+
+	/**
+	 * Stop scrolling animation
+	 */
 	private void stopScrolling() {
 		if (mAnimator != null) {
 			mAnimator.cancel();
 		}
 	}
 
+
+	/**
+	 * Calculate new index of the element dragged
+	 *
+	 * @param x x position of the item
+	 * @param y y position of the item
+	 *
+	 * @return int new index inside the gridlayout
+	 */
 	private int calculateNewIndex(float x, float y) {
 		// calculate which column to move to
 		final float cellWidth = mGrid.getWidth() / mGrid.getColumnCount();
@@ -177,9 +213,21 @@ public class CustomGridLayout extends ScrollView {
 		return index;
 	}
 
-	private void saveGridItemsPosition() {
-		// TODO implementar esta función
-		// Recorrer todos los CustomGridItems uno a uno, actualizando su posición con la posición actual
+
+	/**
+	 * Update indexes of the views whenever one of them changes position
+	 *
+	 * @param position first value modified
+	 */
+	private void updateIndexes(int position) {
+		if (position < 0) return;
+		Log.d(TAG, "Updating indexes above " + position + "...");
+		for (int i = position; i < mGrid.getChildCount(); i++) {
+			View view = mGrid.getChildAt(i);
+			LinearLayout linearLayout = (LinearLayout) view;
+			ControllersGridItem childView = (ControllersGridItem) linearLayout.getChildAt(0);
+			childView.testFunction(i);
+		}
 	}
 
 	// public void addCard(View view) {
@@ -195,9 +243,28 @@ public class CustomGridLayout extends ScrollView {
 	// mGrid.addView(itemView);
 	// }
 
+	/**
+	 * Add a new controller to the layout
+	 *
+	 * @param controllerView any implementation of the abstract class {@link ControllerView}
+	 */
 	public void addController(ControllerView controllerView) {
-		CustomGridItem item = new CustomGridItem(context, controllerView);
-		item.createView(mGrid);
+		// TODO CustomGridItem item = new CustomGridItem(context, controllerView);
+		// View view = item.getView(mGrid);
+		// mGrid.addView(view);
+		// CustomGridItem item = new CustomGridItem(context, controllerView, mGrid);
+		// mGrid.addView(item);
+
+		// TODO nueva implementacion
+		final LayoutInflater inflater = LayoutInflater.from(context);
+		final LinearLayout itemView = (LinearLayout) inflater.inflate(R.layout.customgrid_items_container, mGrid, false);
+		ControllersGridItem item = new ControllersGridItem(context, controllerView);
+		itemView.addView(item);
+		itemView.setOnLongClickListener(new ControllersGridLayout.LongPressListener());
+		mGrid.addView(itemView);
+
+		// Update the indexes of all views
+		updateIndexes(mGrid.getChildCount() - 1);
 	}
 
 

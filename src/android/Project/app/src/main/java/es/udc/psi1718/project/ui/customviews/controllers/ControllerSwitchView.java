@@ -17,7 +17,7 @@ public class ControllerSwitchView extends ControllerView {
 	private String TAG = "ControllerSwitchView";
 
 	private View view;
-	private TextView nameTextView;
+	private TextView nameTextView, positionTextView;
 	private Switch mSwitch;
 	private LinearLayout cardViewLayout;
 
@@ -35,6 +35,8 @@ public class ControllerSwitchView extends ControllerView {
 		// Initialize variables
 		cardViewLayout = (LinearLayout) view.findViewById(R.id.card_view_main_layout);
 		nameTextView = (TextView) view.findViewById(R.id.controller_name_text_view);
+		positionTextView = (TextView) view.findViewById(R.id.tv_controller_position);
+
 		mSwitch = (Switch) view.findViewById(R.id.controller_switch);
 
 		// Create listeners
@@ -79,4 +81,8 @@ public class ControllerSwitchView extends ControllerView {
 		nameTextView.setText(newName);
 	}
 
+	@Override
+	public void testFunction(int position) {
+		positionTextView.setText("" + position);
+	}
 }

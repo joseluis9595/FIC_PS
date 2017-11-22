@@ -66,12 +66,12 @@
         <!--</LinearLayout>-->
         <!--</ScrollView>-->
 
-        <es.udc.psi1718.project.ui.customviews.CustomGridLayout
+        <es.udc.psi1718.project.ui.customviews.ControllersGridLayout
             android:id="@+id/customgrid"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-        </es.udc.psi1718.project.ui.customviews.CustomGridLayout>
+        </es.udc.psi1718.project.ui.customviews.ControllersGridLayout>
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab_new_controller"

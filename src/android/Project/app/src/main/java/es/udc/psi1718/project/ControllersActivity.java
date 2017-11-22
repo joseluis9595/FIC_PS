@@ -23,7 +23,7 @@ import android.widget.Toast;
 import es.udc.psi1718.project.arduinomanager.ArduinoCommunicationManager;
 import es.udc.psi1718.project.arduinomanager.ArduinoResponseCodes;
 import es.udc.psi1718.project.arduinomanager.ArduinoSerialListener;
-import es.udc.psi1718.project.ui.customviews.CustomGridLayout;
+import es.udc.psi1718.project.ui.customviews.ControllersGridLayout;
 import es.udc.psi1718.project.ui.customviews.controllers.ControllerSliderView;
 import es.udc.psi1718.project.ui.customviews.controllers.ControllerSwitchView;
 import es.udc.psi1718.project.ui.customviews.controllers.ControllerViewEventListener;
@@ -48,7 +48,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	private TextView loadingTextView;
 	private ProgressBar progressBar;
 	// private LinearLayout mainLinearLayout;
-	private CustomGridLayout customGridLayout;
+	private ControllersGridLayout customGridLayout;
 	private RelativeLayout loadingLayout;
 	private RelativeLayout normalLayout;
 
@@ -146,6 +146,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	protected void onDestroy() {
 		super.onDestroy();
 		Log.d(TAG, "onDestroy");
+		// TODO saveControllers()
 		Log.e(TAG, "onDestroy : UNREGISTER RECEIVER USB");
 
 		// Unregister broadcast receiver
@@ -187,6 +188,8 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 		// Create new Controller for test purposes
 		createNewController("Controller prueba con nombre muy largo que ocupe al menos dos líneas", "8", "Digital", "Write");
 		createNewController("Prueba2", "9", "Analog", "Write");
+		createNewController("Prueba3", "9", "Analog", "Write");
+		createNewController("Ja", "8", "Digital", "Write");
 	}
 
 
@@ -197,7 +200,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 		// Initialize layout variables
 		fab = (FloatingActionButton) findViewById(R.id.fab_new_controller);
 		// mainLinearLayout = (LinearLayout) findViewById(R.id.controllers_main_layout);
-		customGridLayout = (CustomGridLayout) findViewById(R.id.customgrid);
+		customGridLayout = (ControllersGridLayout) findViewById(R.id.customgrid);
 		loadingLayout = (RelativeLayout) findViewById(R.id.controllers_loading_layout);
 		normalLayout = (RelativeLayout) findViewById(R.id.controllers_parent_layout);
 		loadingTextView = (TextView) findViewById(R.id.controllers_loading_text_view);
