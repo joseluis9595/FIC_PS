@@ -32,6 +32,9 @@
     <string name="newcontroller_nameedittext_hint">Name of the controller</string>
     <string name="newcontroller_pinnumber_hint">Pin number</string>
 
+    <!-- New panel AlertDialog strings -->
+    <string name="et_newpanel_name_hint">Name of the panel</string>
+
     <!-- Controllers Strings -->
     <string name="controllers_loading_string">Connect Arduino now…</string>
     <string name="controllers_tv_pinnumber">Pin %1$d</string>

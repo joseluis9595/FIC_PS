@@ -1,4 +1,4 @@
-package es.udc.psi1718.project;
+package es.udc.psi1718.project.view.activities;
 
 
 import android.content.Context;
@@ -9,7 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 
-import es.udc.psi1718.project.util.UserPreferencesManager;
+import es.udc.psi1718.project.R;
+import es.udc.psi1718.project.storage.UserPreferencesManager;
 
 
 /**

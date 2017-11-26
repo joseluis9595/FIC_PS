@@ -1,4 +1,4 @@
-package es.udc.psi1718.project.util;
+package es.udc.psi1718.project.storage;
 
 
 import android.content.Context;
@@ -16,17 +16,17 @@ import java.io.Writer;
 import es.udc.psi1718.project.R;
 
 /**
- * Singleton class JSONfileReader, used to read JSON files specific from our application
+ * Singleton class JSONFileReader, used to read JSON files specific for our application
  */
-public class MyJSONfileReader {
+public class MyJSONFileReader {
 	private final String TAG = "MyJSONfileReader";
-	private static MyJSONfileReader INSTANCE = new MyJSONfileReader();
+	private static MyJSONFileReader INSTANCE = new MyJSONFileReader();
 	private String jsonString = null;
 
 	/**
 	 * Private constructor to prevent instantiation
 	 */
-	private MyJSONfileReader() {
+	private MyJSONFileReader() {
 	}
 
 
@@ -35,7 +35,7 @@ public class MyJSONfileReader {
 	 *
 	 * @return instance of the class
 	 */
-	public static MyJSONfileReader getInstance() {
+	public static MyJSONFileReader getInstance() {
 		return INSTANCE;
 	}
 

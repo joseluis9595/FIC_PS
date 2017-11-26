@@ -15,7 +15,7 @@
         <!-- TODO IT3 create widgets -->
         <!-- TODO move labels to string resources -->
         <activity
-            android:name=".MainActivity">
+            android:name=".view.activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -23,23 +23,23 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ControllersActivity"
+            android:name=".view.activities.ControllersActivity"
             android:label="@string/title_activity_controllers"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".view.activities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="es.udc.psi1718.project.MainActivity"/>
+                android:value="es.udc.psi1718.project.view.activities.MainActivity"/>
         </activity>
         <activity
-            android:name=".SettingsActivity"
+            android:name=".view.activities.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".view.activities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="es.udc.psi1718.project.MainActivity"/>
+                android:value="es.udc.psi1718.project.view.activities.MainActivity"/>
         </activity>
         <activity
-            android:name=".AboutActivity"
+            android:name=".view.activities.AboutActivity"
             android:theme="@style/AboutActiv">
         </activity>
 

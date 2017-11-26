@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:clickable="false"
     android:orientation="vertical"
-    android:padding="2dp"
     grid:layout_columnWeight="1">
 
 </LinearLayout>

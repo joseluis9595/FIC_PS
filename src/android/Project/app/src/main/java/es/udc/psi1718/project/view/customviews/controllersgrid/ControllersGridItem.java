@@ -1,19 +1,18 @@
-package es.udc.psi1718.project.ui.customviews;
+package es.udc.psi1718.project.view.customviews.controllersgrid;
 
 import android.content.Context;
-import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 
 import es.udc.psi1718.project.R;
-import es.udc.psi1718.project.ui.customviews.controllers.ControllerView;
+import es.udc.psi1718.project.view.customviews.controllers.ControllerView;
 
 
 /**
  * Each item of our {@link ControllersGridLayout} custom grid layout
  */
-public class ControllersGridItem extends CardView {
+public class ControllersGridItem extends LinearLayout {
 	private static final String TAG = "CustomGridItem";
 
 	private ControllerView controllerView;

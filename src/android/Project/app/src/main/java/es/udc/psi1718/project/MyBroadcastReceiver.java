@@ -8,9 +8,11 @@ import android.hardware.usb.UsbManager;
 import android.util.Log;
 
 import es.udc.psi1718.project.arduinomanager.ArduinoCommunicationManager;
-import es.udc.psi1718.project.util.UserPreferencesManager;
+import es.udc.psi1718.project.view.activities.ControllersActivity;
+import es.udc.psi1718.project.view.activities.MainActivity;
+import es.udc.psi1718.project.storage.UserPreferencesManager;
 
-
+// TODO cambiarlo por una clase interna de una actividad?
 public class MyBroadcastReceiver extends BroadcastReceiver {
 	private final String TAG = "MyBroadcastReceiver";
 

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="es.udc.psi1718.project.ControllersActivity">
+    tools:context="es.udc.psi1718.project.view.activities.ControllersActivity">
 
     <!-- TODO DEBUG eliminar android:visibility="gone" -->
     <RelativeLayout
@@ -66,12 +66,12 @@
         <!--</LinearLayout>-->
         <!--</ScrollView>-->
 
-        <es.udc.psi1718.project.ui.customviews.ControllersGridLayout
+        <es.udc.psi1718.project.view.customviews.controllersgrid.ControllersGridLayout
             android:id="@+id/customgrid"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-        </es.udc.psi1718.project.ui.customviews.ControllersGridLayout>
+        </es.udc.psi1718.project.view.customviews.controllersgrid.ControllersGridLayout>
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab_new_controller"

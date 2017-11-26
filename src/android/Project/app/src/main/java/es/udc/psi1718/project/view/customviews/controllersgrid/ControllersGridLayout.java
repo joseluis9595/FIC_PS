@@ -1,4 +1,4 @@
-package es.udc.psi1718.project.ui.customviews;
+package es.udc.psi1718.project.view.customviews.controllersgrid;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -19,7 +19,7 @@ import android.widget.ScrollView;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import es.udc.psi1718.project.R;
-import es.udc.psi1718.project.ui.customviews.controllers.ControllerView;
+import es.udc.psi1718.project.view.customviews.controllers.ControllerView;
 
 
 /**
@@ -263,5 +263,9 @@ public class ControllersGridLayout extends ScrollView {
 
 		// Finally, update the index of this view
 		updateIndexes(mGrid.getChildCount() - 1);
+	}
+
+	public void reset() {
+		mGrid.removeAllViews();
 	}
 }

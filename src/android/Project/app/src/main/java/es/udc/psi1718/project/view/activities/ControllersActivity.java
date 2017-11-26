@@ -1,10 +1,12 @@
-package es.udc.psi1718.project;
+package es.udc.psi1718.project.view.activities;
 
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.IntentFilter;
+import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -20,16 +22,20 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import es.udc.psi1718.project.MyBroadcastReceiver;
+import es.udc.psi1718.project.R;
 import es.udc.psi1718.project.arduinomanager.ArduinoCommunicationManager;
 import es.udc.psi1718.project.arduinomanager.ArduinoResponseCodes;
 import es.udc.psi1718.project.arduinomanager.ArduinoSerialListener;
-import es.udc.psi1718.project.ui.customviews.ControllersGridLayout;
-import es.udc.psi1718.project.ui.customviews.controllers.ControllerSliderView;
-import es.udc.psi1718.project.ui.customviews.controllers.ControllerSwitchView;
-import es.udc.psi1718.project.ui.customviews.controllers.ControllerViewEventListener;
+import es.udc.psi1718.project.storage.UserPreferencesManager;
+import es.udc.psi1718.project.storage.database.MySQLiteHelper;
+import es.udc.psi1718.project.storage.database.daos.Controller;
 import es.udc.psi1718.project.util.Constants;
-import es.udc.psi1718.project.util.UserPreferencesManager;
 import es.udc.psi1718.project.util.Util;
+import es.udc.psi1718.project.view.customviews.controllers.ControllerSliderView;
+import es.udc.psi1718.project.view.customviews.controllers.ControllerSwitchView;
+import es.udc.psi1718.project.view.customviews.controllers.ControllerViewEventListener;
+import es.udc.psi1718.project.view.customviews.controllersgrid.ControllersGridLayout;
 
 import static android.hardware.usb.UsbManager.ACTION_USB_DEVICE_ATTACHED;
 import static android.hardware.usb.UsbManager.ACTION_USB_DEVICE_DETACHED;
@@ -42,12 +48,17 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 
 	private final Boolean DEBUG = true;        // TODO DEBUG remove this constant
 
+	// Panel variables
+	private int panelId;
+
+	// Database access
+	private MySQLiteHelper mySQLiteHelper;
+
 	// Layout variables
 	private FloatingActionButton fab;
 	private Button buttonStartComm;
 	private TextView loadingTextView;
 	private ProgressBar progressBar;
-	// private LinearLayout mainLinearLayout;
 	private ControllersGridLayout customGridLayout;
 	private RelativeLayout loadingLayout;
 	private RelativeLayout normalLayout;
@@ -63,20 +74,21 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 		//Change theme of the activity according to user's preferences
 		setTheme(UserPreferencesManager.getInstance(this).getAppTheme());
 		setContentView(R.layout.activity_controllers);
-
-		// TODO cambiar el nombre del toolbar por el nombre del panel
-
-		// Set active flag to true
-		// active = true;
-
 		Log.d(TAG, "ONCREATE");
 
+		// TODO cambiar el nombre del toolbar por el nombre del panel
+		// TODO tutorial, indicar como mover controllers de sitio, como crearlos, etc...
+
+
 		// Intents
-		int pannelId = getIntent().getIntExtra(Constants.INTENTCOMM_PANNELID, -1);
-		if (pannelId == -1) {
+		panelId = getIntent().getIntExtra(Constants.INTENTCOMM_PANNELID, -1);
+		if (panelId == -1) {
 			Log.e(TAG, "Invalid pannel id");
 			this.finish();
 		}
+
+		// Database
+		mySQLiteHelper = new MySQLiteHelper(context);
 
 		// Arduino communication
 		arduinoCommunication = new ArduinoCommunicationManager(context);
@@ -138,6 +150,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	protected void onStop() {
 		super.onStop();
 		Log.d(TAG, "onStop");
+		// TODO saveControllersState();
 		// Set active flag to false
 		active = false;
 	}
@@ -149,8 +162,12 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 		// TODO saveControllers()
 		Log.e(TAG, "onDestroy : UNREGISTER RECEIVER USB");
 
-		// Unregister broadcast receiver
-		unregisterReceiver(broadcastReceiver);
+		// TODO Unregister broadcast receiver
+		try {
+			unregisterReceiver(broadcastReceiver);
+		} catch (Exception e) {
+			Log.e(TAG, e.toString());
+		}
 
 		// End communication with Arduino
 		endCommunication();
@@ -181,15 +198,55 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	/**
 	 * Gets previous saved controllers and displays them on the sc
 	 */
-	private void loadPreviousControllers() {
-		// TODO IT2 load previous controllers from internal memory in this function
-
+	private void loadSavedControllers() {
 		// TODO DEBUG remove this line when not debugging
 		// Create new Controller for test purposes
-		createNewController("Controller prueba con nombre muy largo que ocupe al menos dos líneas", "8", "Digital", "Write");
-		createNewController("Prueba2", "9", "Analog", "Write");
-		createNewController("Prueba3", "9", "Analog", "Write");
-		createNewController("Ja", "8", "Digital", "Write");
+		// createNewController("Controller prueba con nombre muy largo que ocupe al menos dos líneas", "8", "Digital", "Write");
+		// createNewController("Prueba2", "9", "Analog", "Write");
+		// createNewController("Prueba3", "9", "Analog", "Write");
+		// createNewController("Ja", "8", "Digital", "Write");
+
+		// Remove previous views from the layout
+		customGridLayout.reset();
+
+		// Get previous saved controllers
+		Cursor cursor = mySQLiteHelper.getControllersByPanelId(panelId);
+		if (cursor == null || cursor.getCount() <= 0) {
+			Log.e(TAG, "loadSavedControllers : Cursor is empty");
+			return;
+		}
+
+		String cursorString = DatabaseUtils.dumpCursorToString(cursor);
+		Log.e(TAG, cursorString);
+		if (cursor.moveToFirst()) {
+			do {
+				Log.e(TAG, "Creating new controller");
+				String name = cursor.getString(cursor.getColumnIndex(MySQLiteHelper.COL_CONTROLLER_NAME));
+				String dataType = cursor.getString(cursor.getColumnIndex(MySQLiteHelper.COL_CONTROLLER_DATATYPE));
+				String pinType = cursor.getString(cursor.getColumnIndex(MySQLiteHelper.COL_CONTROLLER_PINTYPE));
+				String pinNumber = cursor.getString(cursor.getColumnIndex(MySQLiteHelper.COL_CONTROLLER_PINNUMBER));
+				// int position = cursor.getInt(cursor.getColumnIndexOrThrow(MySQLiteHelper.COL_CONTROLLER_POSITION));
+				createNewController(name, pinNumber, pinType, dataType);
+			} while (cursor.moveToNext());
+		}
+		cursor.close();
+
+
+		// try {
+		// 	Log.e(TAG, "loadSavedControllers : Cursor is not empty");
+		// 	cursor.moveToFirst();
+		// 	while (cursor.moveToNext()) {
+		// 		Log.e(TAG, "Creating new controller");
+		// 		String name = cursor.getString(cursor.getColumnIndex(MySQLiteHelper.COL_PANEL_NAME));
+		// 		String dataType = cursor.getString(cursor.getColumnIndex(MySQLiteHelper.COL_CONTROLLER_DATATYPE));
+		// 		String pinType = cursor.getString(cursor.getColumnIndex(MySQLiteHelper.COL_CONTROLLER_PINTYPE));
+		// 		String pinNumber = cursor.getString(cursor.getColumnIndex(MySQLiteHelper.COL_CONTROLLER_PINNUMBER));
+		// 		// int position = cursor.getInt(cursor.getColumnIndexOrThrow(MySQLiteHelper.COL_CONTROLLER_POSITION));
+		// 		createNewController(name, pinNumber, pinType, dataType);
+		// 	}
+		// } finally {
+		// 	cursor.close();
+		// }
 	}
 
 
@@ -233,7 +290,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 		buttonStartComm.setOnClickListener(onClickListener);
 
 		// Restore previous Controllers
-		loadPreviousControllers();
+		loadSavedControllers();
 
 		// By default, layout is disabled
 		// TODO DEBUG uncomment this when not debugging
@@ -255,6 +312,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 
 		// Pin de escritura digital
 		if (pinType.equalsIgnoreCase("digital") && dataType.equalsIgnoreCase("write")) {
+			Log.d(TAG, "Creating new controller : digWrite");
 			ControllerSwitchView controllerSwitchView = new ControllerSwitchView(context, name, arduinoPin, pinType, dataType);
 			// mainLinearLayout.addView(controllerSwitchView.getView());
 			// customGridLayout.addCard(controllerSwitchView.getView());
@@ -264,6 +322,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 
 		// Pin de escritura analógica
 		if (pinType.equalsIgnoreCase("analog") && dataType.equalsIgnoreCase("write")) {
+			Log.d(TAG, "Creating new controller : anWrite");
 			ControllerSliderView controllerSliderView = new ControllerSliderView(context, name, arduinoPin, pinType, dataType);
 			// mainLinearLayout.addView(controllerSliderView.getView());
 			// customGridLayout.addCard(controllerSliderView.getView());
@@ -273,9 +332,12 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 
 		// Pin de lectura
 		if (dataType.equalsIgnoreCase("read")) {
+			Log.d(TAG, "Creating new controller : read");
 			// TODO IT3 Crear un cardview de lectura de valores
 			return;
 		}
+
+		Log.d(TAG, "Creating new controller : unknown");
 	}
 
 
@@ -333,13 +395,19 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 								return;
 							}
 
-							// Create a new controller
-							createNewController(
+							// Create new controller
+							Controller controller = new Controller(
 									controllerNameString,
-									arduinoPinString,
+									dataTypeSpinner.getSelectedItem().toString(),
 									pinTypeSpinner.getSelectedItem().toString(),
-									dataTypeSpinner.getSelectedItem().toString()
+									arduinoPinString,
+									customGridLayout.getChildCount() - 1,
+									panelId
 							);
+							mySQLiteHelper.insertController(controller);
+
+							// Refresh view
+							loadSavedControllers();
 
 							// Dismiss the dialog
 							alertDialog.dismiss();

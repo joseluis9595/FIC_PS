@@ -1,4 +1,4 @@
-package es.udc.psi1718.project.ui.customviews.controllers;
+package es.udc.psi1718.project.view.customviews.controllers;
 
 
 import android.content.Context;

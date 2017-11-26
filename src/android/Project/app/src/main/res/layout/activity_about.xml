@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="es.udc.psi1718.project.AboutActivity">
+    tools:context="es.udc.psi1718.project.view.activities.AboutActivity">
 
     <ImageView
         android:layout_width="match_parent"
