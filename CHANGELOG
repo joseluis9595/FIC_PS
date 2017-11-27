@@ -1,0 +1,28 @@
+# ITERACIÓN 1
+- Inicio del proyecto:
+    Descripción del proyecto
+    Hitos y entregables
+    Requisitos de la aplicación
+    ...
+
+# ITERACIÓN 2
+- Primera iteración de la aplicación:
+    Un solo panel, con diversos controladores añadidos de forma estática
+    Implementada arquitectura de paso de mensajes entre Arduino y Android
+    Sólo envío de datos a Arduino, todavía no lectura
+
+# ITERACIÓN 3
+- Nuevas funcionalidades:
+	Creación de paneles
+	Almacenamiento de paneles
+	Almacenamiento de controladores
+	Posibilidad de reordenar controladores
+	Almacenamiento de la posición de los controladores
+	Ajustes
+		Cambiar tema
+		Cambiar icono de la aplicación
+		Iniciar automáticamente conexión con Arduino cuando se conecta USB
+	Creadas vistas para pantallas en modo landscape
+	Reducido notablemente tamaño del archivo .apk
+	Nuevo icono de la aplicación
+	Actividad ‘Acerca de’
