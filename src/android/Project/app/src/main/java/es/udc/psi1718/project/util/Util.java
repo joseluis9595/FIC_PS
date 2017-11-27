@@ -1,7 +1,9 @@
 package es.udc.psi1718.project.util;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -127,5 +129,31 @@ public final class Util {
 			return null;
 		}
 		return stringBuilder.toString();
+	}
+
+	/**
+	 * Enables one component from android_manifest.xml
+	 *
+	 * @param pm            packetManager
+	 * @param componentName name of the component
+	 */
+	public static void enableComponent(PackageManager pm, ComponentName componentName) {
+		pm.setComponentEnabledSetting(
+				componentName,
+				PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+				PackageManager.DONT_KILL_APP);
+	}
+
+	/**
+	 * Disables one component from android_manifest.xml
+	 *
+	 * @param pm            packetManager
+	 * @param componentName name of the component
+	 */
+	public static void disableComponent(PackageManager pm, ComponentName componentName) {
+		pm.setComponentEnabledSetting(
+				componentName,
+				PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+				PackageManager.DONT_KILL_APP);
 	}
 }

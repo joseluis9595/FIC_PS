@@ -77,4 +77,13 @@ public class UserPreferencesManager {
 		return sharedPrefs.getBoolean(context.getString(R.string.userprefs_startconnauto), true);
 
 	}
+
+	/**
+	 * Returns true if app uses the dark icon
+	 *
+	 * @return true : default icon / false : new icon
+	 */
+	public Boolean getUseDarkIcon() {
+		return sharedPrefs.getBoolean(context.getString(R.string.userprefs_icon), true);
+	}
 }

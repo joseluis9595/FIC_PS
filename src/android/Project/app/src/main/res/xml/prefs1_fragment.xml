@@ -12,6 +12,14 @@
             android:key="@string/userprefs_theme"
             android:summary="@string/settings_customization_theme_summary"
             android:title="@string/settings_customization_theme_title"/>
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/userprefs_icon"
+            android:summary="@string/settings_customization_icon_summary"
+            android:title="@string/settings_customization_icon_title"
+            />
+
     </PreferenceCategory>
 
     <PreferenceCategory

@@ -20,4 +20,5 @@ public final class Constants {
 	public final static String INTENTCOMM_CONTACTIV_LAUNCHEDFROMBR = "intentcomm_launchedfrombroadcastreceiver";
 	public final static String INTENTCOMM_PANELID = "intentcomm_panelid";
 	public final static String INTENTCOMM_PANELNAME = "intentcomm_panelname";
+	public final static int INTENTCOMM_DONT_RECREATE = 999;
 }

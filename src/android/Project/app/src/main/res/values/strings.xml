@@ -43,12 +43,15 @@
     <string name="userprefs_filename">es.udc.psi1718.easyarduino.userprefs</string>
     <string name="userprefs_theme">es.udc.psi1718.easyarduino.userprefs.theme</string>
     <string name="userprefs_startconnauto">es.udc.psi1718.easyarduino.userprefs.startconnauto</string>
+    <string name="userprefs_icon">es.udc.psi1718.easyarduino.userprefs.icon</string>
 
     <!-- Settings activity -->
     <string name="settings_customization_title">Customization</string>
     <string name="settings_customization_theme_dialogtitle">App Theme</string>
     <string name="settings_customization_theme_summary">Change the theme of the whole app</string>
     <string name="settings_customization_theme_title">Theme</string>
+    <string name="settings_customization_icon_summary">Note: changes may take a few seconds to be visible on the launcher</string>
+    <string name="settings_customization_icon_title">Use dark icon</string>
     <string name="settings_connectivity_title">Connectivity</string>
     <string name="settings_connectivity_autoconn_title">Connect automatically</string>
     <string name="settings_connectivity_autoconn_dialogtitle">Connect automatically</string>

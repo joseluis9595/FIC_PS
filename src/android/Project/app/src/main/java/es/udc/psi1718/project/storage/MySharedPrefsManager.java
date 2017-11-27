@@ -6,14 +6,29 @@ import android.content.SharedPreferences;
 
 public class MySharedPrefsManager {
 	private final String TAG = "MySharedPrefsManager";
-	private static final String SHAREDPREFS_FILENAME = "es.udc.psi1718.easyarduino.";
+	private static MySharedPrefsManager instance = null;
 
+	private static final String SHAREDPREFS_FILENAME = "es.udc.psi1718.easyarduino.";
 	private final String SHAREDPREFS_TIMESOPENED = SHAREDPREFS_FILENAME + "times_opened";
 
 	private SharedPreferences sharedPrefs;
 
-	public MySharedPrefsManager(Context context) {
+	private MySharedPrefsManager(Context context) {
 		this.sharedPrefs = context.getSharedPreferences(SHAREDPREFS_FILENAME, Context.MODE_PRIVATE);
+	}
+
+	/**
+	 * Get instance (singleton)
+	 *
+	 * @param context context
+	 *
+	 * @return unique instance of the class
+	 */
+	public static MySharedPrefsManager getInstance(Context context) {
+		if (instance == null) {
+			instance = new MySharedPrefsManager(context);
+		}
+		return instance;
 	}
 
 

@@ -1,6 +1,7 @@
 package es.udc.psi1718.project.view.activities;
 
 import android.app.AlertDialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -19,6 +20,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 import es.udc.psi1718.project.R;
+import es.udc.psi1718.project.storage.MySharedPrefsManager;
 import es.udc.psi1718.project.storage.UserPreferencesManager;
 import es.udc.psi1718.project.storage.database.MySQLiteHelper;
 import es.udc.psi1718.project.storage.database.daos.Panel;
@@ -55,8 +57,10 @@ public class MainActivity extends AppCompatActivity {
 
 		// TODO IT3 create a tutorial for first time opening
 
-		// Prepare JSON file
-		// MyJSONFileReader.getInstance().loadJsonFileAsync(this);
+		if (MySharedPrefsManager.getInstance(context).isFirstTimeOpening()) {
+			Util.disableComponent(getPackageManager(), new ComponentName(this, "es.udc.psi1718.project.LightIcon"));
+		}
+
 
 		// Database helper
 		mySQLiteHelper = new MySQLiteHelper(this);
@@ -80,7 +84,12 @@ public class MainActivity extends AppCompatActivity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		Log.e(TAG, "onActivityResult");
 		if (requestCode == SETTINGSACTIV_REQUESTCODE) {
-			this.recreate();
+			if (resultCode == 0) {
+				this.recreate();
+			} else if (resultCode == Constants.INTENTCOMM_DONT_RECREATE) {
+				this.finish();
+			}
+
 		}
 	}
 

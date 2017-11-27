@@ -14,13 +14,30 @@
 
         <!-- TODO IT3 create widgets -->
         <activity
-            android:name=".view.activities.MainActivity">
+            android:name="es.udc.psi1718.project.view.activities.MainActivity">
+        </activity>
+
+        <!-- Activity alias to be able to change icon of the application -->
+        <activity-alias
+            android:name="es.udc.psi1718.project.LightIcon"
+            android:icon="@mipmap/ic_launcher_light"
+            android:label="@string/app_name"
+            android:targetActivity="es.udc.psi1718.project.view.activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
-        </activity>
+        </activity-alias>
+        <activity-alias
+            android:name="es.udc.psi1718.project.DarkIcon"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/app_name"
+            android:targetActivity="es.udc.psi1718.project.view.activities.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity-alias>
 
         <activity
             android:name=".view.activities.ControllersActivity"

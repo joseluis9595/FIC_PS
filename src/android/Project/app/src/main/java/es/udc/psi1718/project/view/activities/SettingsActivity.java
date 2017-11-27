@@ -1,8 +1,10 @@
 package es.udc.psi1718.project.view.activities;
 
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +13,8 @@ import android.view.MenuItem;
 
 import es.udc.psi1718.project.R;
 import es.udc.psi1718.project.storage.UserPreferencesManager;
+import es.udc.psi1718.project.util.Constants;
+import es.udc.psi1718.project.util.Util;
 
 
 /**
@@ -22,6 +26,7 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
 
 	// Shared Preferences variables
 	private SharedPreferences userPrefs;
+	private static Boolean useDarkIcon = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +74,7 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
 	@Override
 	public void onBackPressed() {
 		Log.e(TAG, "onBackPressed");
+		changeAppIcon(useDarkIcon);
 		finish();
 	}
 
@@ -77,6 +83,7 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
 		//Overriding the home button behaviour so that the animation feels more natural
 		int id = item.getItemId();
 		if (id == android.R.id.home) {
+			changeAppIcon(useDarkIcon);
 			finish();
 		}
 		return true;
@@ -88,9 +95,35 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
 		Log.e(TAG, "key changed: " + key);
 		if (key.equals(getString(R.string.userprefs_theme))) {
 			Log.e(TAG, "Changed theme");
-			// Recreate tha activity to apply new theme
+			// Recreate the activity to apply new theme
 			this.recreate();
+		} else if (key.equals(getString(R.string.userprefs_icon))) {
+			useDarkIcon = sharedPreferences.getBoolean(key, true);
 		}
+	}
+
+	/**
+	 * Changes the app icon
+	 *
+	 * @param useDarkIcon boolean
+	 */
+	private void changeAppIcon(Boolean useDarkIcon) {
+		Log.d(TAG, "useDarkIcon is " + useDarkIcon);
+		if (useDarkIcon == null) return;
+		ComponentName darkIconComponent = new ComponentName(this, "es.udc.psi1718.project.DarkIcon");
+		ComponentName lightIconComponent = new ComponentName(this, "es.udc.psi1718.project.LightIcon");
+
+		PackageManager packageManager = getPackageManager();
+		if (useDarkIcon) {
+			Util.enableComponent(packageManager, darkIconComponent);
+			Util.disableComponent(packageManager, lightIconComponent);
+		} else {
+			Util.disableComponent(packageManager, darkIconComponent);
+			Util.enableComponent(packageManager, lightIconComponent);
+		}
+		this.useDarkIcon = null;
+		setResult(Constants.INTENTCOMM_DONT_RECREATE);
+
 	}
 
 

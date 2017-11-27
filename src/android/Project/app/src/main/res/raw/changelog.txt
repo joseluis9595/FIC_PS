@@ -1,3 +1,7 @@
+v0.0.2.1
 - Created landscape alternative layouts for 'activity_about' and 'customgrid_layout'
 - Now panelName is sent via extra on intent communication between 'MainActivity' and 'ControllersActivity'
 - ActionBar on 'ControllersActivity' now has the name of the panel
+
+v0.0.2.2
+- Added setting to be able to change app icon
