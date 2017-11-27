@@ -20,6 +20,7 @@
         <!-- Activity alias to be able to change icon of the application -->
         <activity-alias
             android:name="es.udc.psi1718.project.LightIcon"
+            android:enabled="false"
             android:icon="@mipmap/ic_launcher_light"
             android:label="@string/app_name"
             android:targetActivity="es.udc.psi1718.project.view.activities.MainActivity">
