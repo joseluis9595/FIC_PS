@@ -14,6 +14,7 @@ public class AboutActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_about);
 
+		// Add version of the app to the activity
 		TextView tvVersionName = (TextView) findViewById(R.id.tv_versionname);
 		tvVersionName.setText(BuildConfig.VERSION_NAME);
 	}
