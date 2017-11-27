@@ -172,11 +172,6 @@ public class MainActivity extends AppCompatActivity {
 		// TODO debug
 		String cursorString = DatabaseUtils.dumpCursorToString(cursor);
 		Log.e(TAG, cursorString);
-
-		Cursor cursor1 = mySQLiteHelper.getControllersByPanelId(2);
-		String cursorString1 = DatabaseUtils.dumpCursorToString(cursor1);
-		Log.e(TAG, cursorString1);
-
 	}
 
 	/**

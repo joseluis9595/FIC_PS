@@ -4,6 +4,7 @@ package es.udc.psi1718.project.storage.database;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -154,13 +155,91 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 
 		// Initialize 'Sort' variables
 		// Using COLLATE LOCALIZED to allow db to sort items using special characters
-		String orderCriteria = COL_CONTROLLER_PANELID + " COLLATE LOCALIZED ASC";
+		String orderCriteria = COL_CONTROLLER_POSITION + " COLLATE LOCALIZED ASC";
 
 		// Execute sentence in database
 		Log.d(TAG, "GETGRADES via DB Object instance");
 		return getWritableDatabase().query(TABLE_CONTROLLERS, null,
 				selectionText, selectionItems,
 				null, null, orderCriteria);
+	}
+
+
+	/**
+	 * Update indexes of controllers (useful when controllers moved using drag & drop)
+	 *
+	 * @param initialPosition initial position of the controller
+	 * @param finalPosition   final position of the controller
+	 */
+	public void updateIndexes(int panelId, int initialPosition, int finalPosition) {
+		if (initialPosition == finalPosition) return;
+
+		// Find item in position 'initialPosition'
+		int controllerID = findControllerByPosition(panelId, initialPosition);
+
+		// Check which was the movement of the controller
+		if (initialPosition < finalPosition) {
+			// Update items with position initialPosition < pos <= finalPosition to pos-1
+			getWritableDatabase().execSQL("UPDATE " + TABLE_CONTROLLERS +
+							" SET " + COL_CONTROLLER_POSITION + "=" + COL_CONTROLLER_POSITION + "-1" +
+							" WHERE " + COL_CONTROLLER_POSITION + ">? AND " + COL_CONTROLLER_POSITION +
+							"<=? AND " + COL_CONTROLLER_PANELID + "=?",
+					new String[]{
+							String.valueOf(initialPosition),
+							String.valueOf(finalPosition),
+							String.valueOf(panelId)
+					});
+		} else {
+			// Update items with position finalPosition <= pos < initialPosition to pos+1
+			getWritableDatabase().execSQL("UPDATE " + TABLE_CONTROLLERS +
+							" SET " + COL_CONTROLLER_POSITION + "=" + COL_CONTROLLER_POSITION + "+1" +
+							" WHERE " + COL_CONTROLLER_POSITION + ">=? AND " + COL_CONTROLLER_POSITION +
+							"<? AND " + COL_CONTROLLER_PANELID + "=?",
+					new String[]{
+							String.valueOf(finalPosition),
+							String.valueOf(initialPosition),
+							String.valueOf(panelId)
+					});
+		}
+
+		// Update main item, set new position to finalPosition
+		getWritableDatabase().execSQL("UPDATE " + TABLE_CONTROLLERS +
+						" SET " + COL_CONTROLLER_POSITION + "=" + finalPosition +
+						" WHERE " + COL_CONTROLLER_ID + "=? AND " + COL_CONTROLLER_PANELID + "=?",
+				new String[]{
+						String.valueOf(controllerID),
+						String.valueOf(panelId)
+				});
+
+		// TODO debug
+		Cursor cursor = getControllersByPanelId(panelId);
+		Log.e(TAG, DatabaseUtils.dumpCursorToString(cursor));
+	}
+
+
+	/**
+	 * Find one controller given its position
+	 *
+	 * @param position position of the controller
+	 *
+	 * @return id of the controller
+	 */
+	private int findControllerByPosition(int panelId, int position) {
+		String selectionText = COL_CONTROLLER_POSITION + " =? AND " + COL_CONTROLLER_PANELID + "=?";
+		String[] selectionItems = new String[]{
+				String.valueOf(position),
+				String.valueOf(panelId)
+		};
+
+		// Execute sentence in database
+		Log.d(TAG, "GETGRADES via DB Object instance");
+		Cursor cursor = getWritableDatabase().query(TABLE_CONTROLLERS, null,
+				selectionText, selectionItems,
+				null, null, null);
+		String cursorString = DatabaseUtils.dumpCursorToString(cursor);
+		Log.e(TAG, cursorString);
+		cursor.moveToFirst();
+		return cursor.getInt(cursor.getColumnIndexOrThrow(MySQLiteHelper.COL_CONTROLLER_ID));
 	}
 
 

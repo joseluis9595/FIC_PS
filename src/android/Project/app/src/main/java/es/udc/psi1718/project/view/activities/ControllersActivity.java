@@ -36,11 +36,12 @@ import es.udc.psi1718.project.view.customviews.controllers.ControllerSliderView;
 import es.udc.psi1718.project.view.customviews.controllers.ControllerSwitchView;
 import es.udc.psi1718.project.view.customviews.controllers.ControllerViewEventListener;
 import es.udc.psi1718.project.view.customviews.controllersgrid.ControllersGridLayout;
+import es.udc.psi1718.project.view.customviews.controllersgrid.ControllersGridListener;
 
 import static android.hardware.usb.UsbManager.ACTION_USB_DEVICE_ATTACHED;
 import static android.hardware.usb.UsbManager.ACTION_USB_DEVICE_DETACHED;
 
-public class ControllersActivity extends AppCompatActivity implements ArduinoSerialListener, ControllerViewEventListener {
+public class ControllersActivity extends AppCompatActivity implements ArduinoSerialListener, ControllerViewEventListener, ControllersGridListener {
 
 	private Context context = this;
 	private String TAG = "ControllersActivity";
@@ -401,13 +402,17 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 									dataTypeSpinner.getSelectedItem().toString(),
 									pinTypeSpinner.getSelectedItem().toString(),
 									arduinoPinString,
-									customGridLayout.getChildCount() - 1,
+									customGridLayout.getControllersCount(),
 									panelId
 							);
 							mySQLiteHelper.insertController(controller);
 
 							// Refresh view
-							loadSavedControllers();
+							createNewController(
+									controllerNameString,
+									arduinoPinString,
+									pinTypeSpinner.getSelectedItem().toString(),
+									dataTypeSpinner.getSelectedItem().toString());
 
 							// Dismiss the dialog
 							alertDialog.dismiss();
@@ -566,5 +571,10 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	public void controllerSentCommand(final String arduinoPin, final int pinType, final int dataType, final int data) {
 		Log.d(TAG, "ControllerChangeState : Sending command to Arduino");
 		sendCommand(arduinoPin, pinType, dataType, data);
+	}
+
+	@Override
+	public void ControllerChanged(int initialPosition, int finalPosition) {
+		mySQLiteHelper.updateIndexes(panelId, initialPosition, finalPosition);
 	}
 }

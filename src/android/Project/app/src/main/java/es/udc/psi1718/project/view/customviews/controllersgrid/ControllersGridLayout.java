@@ -39,6 +39,9 @@ public class ControllersGridLayout extends ScrollView {
 	private int index;
 	private int initialIndex = -1;
 
+	// Listener
+	private ControllersGridListener controllersGridListener;
+
 	// Using AtomicBoolean for thread-safe operation
 	private AtomicBoolean mIsScrolling = new AtomicBoolean(false);
 
@@ -46,16 +49,19 @@ public class ControllersGridLayout extends ScrollView {
 	/* BUILDERS */
 	public ControllersGridLayout(Context context) {
 		super(context);
+		controllersGridListener = (ControllersGridListener) context;
 		init(context);
 	}
 
 	public ControllersGridLayout(Context context, AttributeSet attrs) {
 		super(context, attrs);
+		controllersGridListener = (ControllersGridListener) context;
 		init(context);
 	}
 
 	public ControllersGridLayout(Context context, AttributeSet attrs, int defStyleAttr) {
 		super(context, attrs, defStyleAttr);
+		controllersGridListener = (ControllersGridListener) context;
 		init(context);
 	}
 
@@ -138,6 +144,11 @@ public class ControllersGridLayout extends ScrollView {
 					// Update index of every modified view
 					int firstModifiedIndex = (initialIndex < index) ? initialIndex : index;
 					updateIndexes(firstModifiedIndex);
+
+					// Notify listener
+					controllersGridListener.ControllerChanged(initialIndex, index);
+
+					// Reinitialize variables
 					initialIndex = -1;
 
 					// Stop the animation
@@ -265,6 +276,20 @@ public class ControllersGridLayout extends ScrollView {
 		updateIndexes(mGrid.getChildCount() - 1);
 	}
 
+
+	/**
+	 * Return number of controllers in the mGrid layout
+	 *
+	 * @return int, number of controllers
+	 */
+	public int getControllersCount() {
+		return mGrid.getChildCount();
+	}
+
+
+	/**
+	 * Reset layout
+	 */
 	public void reset() {
 		mGrid.removeAllViews();
 	}
