@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.IntentFilter;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.os.Bundle;
@@ -70,6 +71,13 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	private IntentFilter intentFilter;
 
 	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+		setContentView(R.layout.activity_controllers);
+		initializeLayout();
+	}
+
+	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		//Change theme of the activity according to user's preferences
@@ -82,10 +90,16 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 
 
 		// Intents
-		panelId = getIntent().getIntExtra(Constants.INTENTCOMM_PANNELID, -1);
+		panelId = getIntent().getIntExtra(Constants.INTENTCOMM_PANELID, -1);
+		String panelName = getIntent().getStringExtra(Constants.INTENTCOMM_PANELNAME);
 		if (panelId == -1) {
 			Log.e(TAG, "Invalid pannel id");
 			this.finish();
+		} else {
+			android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+			if (actionBar != null) {
+				actionBar.setTitle(panelName != null ? panelName : "Panel");
+			}
 		}
 
 		// Database
@@ -351,7 +365,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 
 		// Inflate and set the custom view
 		LayoutInflater inflater = this.getLayoutInflater();
-		View dialogView = inflater.inflate(R.layout.alert_dialog_new_controller_layout, null);
+		View dialogView = inflater.inflate(R.layout.alertdialog_newcontroller_layout, null);
 		dialogBuilder.setView(dialogView);
 
 		// Save the views inside the alertDialog
@@ -574,7 +588,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	}
 
 	@Override
-	public void ControllerChanged(int initialPosition, int finalPosition) {
+	public void controllersPositionChanged(int initialPosition, int finalPosition) {
 		mySQLiteHelper.updateIndexes(panelId, initialPosition, finalPosition);
 	}
 }

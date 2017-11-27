@@ -18,5 +18,6 @@ public final class Constants {
 
 	// Intent communication
 	public final static String INTENTCOMM_CONTACTIV_LAUNCHEDFROMBR = "intentcomm_launchedfrombroadcastreceiver";
-	public final static String INTENTCOMM_PANNELID = "intentcomm_pannelid";
+	public final static String INTENTCOMM_PANELID = "intentcomm_panelid";
+	public final static String INTENTCOMM_PANELNAME = "intentcomm_panelname";
 }

@@ -152,7 +152,13 @@ public class MainActivity extends AppCompatActivity {
 			@Override
 			public void onItemClick(AdapterView<?> adapterView, View view, int i, long cursorID) {
 				Log.d(TAG, "Pressed item " + i + " on the listview, cursorID : " + cursorID);
-				controllersIntent.putExtra(Constants.INTENTCOMM_PANNELID, (int) cursorID);
+				controllersIntent.putExtra(Constants.INTENTCOMM_PANELID, (int) cursorID);
+
+				// TODO mejorar esto, poca independencia con base de datos
+				Cursor selectedFromList = (Cursor) lvPannels.getItemAtPosition(i);
+				String panelName = selectedFromList.getString(selectedFromList.getColumnIndexOrThrow(MySQLiteHelper.COL_PANEL_NAME));
+				controllersIntent.putExtra(Constants.INTENTCOMM_PANELNAME, panelName);
+
 				startActivity(controllersIntent);
 			}
 		});

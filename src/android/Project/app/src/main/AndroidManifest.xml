@@ -13,7 +13,6 @@
         android:theme="@style/AppTheme.Default">
 
         <!-- TODO IT3 create widgets -->
-        <!-- TODO move labels to string resources -->
         <activity
             android:name=".view.activities.MainActivity">
             <intent-filter>
@@ -22,14 +21,17 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
         <activity
             android:name=".view.activities.ControllersActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/title_activity_controllers"
             android:parentActivityName=".view.activities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="es.udc.psi1718.project.view.activities.MainActivity"/>
         </activity>
+
         <activity
             android:name=".view.activities.SettingsActivity"
             android:label="@string/title_activity_settings"
@@ -38,6 +40,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="es.udc.psi1718.project.view.activities.MainActivity"/>
         </activity>
+
         <activity
             android:name=".view.activities.AboutActivity"
             android:theme="@style/AboutActiv">

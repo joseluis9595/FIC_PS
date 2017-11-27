@@ -146,7 +146,7 @@ public class ControllersGridLayout extends ScrollView {
 					updateIndexes(firstModifiedIndex);
 
 					// Notify listener
-					controllersGridListener.ControllerChanged(initialIndex, index);
+					controllersGridListener.controllersPositionChanged(initialIndex, index);
 
 					// Reinitialize variables
 					initialIndex = -1;
