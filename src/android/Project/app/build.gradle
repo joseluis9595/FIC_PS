@@ -7,19 +7,25 @@ def versionBuild = 3
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.0"
     defaultConfig {
         applicationId "es.udc.psi1718.project"
         minSdkVersion 17
         targetSdkVersion 25
+
+        // Calculate versionCode and versionName programatically
         versionCode versionMajor * 100000 + versionMinor * 10000 + versionPatch * 1000 + versionBuild
         versionName "${versionMajor}.${versionMinor}.${versionPatch}"
+
+        // Don't compile unnecessary resources
+        resConfig "en"
+
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
         release {
             minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -33,9 +39,8 @@ dependencies {
 
     compile files('libs/usbserial.jar')
 
-    compile 'com.android.support:cardview-v7:25.3.1'
-    compile 'com.android.support:gridlayout-v7:25.3.1'
-    compile 'com.android.support:design:25.3.1'
-    compile 'com.android.support:support-v4:25.3.1'
+    compile 'com.android.support:cardview-v7:25.4.0'
+    compile 'com.android.support:gridlayout-v7:25.4.0'
+    compile 'com.android.support:design:25.4.0'
     testCompile 'junit:junit:4.12'
 }

@@ -24,7 +24,8 @@
         android:layout_alignParentEnd="true"
         android:layout_margin="@dimen/fab_margin"
         android:clickable="true"
-        android:src="@drawable/ic_action_add"
-        app:fabSize="mini"/>
+        android:focusable="true"
+        app:fabSize="mini"
+        app:srcCompat="@drawable/ic_action_add"/>
 
 </RelativeLayout>
