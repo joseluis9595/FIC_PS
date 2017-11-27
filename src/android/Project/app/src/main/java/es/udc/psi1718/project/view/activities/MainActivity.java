@@ -57,10 +57,10 @@ public class MainActivity extends AppCompatActivity {
 
 		// TODO IT3 create a tutorial for first time opening
 
+		// If first time opnening the app, disable light-icon activity-alias
 		if (MySharedPrefsManager.getInstance(context).isFirstTimeOpening()) {
 			Util.disableComponent(getPackageManager(), new ComponentName(this, "es.udc.psi1718.project.LightIcon"));
 		}
-
 
 		// Database helper
 		mySQLiteHelper = new MySQLiteHelper(this);
