@@ -85,7 +85,6 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 		setContentView(R.layout.activity_controllers);
 		Log.d(TAG, "ONCREATE");
 
-		// TODO cambiar el nombre del toolbar por el nombre del panel
 		// TODO tutorial, indicar como mover controllers de sitio, como crearlos, etc...
 
 
@@ -174,7 +173,6 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	protected void onDestroy() {
 		super.onDestroy();
 		Log.d(TAG, "onDestroy");
-		// TODO saveControllers()
 		Log.e(TAG, "onDestroy : UNREGISTER RECEIVER USB");
 
 		// TODO Unregister broadcast receiver
