@@ -16,3 +16,10 @@ v0.0.2.5
 - Changes in UI
 - Changes in AlertDialogs
 - Animations added to the some view items of the application
+
+v0.1.1.0
+- All functionalities for this iteration have been implemented
+- Created "memoria.pdf"
+
+v0.1.1.1
+- Minor fix when rotating screen in ControllersActivity

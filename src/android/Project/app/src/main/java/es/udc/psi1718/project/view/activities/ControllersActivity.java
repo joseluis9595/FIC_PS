@@ -50,7 +50,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	private String TAG = "ControllersActivity";
 	public static Boolean active = false;
 
-	private final Boolean DEBUG = false;        // TODO DEBUG remove this constant
+	private final Boolean DEBUG = true;        // TODO DEBUG remove this constant
 
 	// Panel variables
 	private int panelId;
