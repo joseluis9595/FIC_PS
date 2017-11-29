@@ -50,7 +50,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	private String TAG = "ControllersActivity";
 	public static Boolean active = false;
 
-	private final Boolean DEBUG = true;        // TODO DEBUG remove this constant
+	private final Boolean DEBUG = false;        // TODO DEBUG remove this constant
 
 	// Panel variables
 	private int panelId;
@@ -71,12 +71,15 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	private ArduinoCommunicationManager arduinoCommunication;
 	private BroadcastReceiver broadcastReceiver;
 	private IntentFilter intentFilter;
+	private Boolean connectionIsActive = false;
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
-		setContentView(R.layout.activity_controllers);
-		initializeLayout();
+		if (connectionIsActive || DEBUG) {
+			setContentView(R.layout.activity_controllers);
+			initializeLayout();
+		}
 	}
 
 	@Override
@@ -88,7 +91,6 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 		Log.d(TAG, "ONCREATE");
 
 		// TODO tutorial, indicar como mover controllers de sitio, como crearlos, etc...
-
 
 		// Intents
 		panelId = getIntent().getIntExtra(Constants.INTENTCOMM_PANELID, -1);
@@ -117,6 +119,15 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 
 		// Initialize layout
 		initializeLayout();
+
+		// By default, layout is disabled
+		// TODO DEBUG uncomment this when not debugging
+		if (DEBUG) {
+			enableUI();
+		} else {
+			disableUI();
+			setLoading(false);
+		}
 	}
 
 	@Override
@@ -311,17 +322,6 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 
 		// Restore previous Controllers
 		loadSavedControllers();
-
-		// By default, layout is disabled
-		// TODO DEBUG uncomment this when not debugging
-		if (DEBUG) {
-			enableUI();
-		} else {
-			disableUI();
-			setLoading(false);
-		}
-
-
 	}
 
 
@@ -554,6 +554,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 			public void run() {
 				// TODO IT2 comprobar si se ha cancelado la comunicación
 				enableUI();
+				connectionIsActive = true;
 				// TODO DEBUG Util.displayMessage(context, "Connection opened!");
 			}
 		});
@@ -572,6 +573,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 				}
 				disableUI();
 				setLoading(false);
+				connectionIsActive = false;
 			}
 		});
 	}
@@ -584,6 +586,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 				disableUI();
 				Util.displayError(context, arduinoResponseCode.getDescription());
 				setLoading(false);
+				connectionIsActive = false;
 			}
 		});
 	}
