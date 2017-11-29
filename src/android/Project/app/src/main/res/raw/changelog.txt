@@ -8,3 +8,6 @@ v0.0.2.2
 
 v0.0.2.3
 - Deleted useless files
+
+v0.0.2.4
+- Fixed crash when controller was long pressed and released quickly after

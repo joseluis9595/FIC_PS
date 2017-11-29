@@ -11,7 +11,7 @@
     <color name="colorPrimaryDark_dark">#FF000000</color>
     <color name="colorAccent_dark">#26a69a</color>
 
-    <!-- Dark theme -->
+    <!-- Light theme -->
     <color name="colorPrimary_light">#FFF5F5F5</color>
     <color name="colorPrimaryDark_light">#FF757575</color>
     <color name="colorAccent_light">#26a69a</color>

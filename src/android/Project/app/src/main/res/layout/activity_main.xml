@@ -10,6 +10,7 @@
     android:padding="@dimen/main_margin"
     tools:context="es.udc.psi1718.project.view.activities.MainActivity">
 
+    <!-- TODO add animations -->
     <ListView
         android:id="@+id/lv_mainactiv"
         android:layout_width="match_parent"

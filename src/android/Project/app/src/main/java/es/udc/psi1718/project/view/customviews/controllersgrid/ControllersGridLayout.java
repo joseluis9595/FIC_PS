@@ -141,6 +141,8 @@ public class ControllersGridLayout extends ScrollView {
 				case DragEvent.ACTION_DRAG_ENDED:
 					Log.e(TAG, "ACTION_DRAG_ENDED : " + index);
 
+					if (initialIndex == -1) break;
+
 					// Update index of every modified view
 					int firstModifiedIndex = (initialIndex < index) ? initialIndex : index;
 					updateIndexes(firstModifiedIndex);
