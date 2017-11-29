@@ -33,6 +33,7 @@
     <string name="newcontroller_pinnumber_hint">Pin number</string>
 
     <!-- New panel AlertDialog strings -->
+    <string name="alertdialog_newpanel_title">Add new panel</string>
     <string name="et_newpanel_name_hint">Name of the panel</string>
 
     <!-- Controllers Strings -->

@@ -11,3 +11,8 @@ v0.0.2.3
 
 v0.0.2.4
 - Fixed crash when controller was long pressed and released quickly after
+
+v0.0.2.5
+- Changes in UI
+- Changes in AlertDialogs
+- Animations added to the some view items of the application

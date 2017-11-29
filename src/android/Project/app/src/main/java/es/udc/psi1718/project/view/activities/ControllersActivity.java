@@ -15,6 +15,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -152,6 +154,11 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	protected void onResume() {
 		super.onResume();
 		Log.d(TAG, "onResume");
+
+		// TODO move this animation to enableUI or similar
+		// Add animation to the fab
+		Animation animation = AnimationUtils.loadAnimation(context, R.anim.fab_grow_anim);
+		fab.startAnimation(animation);
 	}
 
 	@Override
@@ -387,6 +394,11 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 		final AlertDialog alertDialog = dialogBuilder.create();
 		alertDialog.show();
 		Log.d(TAG, "createNewControllerDialog : created AlertDialog");
+
+		// Change opacity of negative button
+		alertDialog
+				.getButton(AlertDialog.BUTTON_NEGATIVE)
+				.setAlpha(0.7f);
 
 		// Override onClickListener so that we can control when alertDialog closes
 		alertDialog

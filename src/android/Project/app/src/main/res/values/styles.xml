@@ -4,6 +4,7 @@
         <item name="colorPrimary">@color/colorPrimary_dark</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark_dark</item>
         <item name="colorAccent">@color/colorAccent_dark</item>
+        <!--<item name="android:alertDialogTheme">@style/AlertDialogCustomTheme</item>-->
         <!-- custom attrs -->
         <item name="themeColorAccent">@color/colorAccent_dark</item>
     </style>
@@ -32,11 +33,21 @@
         <item name="themeColorAccent">@color/colorAccent_custom</item>
     </style>
 
+    <!-- TODO modify this animation -->
+    <!--<style name="AlertDialogCustomTheme" parent="AlertDialog.AppCompat">-->
+    <!--<item name="android:windowAnimationStyle">@style/MyAnimation.Window</item>-->
+    <!--</style>-->
+
+    <!--<style name="MyAnimation.Window" parent="@android:style/Animation.Activity">-->
+    <!--<item name="android:windowEnterAnimation">@anim/anim_in</item>-->
+    <!--<item name="android:windowExitAnimation">@anim/anim_out</item>-->
+    <!--</style>-->
+
     <!-- Animation for fading in/out themes -->
-    <style name="WindowAnimationTransition">
-        <item name="android:windowEnterAnimation">@android:anim/fade_in</item>
-        <item name="android:windowExitAnimation">@android:anim/fade_out</item>
-    </style>
+    <!--<style name="WindowAnimationTransition">-->
+    <!--<item name="android:windowEnterAnimation">@android:anim/fade_in</item>-->
+    <!--<item name="android:windowExitAnimation">@android:anim/fade_out</item>-->
+    <!--</style>-->
 
     <!--
     <style name="AppTheme" parent="Theme.AppCompat">

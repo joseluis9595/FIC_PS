@@ -15,6 +15,8 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -97,6 +99,10 @@ public class MainActivity extends AppCompatActivity {
 	protected void onResume() {
 		super.onResume();
 		Log.d(TAG, "onResume");
+
+		// Add animation to the fab
+		Animation animation = AnimationUtils.loadAnimation(context, R.anim.fab_grow_anim);
+		fabNewPanel.startAnimation(animation);
 	}
 
 	@Override
@@ -194,6 +200,7 @@ public class MainActivity extends AppCompatActivity {
 	 */
 	private void createNewPanelDialog() {
 		// Create AlertDialog builder
+		// final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this, R.style.AlertDialogCustomTheme);
 		final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
 
 		// Inflate and set the custom view
@@ -206,6 +213,7 @@ public class MainActivity extends AppCompatActivity {
 
 		// Set the rest of the options
 		dialogBuilder
+				.setTitle(R.string.alertdialog_newpanel_title)
 				.setCancelable(false)
 				.setPositiveButton("Create", null)
 				.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -218,6 +226,15 @@ public class MainActivity extends AppCompatActivity {
 		// Display AlertDialog
 		final AlertDialog alertDialog = dialogBuilder.create();
 		alertDialog.show();
+
+		// Add animation to the view inside the alertDialog
+		dialogView.startAnimation(AnimationUtils.loadAnimation(
+				context, android.R.anim.slide_in_left));
+
+		// Change opacity of negative button
+		alertDialog
+				.getButton(AlertDialog.BUTTON_NEGATIVE)
+				.setAlpha(0.7f);
 
 		// Override onClickListener so that we can control when alertDialog closes
 		alertDialog
