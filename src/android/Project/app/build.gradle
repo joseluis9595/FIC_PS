@@ -1,9 +1,9 @@
 apply plugin: 'com.android.application'
 
 def versionMajor = 0
-def versionMinor = 0
-def versionPatch = 2
-def versionBuild = 5
+def versionMinor = 1
+def versionPatch = 1
+def versionBuild = 0
 
 android {
     compileSdkVersion 25
@@ -18,6 +18,9 @@ android {
 
         // Don't compile unnecessary resources
         resConfig "en"
+
+        // Change name of the generated apks
+        project.ext.set("archivesBaseName", "EasyArduino-v" + defaultConfig.versionName);
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
