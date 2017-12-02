@@ -24,8 +24,8 @@ Dispondr  de dos elementos principales, a los que llamaremos paneles y controlad
 A continuación se muestra un prototipo de la aplicación donde podemos ver dos paneles, el de la izquierda con dos controladores, y del de la derecha con tres controladores:
 
 <p align="center">
-  <img src="documentation/images/pannel_1.jpg" width="250" alt="Example of a simple pannel"/>
-  <img src="documentation/images/pannel_2.jpg" width="250" alt="Example of a simple pannel"/>
+  <img src="documentation/design/images/pannel_1.jpg" width="250" alt="Example of a simple pannel"/>
+  <img src="documentation/design/images/pannel_2.jpg" width="250" alt="Example of a simple pannel"/>
 </p>
 
 Al crear uno de dichos paneles, y elegir con qu  componentes va a querer interactuar, al usuario se le dispondr n una serie de layouts (controladores) que contendr n, por ejemplo, un botón para encender un LED, un cuadro de texto donde se mostrar  el valor en tiempo real de un sensor de temperatura, etc...
