@@ -2,8 +2,8 @@
 <resources>
 
     <!-- Default theme -->
-    <color name="colorPrimary">#3f51b5</color>
-    <color name="colorPrimaryDark">#303f9f</color>
+    <color name="colorPrimary">#039be5</color>
+    <color name="colorPrimaryDark">#0277bd</color>
     <color name="colorAccent">#FF4081</color>
 
     <!-- Dark theme -->
@@ -21,13 +21,16 @@
     <color name="colorPrimaryDark_custom">#014949</color>
     <color name="colorAccent_custom">#d84315</color>
 
+    <!-- About activity -->
+    <color name="aboutactiv_textcolor_main">#dddddd</color>
+    <color name="aboutactiv_textcolor_secondary">#bbbbbb</color>
+
+    <!-- Other resources -->
     <color name="background_color">#eeeeee</color>
 
     <color name="card_view_background_color">#e0e0e0</color>
 
-    <!-- About activity -->
-    <color name="aboutactiv_textcolor_main">#dddddd</color>
-    <color name="aboutactiv_textcolor_secondary">#bbbbbb</color>
+
 
 
     <!-- Previous color palette
