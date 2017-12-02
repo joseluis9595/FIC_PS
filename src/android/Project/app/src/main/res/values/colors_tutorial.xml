@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="tutorial_dotactive_color">@color/colorPrimary</color>
+    <color name="tutorial_dotinactive_color">@color/colorDarkGrey</color>
+</resources>

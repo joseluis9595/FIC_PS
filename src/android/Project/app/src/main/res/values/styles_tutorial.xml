@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Theme for 'About' Activity-->
+    <style name="TutorialActiv" parent="@style/Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowAnimationStyle">@style/WindowAnimationFadeIn</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="TutorialActivText">
+
+    </style>
+
+    <style name="TutorialActivText.title">
+        <item name="android:layout_centerInParent">true</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:layout_marginTop">40dp</item>
+        <item name="android:layout_marginBottom">30dp</item>
+        <item name="android:textSize">25sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TutorialActivText.steps">
+        <item name="android:textSize">14sp</item>
+    </style>
+</resources>

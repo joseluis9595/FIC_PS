@@ -57,12 +57,13 @@ public class MainActivity extends AppCompatActivity {
 		setContentView(R.layout.activity_main);
 		Log.d(TAG, "onCreate");
 
-		// TODO IT3 create a tutorial for first time opening
-
-		// If first time opnening the app, disable light-icon activity-alias
+		// If first time opening the app, disable light-icon activity-alias and launch tutorial
 		if (MySharedPrefsManager.getInstance(context).isFirstTimeOpening()) {
 			Util.disableComponent(getPackageManager(), new ComponentName(this, "es.udc.psi1718.project.LightIcon"));
+			//startTutorial();
 		}
+
+		startTutorial();
 
 		// Database helper
 		mySQLiteHelper = new MySQLiteHelper(this);
@@ -255,6 +256,15 @@ public class MainActivity extends AppCompatActivity {
 
 					}
 				});
+	}
+
+	/**
+	 * Starts the tutorial activity and finished this one
+	 */
+	private void startTutorial() {
+		Intent tutorialIntent = new Intent(MainActivity.this, TutorialActivity.class);
+		startActivity(tutorialIntent);
+		this.finish();
 	}
 }
 

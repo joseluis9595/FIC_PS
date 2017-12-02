@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tutorialitem="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_tutorial_title"
+            style="@style/TutorialActivText.title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tutorial_screen2_title"/>
+
+        <es.udc.psi1718.project.view.customviews.tutorial.TutorialStepItemLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tutorialitem:tutorialItem_number="1"
+            tutorialitem:tutorialItem_text="@string/tutorial_screen2_step1">
+
+        </es.udc.psi1718.project.view.customviews.tutorial.TutorialStepItemLayout>
+
+        <es.udc.psi1718.project.view.customviews.tutorial.TutorialStepItemLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tutorialitem:tutorialItem_number="2"
+            tutorialitem:tutorialItem_text="@string/tutorial_screen2_step2">
+
+        </es.udc.psi1718.project.view.customviews.tutorial.TutorialStepItemLayout>
+
+
+        <ImageView
+            android:id="@+id/img_tutorial"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="40dp"
+            android:src="@drawable/tutorial_img_2"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

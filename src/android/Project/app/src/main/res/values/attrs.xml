@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <attr name="themeColorAccent" format="reference"/>
+
+    <declare-styleable name="TutorialStepItemLayout">
+        <attr name="tutorialItem_text" format="reference"/>
+        <attr name="tutorialItem_number" format="integer"/>
+    </declare-styleable>
 </resources>

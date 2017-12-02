@@ -1,0 +1,34 @@
+<resources>
+
+    <!-- General Strings -->
+    <string name="tutorial_btnnext_finish">Finish</string>
+    <string name="tutorial_btnnext_normal">Next</string>
+    <string name="tutorial_btnskip_normal">Skip</string>
+
+    <!-- Screen 1 -->
+    <string name="tutorial_screen1_title">Welcome to EasyArduino!</string>
+    <string name="tutorial_screen1_step1">We are going to guide you on how to control a simple LED light connected to your Arduino</string>
+
+    <!-- Screen 2 -->
+    <string name="tutorial_screen2_title">Turning ON an LED on your Arduino</string>
+    <!-- TODO modify link in string resource -->
+    <string name="tutorial_screen2_step1">First of all, upload our code to your Arduino, available here</string>
+    <string name="tutorial_screen2_step2">Now connect an LED to your Arduino following the schematics below</string>
+
+    <!-- Screen 3 -->
+    <string name="tutorial_screen3_title">Creating a new panel</string>
+    <string name="tutorial_screen3_step1">Connect your Arduino to your phone via USB, and click the + button on the main activity</string>
+    <string name="tutorial_screen3_step2">Enter a name for the panel</string>
+    <string name="tutorial_screen3_step3">Done! Now click on the new item created</string>
+
+    <!-- Screen 4 -->
+    <string name="tutorial_screen4_title">Creating controllers</string>
+    <string name="tutorial_screen4_step1">Inside a panel, click the + button on the bottom right</string>
+    <string name="tutorial_screen4_step2">Choose the following configuration</string>
+    <string name="tutorial_screen4_step3">Done!</string>
+
+    <!-- Screen 5 -->
+    <string name="tutorial_screen5_title">Ready to go</string>
+    <string name="tutorial_screen5_step1">Now just toggle on and off the newly created switch to light the LED</string>
+
+</resources>

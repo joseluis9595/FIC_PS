@@ -13,29 +13,29 @@
         android:theme="@style/AppTheme.Default">
 
         <!-- TODO IT3 create widgets -->
-        <activity
-            android:name="es.udc.psi1718.project.view.activities.MainActivity">
+        <activity android:name=".view.activities.MainActivity">
         </activity>
 
-        <!-- Activity alias to be able to change icon of the application -->
         <activity-alias
-            android:name="es.udc.psi1718.project.LightIcon"
+            android:name=".DarkIcon"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/app_name"
+            android:targetActivity=".view.activities.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity-alias> <!-- Activity alias to be able to change icon of the application -->
+        <activity-alias
+            android:name=".LightIcon"
             android:enabled="false"
             android:icon="@mipmap/ic_launcher_light"
             android:label="@string/app_name"
-            android:targetActivity="es.udc.psi1718.project.view.activities.MainActivity">
+            android:targetActivity=".view.activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
-        </activity-alias>
-        <activity-alias
-            android:name="es.udc.psi1718.project.DarkIcon"
-            android:icon="@mipmap/ic_launcher"
-            android:label="@string/app_name"
-            android:targetActivity="es.udc.psi1718.project.view.activities.MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity-alias>
@@ -49,7 +49,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="es.udc.psi1718.project.view.activities.MainActivity"/>
         </activity>
-
         <activity
             android:name=".view.activities.SettingsActivity"
             android:label="@string/title_activity_settings"
@@ -58,10 +57,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="es.udc.psi1718.project.view.activities.MainActivity"/>
         </activity>
-
         <activity
             android:name=".view.activities.AboutActivity"
             android:theme="@style/AboutActiv">
+        </activity>
+        <activity
+            android:name=".view.activities.TutorialActivity"
+            android:theme="@style/TutorialActiv">
         </activity>
 
         <receiver
@@ -72,6 +74,7 @@
                 <action android:name="android.intent.action.ACTION_USB_DEVICE_DETTACHED"/>
             </intent-filter>
         </receiver>
+
 
     </application>
 

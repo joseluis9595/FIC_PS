@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- General color palette -->
+    <color name="colorDarkGrey">#666666</color>
+    <color name="colorLightBlue">#039be5</color>
+    <color name="colorBlue">#0277bd</color>
+    <color name="colorPink">#FF4081</color>
+
     <!-- Default theme -->
-    <color name="colorPrimary">#039be5</color>
-    <color name="colorPrimaryDark">#0277bd</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">@color/colorLightBlue</color>
+    <color name="colorPrimaryDark">@color/colorBlue</color>
+    <color name="colorAccent">@color/colorPink</color>
 
     <!-- Dark theme -->
     <color name="colorPrimary_dark">#FF212121</color>
@@ -27,10 +33,7 @@
 
     <!-- Other resources -->
     <color name="background_color">#eeeeee</color>
-
     <color name="card_view_background_color">#e0e0e0</color>
-
-
 
 
     <!-- Previous color palette
