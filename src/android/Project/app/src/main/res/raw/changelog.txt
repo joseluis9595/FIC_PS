@@ -37,3 +37,6 @@ v0.1.2.4
 - Added button to download Arduino code to the tutorial
 - Added sharedPreference to indicate whether or not to show the tutorial
 - New animations and colors for the tutorial
+
+v0.1.2.5
+- Using the new functions to minify apk file size with gradle
