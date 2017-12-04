@@ -333,7 +333,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 		// Pin de escritura digital
 		if (pinType.equalsIgnoreCase("digital") && dataType.equalsIgnoreCase("write")) {
 			Log.d(TAG, "Creating new controller : digWrite");
-			ControllerSwitchView controllerSwitchView = new ControllerSwitchView(context, name, arduinoPin, pinType, dataType);
+			ControllerSwitchView controllerSwitchView = new ControllerSwitchView(context, name, arduinoPin);
 			// mainLinearLayout.addView(controllerSwitchView.getView());
 			// customGridLayout.addCard(controllerSwitchView.getView());
 			customGridLayout.addController(controllerSwitchView);
@@ -343,7 +343,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 		// Pin de escritura analógica
 		if (pinType.equalsIgnoreCase("analog") && dataType.equalsIgnoreCase("write")) {
 			Log.d(TAG, "Creating new controller : anWrite");
-			ControllerSliderView controllerSliderView = new ControllerSliderView(context, name, arduinoPin, pinType, dataType);
+			ControllerSliderView controllerSliderView = new ControllerSliderView(context, name, arduinoPin);
 			// mainLinearLayout.addView(controllerSliderView.getView());
 			// customGridLayout.addCard(controllerSliderView.getView());
 			customGridLayout.addController(controllerSliderView);

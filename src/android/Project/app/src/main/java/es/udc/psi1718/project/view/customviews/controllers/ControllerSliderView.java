@@ -26,13 +26,15 @@ public class ControllerSliderView extends ControllerView {
 	private long timeInMillis;
 
 
-	public ControllerSliderView(Context context, String name, String arduinoPin, String pinType, String commandType) {
-		super(context, name, arduinoPin, pinType, commandType);
-		initializeLayout(name, arduinoPin, pinType, commandType);
+	public ControllerSliderView(Context context, String name, String arduinoPin) {
+		super(context, name, arduinoPin,
+				ArduinoCommunicationManager.PINTYPE_ANALOG,
+				ArduinoCommunicationManager.COMMANDTYPE_WRITE);
+		initializeLayout(name, arduinoPin);
 	}
 
 
-	private void initializeLayout(String name, String arduinoPin, String pinType, String commandType) {
+	private void initializeLayout(String name, String arduinoPin) {
 		// Inflate view
 		view = inflate(getContext(), R.layout.controller_slider_layout, null);
 
@@ -49,10 +51,7 @@ public class ControllerSliderView extends ControllerView {
 				if (fromUser) {
 					if (System.currentTimeMillis() - timeInMillis >= Constants.MAX_DELAY_TIME_SLIDER) {
 						Log.d(TAG, "Can send data");
-						ControllerSliderView.super.sendCommand(
-								progressValue,
-								ArduinoCommunicationManager.PINTYPE_ANALOG,
-								ArduinoCommunicationManager.COMMANDTYPE_WRITE);
+						ControllerSliderView.super.sendCommand(progressValue);
 						timeInMillis = System.currentTimeMillis();
 					}
 				}
@@ -66,10 +65,7 @@ public class ControllerSliderView extends ControllerView {
 			@Override
 			public void onStopTrackingTouch(SeekBar seekBar) {
 				// TODO IT2-3-4 still not working properly when the seekbar is moved quickly
-				ControllerSliderView.super.sendCommand(
-						seekBar.getProgress(),
-						ArduinoCommunicationManager.PINTYPE_ANALOG,
-						ArduinoCommunicationManager.COMMANDTYPE_WRITE);
+				ControllerSliderView.super.sendCommand(seekBar.getProgress());
 			}
 		};
 

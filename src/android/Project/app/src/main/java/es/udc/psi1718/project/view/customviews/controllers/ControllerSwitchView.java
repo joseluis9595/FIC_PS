@@ -22,13 +22,13 @@ public class ControllerSwitchView extends ControllerView {
 	private LinearLayout cardViewLayout;
 
 
-	public ControllerSwitchView(Context context, String name, String arduinoPin, String pinType, String commandType) {
-		super(context, name, arduinoPin, pinType, commandType);
-		initializeLayout(name, arduinoPin, pinType, commandType);
+	public ControllerSwitchView(Context context, String name, String arduinoPin) {
+		super(context, name, arduinoPin, ArduinoCommunicationManager.PINTYPE_DIGITAL, ArduinoCommunicationManager.COMMANDTYPE_WRITE);
+		initializeLayout(name, arduinoPin);
 	}
 
 
-	private void initializeLayout(String name, String arduinoPin, String pinType, String commandType) {
+	private void initializeLayout(String name, String arduinoPin) {
 		// Inflate view
 		view = inflate(getContext(), R.layout.controller_switch_layout, null);
 
@@ -45,7 +45,7 @@ public class ControllerSwitchView extends ControllerView {
 			public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
 				int data = (b) ? 1 : 0;
 				Log.d(TAG, "OnCheckedChange()");
-				ControllerSwitchView.super.sendCommand(data, ArduinoCommunicationManager.PINTYPE_DIGITAL, ArduinoCommunicationManager.COMMANDTYPE_WRITE);
+				ControllerSwitchView.super.sendCommand(data);
 			}
 		};
 

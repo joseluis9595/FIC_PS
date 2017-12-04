@@ -14,13 +14,13 @@ public abstract class ControllerView extends LinearLayout {
 
 	// Command variables
 	private String arduinoPin;
-	private String pinType;
-	private String commandType;
+	private int pinType;
+	private int commandType;
 
 	// Layout variables
 	private String name;
 
-	public ControllerView(Context context, String name, String arduinoPin, String pinType, String commandType) {
+	public ControllerView(Context context, String name, String arduinoPin, int pinType, int commandType) {
 		super(context);
 		this.name = name;
 		this.arduinoPin = arduinoPin;
@@ -45,7 +45,7 @@ public abstract class ControllerView extends LinearLayout {
 	 *
 	 * @param data int value to write to Arduino
 	 */
-	void sendCommand(int data, int pinType, int commandType) {
+	void sendCommand(int data) {
 		// Send command via interface
 		listener.controllerSentCommand(arduinoPin, pinType, commandType, data);
 	}
