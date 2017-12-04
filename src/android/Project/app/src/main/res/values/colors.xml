@@ -2,9 +2,12 @@
 <resources>
 
     <!-- General color palette -->
-    <color name="colorDarkGrey">#666666</color>
+    <color name="colorGrey">#666666</color>
+    <color name="colorDarkGrey">#333333</color>
     <color name="colorLightBlue">#039be5</color>
     <color name="colorBlue">#0277bd</color>
+    <color name="colorBlue2">#01579b</color>
+    <color name="colorBlue3">#1a237e</color>
     <color name="colorPink">#FF4081</color>
 
     <!-- Default theme -->

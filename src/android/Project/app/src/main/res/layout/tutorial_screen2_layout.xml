@@ -24,8 +24,17 @@
             android:layout_height="wrap_content"
             tutorialitem:tutorialItem_number="1"
             tutorialitem:tutorialItem_text="@string/tutorial_screen2_step1">
-
         </es.udc.psi1718.project.view.customviews.tutorial.TutorialStepItemLayout>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_btn_transparent_withborder"
+            android:onClick="goToArduinoFile"
+            android:paddingEnd="30dp"
+            android:paddingStart="30dp"
+            android:text="download"
+            android:textColor="@color/colorLightBlue"/>
 
         <es.udc.psi1718.project.view.customviews.tutorial.TutorialStepItemLayout
             android:layout_width="match_parent"

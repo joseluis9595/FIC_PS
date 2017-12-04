@@ -10,6 +10,7 @@ public class MySharedPrefsManager {
 
 	private static final String SHAREDPREFS_FILENAME = "es.udc.psi1718.easyarduino.";
 	private final String SHAREDPREFS_TIMESOPENED = SHAREDPREFS_FILENAME + "times_opened";
+	private final String SHAREDPREFS_TUTORIALSEEN = SHAREDPREFS_FILENAME + "tutorial_seen";
 
 	private SharedPreferences sharedPrefs;
 
@@ -43,6 +44,23 @@ public class MySharedPrefsManager {
 			return true;
 		}
 		return false;
+	}
+
+
+	/**
+	 * Check if the tutorial was seen by the user
+	 *
+	 * @return Boolean
+	 */
+	public Boolean shouldShowTutorial() {
+		return sharedPrefs.getInt(SHAREDPREFS_TUTORIALSEEN, -1) == -1;
+	}
+
+	/**
+	 * Marks tutorial as seen by the user
+	 */
+	public void setTutorialSeen() {
+		sharedPrefs.edit().putInt(SHAREDPREFS_TUTORIALSEEN, 1).apply();
 	}
 
 	/* TODO IT2-3

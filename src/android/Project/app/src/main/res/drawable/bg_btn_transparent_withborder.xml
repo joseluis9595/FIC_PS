@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:drawable="@drawable/btn_transparent_withborder_outline"
+        android:state_pressed="true">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/colorBlue"/>
+        </shape>
+    </item>
+
+    <item
+        android:drawable="@drawable/btn_transparent_withborder_outline"
+        android:state_focused="true">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/colorBlue"/>
+        </shape>
+    </item>
+
+    <item android:drawable="@drawable/btn_transparent_withborder_outline"/>
+
+</selector>

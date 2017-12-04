@@ -11,8 +11,7 @@
 
     <!-- Screen 2 -->
     <string name="tutorial_screen2_title">Turning ON an LED on your Arduino</string>
-    <!-- TODO modify link in string resource -->
-    <string name="tutorial_screen2_step1">First of all, upload our code to your Arduino, available here</string>
+    <string name="tutorial_screen2_step1">First of all, upload our code to your Arduino, available here:</string>
     <string name="tutorial_screen2_step2">Now connect an LED to your Arduino following the schematics below</string>
 
     <!-- Screen 3 -->

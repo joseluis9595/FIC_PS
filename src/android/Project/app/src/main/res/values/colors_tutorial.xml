@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="tutorial_dotactive_color">@color/colorPrimary</color>
-    <color name="tutorial_dotinactive_color">@color/colorDarkGrey</color>
+    <color name="tutorial_dotinactive_color">@color/colorGrey</color>
+
+    <color name="tutorial_color1">@color/colorLightBlue</color>
+    <color name="tutorial_color2">@color/colorBlue</color>
+    <color name="tutorial_color3">@color/colorBlue2</color>
+    <color name="tutorial_color4">@color/colorBlue3</color>
+    <color name="tutorial_color5">@color/colorDarkGrey</color>
+
 </resources>

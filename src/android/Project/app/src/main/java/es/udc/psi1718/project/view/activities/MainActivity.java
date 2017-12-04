@@ -57,13 +57,15 @@ public class MainActivity extends AppCompatActivity {
 		setContentView(R.layout.activity_main);
 		Log.d(TAG, "onCreate");
 
-		// If first time opening the app, disable light-icon activity-alias and launch tutorial
+		// If first time opening the app, disable light-icon activity-alias
 		if (MySharedPrefsManager.getInstance(context).isFirstTimeOpening()) {
 			Util.disableComponent(getPackageManager(), new ComponentName(this, "es.udc.psi1718.project.LightIcon"));
-			startTutorial();
 		}
 
-		// startTutorial();
+		// Show tutorial if necessary
+		if (MySharedPrefsManager.getInstance(context).shouldShowTutorial()) {
+			startTutorial();
+		}
 
 		// Database helper
 		mySQLiteHelper = new MySQLiteHelper(this);
