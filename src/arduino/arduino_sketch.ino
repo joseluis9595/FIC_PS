@@ -4,8 +4,8 @@
  * This sketch allows Arduino to receive data via serial port
  * and act accordingly
  *
- * Example
- * DIGITAL-8-1
+ * Example command
+ * *D-W-008-0001
  */
 
 
@@ -44,54 +44,57 @@ void loop() {
 
 	// Interpret data
 	if (myString.length() >0) {
+		// Remove fist char (*)
 		myString.remove(0,1);
-		//Serial.println(myString); //see what was received
+
+		// Get values from the String
 		String firstValueString = getValue(myString, '-', 0);
-		char firstValue = firstValueString.charAt(0);
+		char commandType = firstValueString.charAt(0);
 		String secondValueString = getValue(myString, '-', 1);
-		char secondValue = secondValueString.charAt(0);
+		char instruction = secondValueString.charAt(0);
 		String thirdValue = getValue(myString, '-', 2);
 		String fourthValue = getValue(myString, '-', 3);
 		
 		// TODO not possible to use Analog pins yet
-		int thirdValueInt = thirdValue.toInt();
-		int fourthValueInt = fourthValue.toInt();
+		int pinNumber = thirdValue.toInt();
+		int value = fourthValue.toInt();
 
-
-		switch (secondValue){
+		// Switch based on instruction (Read or write)
+		switch (instruction){
 			case 'R':
-				pinMode(thirdValueInt, INPUT);
-				if (firstValue =='D'){
+				// Change pin mode
+				pinMode(pinNumber, INPUT);
+
+				// Act according to command type
+				if (commandType =='D'){
 					//digitalRead(thirdValueInt);
 					//Serial.println("digitalRead(" + String(thirdValueInt) + ")");
 					//Serial.println(digitalRead(thirdValueInt));
-					// TODO modify this print
+					// TODO return value with the same format
 					Serial.print("*" + myString);
-				} else if (firstValue == 'A'){
+				} else if (commandType == 'A'){
 					//analogRead(thirdValueInt);
 					//Serial.println("analogRead(" + String(thirdValueInt) + ")");
 					//Serial.println(analogRead(thirdValueInt));
-					// TODO modify this print
+					// TODO return value with the same format
 					Serial.print("*" + myString);
 				}
 				break;
 
 			case 'W':
-				pinMode(thirdValueInt, OUTPUT);
-				if (firstValue == 'D'){
-					digitalWrite(thirdValueInt, fourthValueInt);
-					// Serial.println("digitalWrite(" + String(thirdValueInt) + ", " + String(fourthValueInt) + ")");
-					Serial.print("*" + myString);
-				} else if (firstValue == 'A'){
-					analogWrite(thirdValueInt, fourthValueInt);
-					// Serial.println("analogWrite(" + String(thirdValueInt) + ", " + String(fourthValueInt) + ")");
-					Serial.print("*" + myString);
+				// Change pin mode
+				pinMode(pinNumber, OUTPUT);
+
+				// Act according to command type
+				if (commandType == 'D'){
+					digitalWrite(pinNumber, value);
+					// Serial.print("*" + myString);
+				} else if (commandType == 'A'){
+					analogWrite(pinNumber, value);
+					// Serial.print("*" + myString);
 				}
 				break;
 		}
-
-		//Serial.println("*" + String(firstValue) + "-" + secondValue + "-" + thirdValue);
-		//Serial.println(firstValue + " " + secondValueInt + " " + thirdValueInt);
 		delay(10);
 	}
 } 

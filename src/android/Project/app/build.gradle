@@ -2,8 +2,8 @@ apply plugin: 'com.android.application'
 
 def versionMajor = 0
 def versionMinor = 1
-def versionPatch = 1
-def versionBuild = 1
+def versionPatch = 2
+def versionBuild = 3
 
 android {
     compileSdkVersion 25
@@ -13,7 +13,7 @@ android {
         targetSdkVersion 25
 
         // Calculate versionCode and versionName programatically
-        versionCode versionMajor * 100000 + versionMinor * 10000 + versionPatch * 1000 + versionBuild
+        versionCode versionMajor * 10000 + versionMinor * 1000 + versionPatch * 100 + versionBuild
         versionName "${versionMajor}.${versionMinor}.${versionPatch}"
 
         // Don't compile unnecessary resources
@@ -35,7 +35,6 @@ android {
 }
 
 dependencies {
-    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'

@@ -9,7 +9,6 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -77,9 +76,7 @@ public class TutorialActivity extends AppCompatActivity {
 		btnSkip.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				Intent mainActivIntent = new Intent(TutorialActivity.this, MainActivity.class);
-				startActivity(mainActivIntent);
-				finish();
+				startMainActivity();
 			}
 		});
 
@@ -90,13 +87,23 @@ public class TutorialActivity extends AppCompatActivity {
 				if (newPosition < screens.length) {
 					mViewPager.setCurrentItem(newPosition, true);
 				} else {
-					Intent mainActivIntent = new Intent(TutorialActivity.this, MainActivity.class);
-					startActivity(mainActivIntent);
-					finish();
+					startMainActivity();
 				}
 			}
 		});
 	}
+
+
+	/**
+	 * Starts the main activity
+	 */
+	private void startMainActivity() {
+		Intent mainActivIntent = new Intent(TutorialActivity.this, MainActivity.class);
+		startActivity(mainActivIntent);
+		finish();
+
+	}
+
 
 	/**
 	 * Make the status bar transparent
@@ -121,14 +128,14 @@ public class TutorialActivity extends AppCompatActivity {
 		for (int i = 0; i < dots.length; i++) {
 			dots[i] = new TextView(this);
 			dots[i].setText(Html.fromHtml("&#8226;"));
-			dots[i].setTextSize(35);
+			dots[i].setTextSize(22);
 			dots[i].setAlpha(.2f);
 			dots[i].setTextColor(getResources().getColor(R.color.colorDarkGrey));
 			dotsContainer.addView(dots[i]);
 		}
 		dots[position].setAlpha(1f);
+		dots[position].setTextSize(25);
 		dots[position].setTextColor(getResources().getColor(R.color.colorLightBlue));
-		Log.e(TAG, "Executed setNavigationDots");
 	}
 
 	/**
@@ -137,7 +144,6 @@ public class TutorialActivity extends AppCompatActivity {
 	ViewPager.OnPageChangeListener mOnPageChangeListener = new ViewPager.OnPageChangeListener() {
 		@Override
 		public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
 		}
 
 		@Override
@@ -154,7 +160,7 @@ public class TutorialActivity extends AppCompatActivity {
 				AlphaAnimation fadeIn = new AlphaAnimation(0.0f, 0.8f);
 				fadeIn.setDuration(200);
 				btnSkip.startAnimation(fadeIn);
-			} else {
+			} else if (btnSkip.getVisibility() == View.VISIBLE) {
 				btnSkip.setVisibility(View.GONE);
 				AlphaAnimation fadeOut = new AlphaAnimation(0.8f, 0.0f);
 				fadeOut.setDuration(200);
@@ -164,7 +170,6 @@ public class TutorialActivity extends AppCompatActivity {
 
 		@Override
 		public void onPageScrollStateChanged(int state) {
-
 		}
 	};
 
@@ -183,16 +188,17 @@ public class TutorialActivity extends AppCompatActivity {
 			} else if (position <= 1) { // [-1,1]
 
 				// Change animation of the whole view
-				view.setAlpha(1 - Math.abs(position));
+				view.setAlpha(1 - Math.abs(position) * 1.8f);
 				view.setTranslationX(position * (pageWidth / 3));
 
 				// Change animation of the title
 				TextView tvTitle = (TextView) view.findViewById(R.id.tv_tutorial_title);
-				// tvTitle.setAlpha(1 - Math.abs(position));
+				tvTitle.setAlpha(1 - Math.abs(position) * 1.2f);
 				tvTitle.setTranslationX(position * (pageWidth / 2));
 
 				// Change animation of the imageView
 				ImageView img = (ImageView) view.findViewById(R.id.img_tutorial);
+				img.setAlpha(1 - Math.abs(position));
 				img.setTranslationX(position * (pageWidth / 6));
 
 			} else { // (1,+Infinity]

@@ -60,10 +60,10 @@ public class MainActivity extends AppCompatActivity {
 		// If first time opening the app, disable light-icon activity-alias and launch tutorial
 		if (MySharedPrefsManager.getInstance(context).isFirstTimeOpening()) {
 			Util.disableComponent(getPackageManager(), new ComponentName(this, "es.udc.psi1718.project.LightIcon"));
-			//startTutorial();
+			startTutorial();
 		}
 
-		startTutorial();
+		// startTutorial();
 
 		// Database helper
 		mySQLiteHelper = new MySQLiteHelper(this);
@@ -142,6 +142,10 @@ public class MainActivity extends AppCompatActivity {
 			case R.id.action_settings:
 				Intent settingsIntent = new Intent(this, SettingsActivity.class);
 				startActivityForResult(settingsIntent, SETTINGSACTIV_REQUESTCODE);
+				return true;
+			case R.id.action_tutorial:
+				startTutorial();
+				return true;
 			default:
 				return super.onOptionsItemSelected(item);
 		}

@@ -16,6 +16,7 @@
         <activity android:name=".view.activities.MainActivity">
         </activity>
 
+        <!-- Activity alias to be able to change icon of the application -->
         <activity-alias
             android:name=".DarkIcon"
             android:icon="@mipmap/ic_launcher"
@@ -23,10 +24,9 @@
             android:targetActivity=".view.activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
-        </activity-alias> <!-- Activity alias to be able to change icon of the application -->
+        </activity-alias>
         <activity-alias
             android:name=".LightIcon"
             android:enabled="false"
@@ -35,7 +35,6 @@
             android:targetActivity=".view.activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity-alias>

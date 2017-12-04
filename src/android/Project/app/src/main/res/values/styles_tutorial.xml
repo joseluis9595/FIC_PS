@@ -3,9 +3,13 @@
 
     <!-- Theme for 'About' Activity-->
     <style name="TutorialActiv" parent="@style/Theme.AppCompat.Light.NoActionBar">
-        <item name="android:windowAnimationStyle">@style/WindowAnimationFadeIn</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="TutorialWindowAnimation">
+        <item name="android:windowEnterAnimation">@android:anim/fade_in</item>
+        <item name="android:windowExitAnimation">@android:anim/fade_out</item>
     </style>
 
     <style name="TutorialActivText">

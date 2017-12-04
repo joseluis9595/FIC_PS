@@ -35,6 +35,12 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
 		Log.d(TAG, "onCreate");
 		setContentView(R.layout.activity_settings);
 
+		try {
+			getSupportActionBar().setHomeButtonEnabled(true);
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+		}
+
 		// Load user preferences
 		userPrefs = getSharedPreferences(getString(R.string.userprefs_filename), Context.MODE_PRIVATE);
 

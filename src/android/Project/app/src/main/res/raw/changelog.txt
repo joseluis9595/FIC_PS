@@ -23,3 +23,12 @@ v0.1.1.0
 
 v0.1.1.1
 - Minor fix when rotating screen in ControllersActivity
+
+v0.1.2.1
+- Added tutorial for fist time users
+
+v0.1.2.2
+- Animations in the tutorial
+
+v0.1.2.3
+- Code cleanup, .ino code updated, finished tutorial
