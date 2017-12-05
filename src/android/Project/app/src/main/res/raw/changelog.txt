@@ -19,7 +19,7 @@ v0.0.2.5
 
 v0.1.1.0
 - All functionalities for this iteration have been implemented
-- Created "memoria.pdf"
+- Created "memoria.pdf" for it3
 
 v0.1.1.1
 - Minor fix when rotating screen in ControllersActivity
@@ -40,3 +40,8 @@ v0.1.2.4
 
 v0.1.2.5
 - Using the new functions to minify apk file size with gradle
+
+v0.1.2.6
+- Added animation to the 'next' button on the tutorial (AnimatedVectorDrawable, only API > 21)
+- Fixed bug when pressing 'back' on the tutorial activity, when launched from the menu
+- Added new items in colors.xml

@@ -1,0 +1,18 @@
+<vector
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="20dp"
+    android:height="20dp"
+    android:viewportHeight="73"
+    android:viewportWidth="73">
+    <group
+        android:name="nextgroup"
+        android:pivotX="36"
+        android:pivotY="36">
+        <path
+            android:name="nextpath"
+            android:fillColor="#FFFFFF"
+            android:fillType="evenOdd"
+            android:pathData="M 13.337 9.827 L 23.163 0 L 59.663 36.5 L 23.163 73 L 13.337 63.173 L 40.01 36.5 Z"
+            android:strokeWidth="0"/>
+    </group>
+</vector>

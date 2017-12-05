@@ -4,6 +4,7 @@ import android.animation.ArgbEvaluator;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.AnimatedVectorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -34,7 +35,8 @@ public class TutorialActivity extends AppCompatActivity {
 	// Layout variables
 	private ViewPagerCustomDuration mViewPager;
 	private int[] screens;
-	private Button btnSkip, btnNext;
+	private Button btnSkip;
+	private ImageView btnNext;
 	private LinearLayout dotsContainer;
 	private RelativeLayout buttonsContainer;
 	private MyViewPagerAdapter myViewPagerAdapter;
@@ -43,6 +45,7 @@ public class TutorialActivity extends AppCompatActivity {
 
 	// Animations
 	// Animation fadeOutAnim;
+	private Boolean lastPageSelected = false;
 
 
 	@Override
@@ -72,7 +75,8 @@ public class TutorialActivity extends AppCompatActivity {
 		mViewPager = (ViewPagerCustomDuration) findViewById(R.id.view_pager);
 		dotsContainer = (LinearLayout) findViewById(R.id.layout_activtutorial_dotscontainer);
 		btnSkip = (Button) findViewById(R.id.btn_tutorialctiv_skip);
-		btnNext = (Button) findViewById(R.id.btn_tutorialctiv_next);
+		// btnNext = (Button) findViewById(R.id.btn_tutorialctiv_next);
+		btnNext = (ImageView) findViewById(R.id.btn_tutorialctiv_next);
 		buttonsContainer = (RelativeLayout) findViewById(R.id.layout_tutorialactiv_buttonscontainer);
 
 		// Modify layout
@@ -164,9 +168,34 @@ public class TutorialActivity extends AppCompatActivity {
 			public void onPageSelected(int position) {
 				setNavigationDot(position);
 				if (position == screens.length - 1) {
-					btnNext.setText(R.string.tutorial_btnnext_finish);
+					// btnNext.setText(R.string.tutorial_btnnext_finish);
+					// TODO finish the animation
+					// Get Animated Vector Drawables
+					// Drawable btnNextDrawable = btnNext.getDrawable();
+					// if (btnNextDrawable instanceof Animatable) {
+					// 	((Animatable) btnNextDrawable).start();
+					// }
+					AnimatedVectorDrawable d = null;
+					if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+						d = (AnimatedVectorDrawable) context.getResources().getDrawable(R.drawable.avd_next_to_check);
+						btnNext.setImageDrawable(d);
+						d.start();
+						lastPageSelected = true;
+					}
+
 				} else {
-					btnNext.setText(R.string.tutorial_btnnext_normal);
+					// btnNext.setText(R.string.tutorial_btnnext_normal);
+					// TODO reverse animation
+					if (lastPageSelected) {
+						AnimatedVectorDrawable d = null;
+						if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+							d = (AnimatedVectorDrawable) context.getResources().getDrawable(R.drawable.avd_check_to_next);
+							btnNext.setImageDrawable(d);
+							d.start();
+						}
+						lastPageSelected = false;
+					}
+
 				}
 				// Hide or show 'skip' button
 				if (position == 0) {

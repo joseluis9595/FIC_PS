@@ -2,8 +2,10 @@
 <resources>
 
     <!-- General color palette -->
+    <color name="colorWhite">#FFF</color>
     <color name="colorGrey">#666666</color>
     <color name="colorDarkGrey">#333333</color>
+    <color name="colorBlack">#000000</color>
     <color name="colorLightBlue">#039be5</color>
     <color name="colorBlue">#0277bd</color>
     <color name="colorBlue2">#01579b</color>
@@ -17,12 +19,12 @@
 
     <!-- Dark theme -->
     <color name="colorPrimary_dark">#FF212121</color>
-    <color name="colorPrimaryDark_dark">#FF000000</color>
+    <color name="colorPrimaryDark_dark">@color/colorBlack</color>
     <color name="colorAccent_dark">#26a69a</color>
 
     <!-- Light theme -->
-    <color name="colorPrimary_light">#FFF5F5F5</color>
-    <color name="colorPrimaryDark_light">#FF757575</color>
+    <color name="colorPrimary_light">#F5F5F5</color>
+    <color name="colorPrimaryDark_light">#757575</color>
     <color name="colorAccent_light">#26a69a</color>
 
     <!-- Arduino based theme -->

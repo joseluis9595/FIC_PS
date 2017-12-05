@@ -35,20 +35,11 @@
 
         </es.udc.psi1718.project.view.customviews.tutorial.TutorialStepItemLayout>
 
-
         <ImageView
             android:id="@+id/img_tutorial"
-            android:layout_width="250dp"
-            android:layout_height="250dp"
-            android:src="@drawable/tutorial_img_4"/>
-
-        <es.udc.psi1718.project.view.customviews.tutorial.TutorialStepItemLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tutorialitem:tutorialItem_number="3"
-            tutorialitem:tutorialItem_text="@string/tutorial_screen4_step3">
-
-        </es.udc.psi1718.project.view.customviews.tutorial.TutorialStepItemLayout>
+            android:layout_height="match_parent"
+            android:src="@drawable/tutorial_img_4"/>
 
     </LinearLayout>
 

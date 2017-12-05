@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
 
 		// Show tutorial if necessary
 		if (MySharedPrefsManager.getInstance(context).shouldShowTutorial()) {
-			startTutorial();
+			startTutorial(true);
 		}
 
 		// Database helper
@@ -146,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
 				startActivityForResult(settingsIntent, SETTINGSACTIV_REQUESTCODE);
 				return true;
 			case R.id.action_tutorial:
-				startTutorial();
+				startTutorial(false);
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
@@ -267,10 +267,11 @@ public class MainActivity extends AppCompatActivity {
 	/**
 	 * Starts the tutorial activity and finished this one
 	 */
-	private void startTutorial() {
+	private void startTutorial(Boolean finishActivity) {
 		Intent tutorialIntent = new Intent(MainActivity.this, TutorialActivity.class);
 		startActivity(tutorialIntent);
-		this.finish();
+		if (finishActivity)
+			this.finish();
 	}
 }
 

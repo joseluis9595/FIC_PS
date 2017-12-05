@@ -23,8 +23,7 @@
     <!-- Screen 4 -->
     <string name="tutorial_screen4_title">Creating controllers</string>
     <string name="tutorial_screen4_step1">Inside a panel, click the + button on the bottom right</string>
-    <string name="tutorial_screen4_step2">Choose the following configuration</string>
-    <string name="tutorial_screen4_step3">Done!</string>
+    <string name="tutorial_screen4_step2">Choose the following configuration and we are done!</string>
 
     <!-- Screen 5 -->
     <string name="tutorial_screen5_title">Ready to go</string>

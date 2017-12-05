@@ -62,6 +62,7 @@
         </activity>
         <activity
             android:name=".view.activities.TutorialActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/TutorialActiv">
         </activity>
 
