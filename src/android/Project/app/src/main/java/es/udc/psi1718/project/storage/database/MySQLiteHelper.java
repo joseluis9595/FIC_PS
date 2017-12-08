@@ -33,6 +33,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 
 	public static final String COL_CONTROLLER_ID = "_id";
 	public static final String COL_CONTROLLER_NAME = "controllerName";
+	public static final String COL_CONTROLLER_CONTROLLERTYPE = "controllertype";
 	public static final String COL_CONTROLLER_DATATYPE = "dataType";
 	public static final String COL_CONTROLLER_PINTYPE = "pinType";
 	public static final String COL_CONTROLLER_PINNUMBER = "pinNumber";
@@ -58,6 +59,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 				+ TABLE_CONTROLLERS + " ( "
 				+ COL_CONTROLLER_ID + " integer primary key autoincrement, "
 				+ COL_CONTROLLER_NAME + " text not null, "
+				+ COL_CONTROLLER_CONTROLLERTYPE + " integer not null, "
 				+ COL_CONTROLLER_DATATYPE + " text not null, "
 				+ COL_CONTROLLER_PINTYPE + " text not null, "
 				+ COL_CONTROLLER_PINNUMBER + " text not null, "
@@ -131,6 +133,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 		SQLiteDatabase db = getWritableDatabase();
 		ContentValues values = new ContentValues();
 		values.put(COL_CONTROLLER_NAME, controller.getName());
+		values.put(COL_CONTROLLER_CONTROLLERTYPE, controller.getControllerType());
 		values.put(COL_CONTROLLER_DATATYPE, controller.getDataType());
 		values.put(COL_CONTROLLER_PINTYPE, controller.getPinType());
 		values.put(COL_CONTROLLER_PINNUMBER, controller.getPinNumber());

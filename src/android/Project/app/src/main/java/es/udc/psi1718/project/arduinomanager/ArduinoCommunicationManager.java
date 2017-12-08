@@ -42,10 +42,19 @@ public class ArduinoCommunicationManager {
 	private final int COMMAND_ARDUINO_PIN_LENGTH = 2;
 	private final int COMMAND_LENGTH = 12;
 
+	// Pin and command type
 	public final static int PINTYPE_DIGITAL = 1;
 	public final static int PINTYPE_ANALOG = 2;
 	public final static int COMMANDTYPE_READ = 3;
 	public final static int COMMANDTYPE_WRITE = 4;
+
+	// Controller types
+	public final static int CONTROLLER_GENERIC = 0;
+	public final static int CONTROLLER_LED_ANALOG = 1;
+	public final static int CONTROLLER_LED_DIGITAL = 2;
+	public final static int CONTROLLER_SERVO = 3;
+	public final static int CONTROLLER_TEMP_SENSOR = 4;
+	public final static int CONTROLLER_HUMIDITY_SENSOR = 5;
 
 	// Interface
 	private ArduinoSerialListener arduinoSerialListener;
@@ -120,7 +129,18 @@ public class ArduinoCommunicationManager {
 	};
 
 
-	private String createCommand(String arduinoPin, int pinType, int commandType, int data) {
+	/**
+	 * Creates a String command that will be sent via serial port to the arduino
+	 *
+	 * @param controllerType type of component that the controller represents
+	 * @param arduinoPin     pin where the component is connected
+	 * @param pinType        type of the pin (analog-digital)
+	 * @param commandType    type of command (write-read)
+	 * @param data           data to be sent
+	 *
+	 * @return String
+	 */
+	private String createCommand(int controllerType, String arduinoPin, int pinType, int commandType, int data) {
 		String command = "";
 		command += COMMAND_FIRST_BYTE;
 
@@ -185,16 +205,17 @@ public class ArduinoCommunicationManager {
 	/**
 	 * Sends command via serial port
 	 *
-	 * @param arduinoPin
-	 * @param pinType
-	 * @param commandType
-	 * @param data
+	 * @param controllerType type of the controller
+	 * @param arduinoPin     pin where the component is connected on the arduino
+	 * @param pinType        type of the pin (digital-analog)
+	 * @param commandType    command type (read-write)
+	 * @param data           data sent
 	 *
-	 * @return
+	 * @return {@link ArduinoResponseCodes}
 	 */
-	public ArduinoResponseCodes sendCommand(String arduinoPin, int pinType, int commandType, int data) {
+	public ArduinoResponseCodes sendCommand(int controllerType, String arduinoPin, int pinType, int commandType, int data) {
 		if (serialPort != null) {
-			String command = createCommand(arduinoPin, pinType, commandType, data);
+			String command = createCommand(controllerType, arduinoPin, pinType, commandType, data);
 
 			// If malformed command send error via interface
 			if (command.equals("ERROR")) return ArduinoResponseCodes.ERROR_INVALID_COMMAND;

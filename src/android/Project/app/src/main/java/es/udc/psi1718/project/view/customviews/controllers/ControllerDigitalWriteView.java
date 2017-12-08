@@ -12,18 +12,18 @@ import es.udc.psi1718.project.R;
 import es.udc.psi1718.project.arduinomanager.ArduinoCommunicationManager;
 
 
-public class ControllerSwitchView extends ControllerView {
+public class ControllerDigitalWriteView extends ControllerView {
 
 	private String TAG = "ControllerSwitchView";
 
 	private View view;
-	private TextView nameTextView, positionTextView;
+	private TextView nameTextView, tvPinNumber;
 	private Switch mSwitch;
 	private LinearLayout cardViewLayout;
 
 
-	public ControllerSwitchView(Context context, String name, String arduinoPin) {
-		super(context, name, arduinoPin, ArduinoCommunicationManager.PINTYPE_DIGITAL, ArduinoCommunicationManager.COMMANDTYPE_WRITE);
+	public ControllerDigitalWriteView(Context context, String name, int controllerType, String arduinoPin) {
+		super(context, name, controllerType, arduinoPin, ArduinoCommunicationManager.PINTYPE_DIGITAL, ArduinoCommunicationManager.COMMANDTYPE_WRITE);
 		initializeLayout(name, arduinoPin);
 	}
 
@@ -35,7 +35,7 @@ public class ControllerSwitchView extends ControllerView {
 		// Initialize variables
 		cardViewLayout = (LinearLayout) view.findViewById(R.id.card_view_main_layout);
 		nameTextView = (TextView) view.findViewById(R.id.controller_name_text_view);
-		positionTextView = (TextView) view.findViewById(R.id.tv_controller_position);
+		tvPinNumber = (TextView) view.findViewById(R.id.tv_controller_position);
 
 		mSwitch = (Switch) view.findViewById(R.id.controller_switch);
 
@@ -45,7 +45,7 @@ public class ControllerSwitchView extends ControllerView {
 			public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
 				int data = (b) ? 1 : 0;
 				Log.d(TAG, "OnCheckedChange()");
-				ControllerSwitchView.super.sendCommand(data);
+				ControllerDigitalWriteView.super.sendCommand(data);
 			}
 		};
 
@@ -68,6 +68,7 @@ public class ControllerSwitchView extends ControllerView {
 		// cardViewLayout.setOnLongClickListener(onLongClickListener);
 		mSwitch.setOnCheckedChangeListener(onCheckedChangeListener);
 		nameTextView.setText(name);
+		tvPinNumber.setText("Pin : " + arduinoPin);
 	}
 
 
@@ -80,9 +81,5 @@ public class ControllerSwitchView extends ControllerView {
 	public void setName(String newName) {
 		nameTextView.setText(newName);
 	}
-
-	@Override
-	public void setPosition(int position) {
-		positionTextView.setText("" + position);
-	}
+	
 }

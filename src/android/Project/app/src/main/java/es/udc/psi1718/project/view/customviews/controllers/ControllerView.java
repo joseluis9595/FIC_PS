@@ -16,13 +16,15 @@ public abstract class ControllerView extends LinearLayout {
 	private String arduinoPin;
 	private int pinType;
 	private int commandType;
+	private int controllerType;
 
 	// Layout variables
 	private String name;
 
-	public ControllerView(Context context, String name, String arduinoPin, int pinType, int commandType) {
+	public ControllerView(Context context, String name, int controllerType, String arduinoPin, int pinType, int commandType) {
 		super(context);
 		this.name = name;
+		this.controllerType = controllerType;
 		this.arduinoPin = arduinoPin;
 		this.pinType = pinType;
 		this.commandType = commandType;
@@ -47,7 +49,7 @@ public abstract class ControllerView extends LinearLayout {
 	 */
 	void sendCommand(int data) {
 		// Send command via interface
-		listener.controllerSentCommand(arduinoPin, pinType, commandType, data);
+		listener.controllerSentCommand(controllerType, arduinoPin, pinType, commandType, data);
 	}
 
 
@@ -65,10 +67,4 @@ public abstract class ControllerView extends LinearLayout {
 	 */
 	public abstract void setName(String newName);
 
-	/**
-	 * Sets the position of the view in the layout its placed
-	 *
-	 * @param position position
-	 */
-	public abstract void setPosition(int position);
 }

@@ -3,13 +3,14 @@ package es.udc.psi1718.project.storage.database.daos;
 public class Controller {
 	private int id;
 	private String name;
+	private int controllerType;
 	private String dataType;
 	private String pinType;
 	private String pinNumber;
 	private int position;
 	private int panelId;
 
-	public Controller(int id, String name, String dataType, String pinType, String pinNumber, int position, int panelId) {
+	public Controller(int id, String name, int controllerType, String dataType, String pinType, String pinNumber, int position, int panelId) {
 		this.id = id;
 		this.name = name;
 		this.dataType = dataType;
@@ -17,10 +18,12 @@ public class Controller {
 		this.pinNumber = pinNumber;
 		this.position = position;
 		this.panelId = panelId;
+		this.controllerType = controllerType;
 	}
 
-	public Controller(String name, String dataType, String pinType, String pinNumber, int position, int panelId) {
+	public Controller(String name, int controllerType, String dataType, String pinType, String pinNumber, int position, int panelId) {
 		this.name = name;
+		this.controllerType = controllerType;
 		this.dataType = dataType;
 		this.pinType = pinType;
 		this.pinNumber = pinNumber;
@@ -82,6 +85,14 @@ public class Controller {
 
 	public void setPanelId(int panelId) {
 		this.panelId = panelId;
+	}
+
+	public int getControllerType() {
+		return controllerType;
+	}
+
+	public void setControllerType(int controllerType) {
+		this.controllerType = controllerType;
 	}
 }
 

@@ -61,6 +61,13 @@ v0.1.2.9
 - Press back button to close custom alertDialog
 - Added custom alertDialog to controllersActivity
 
+v0.1.3.0
+- Created 'read' controllers
+- Changed controllers concept:
+    Previously, the user had to choose whether it was analog or digital, and write or read.
+    Now, a list of components is displayed to the user and the more complex stuff is handled by the
+    system itself. No worries for the final user :)
+
 
 
 

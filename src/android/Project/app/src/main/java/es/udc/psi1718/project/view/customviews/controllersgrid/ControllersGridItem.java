@@ -40,14 +40,4 @@ public class ControllersGridItem extends LinearLayout {
 		// Add the view of the controller to our item
 		containerLayout.addView(controllerView.getView());
 	}
-
-
-	/**
-	 * Change the position of the item within its layout
-	 *
-	 * @param position position of the item
-	 */
-	public void setPosition(int position) {
-		controllerView.setPosition(position);
-	}
 }

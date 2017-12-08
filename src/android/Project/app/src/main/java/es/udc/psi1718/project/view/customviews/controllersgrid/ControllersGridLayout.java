@@ -246,7 +246,7 @@ public class ControllersGridLayout extends ScrollView {
 			View view = mGrid.getChildAt(i);
 			LinearLayout linearLayout = (LinearLayout) view;
 			ControllersGridItem childView = (ControllersGridItem) linearLayout.getChildAt(0);
-			childView.setPosition(i);
+			// childView.setPosition(i);
 		}
 	}
 

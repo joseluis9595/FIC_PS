@@ -20,6 +20,7 @@
     <string name="err_not_implemented_yet">Not implemented yet</string>
     <string name="err_nodevicefound">No device found…</string>
     <string name="err_completeallfields">Complete all fields</string>
+    <string name="err_invalidcontroller">Invalid controller type</string>
 
     <!-- Buttons -->
     <string name="btn_startcomm_string">Start communication</string>
@@ -40,6 +41,13 @@
     <!-- Controllers Strings -->
     <string name="controllers_loading_string">Connect Arduino now…</string>
     <string name="controllers_tv_pinnumber">Pin %1$d</string>
+
+    <!-- Controllers type Strings -->
+    <string name="controllertype_led">LED</string>
+    <string name="controllertype_servo">Servo motor</string>
+    <string name="controllertype_tempsensor">Temperature sensor</string>
+    <string name="controllertype_humidsensor">Humidity sensor</string>
+    <string name="controllertype_generalcontroller">General purpose controller</string>
 
     <!-- Shared Preferences -->
     <string name="userprefs_filename">es.udc.psi1718.easyarduino.userprefs</string>

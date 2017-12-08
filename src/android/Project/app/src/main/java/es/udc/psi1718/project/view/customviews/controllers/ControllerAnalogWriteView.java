@@ -3,7 +3,6 @@ package es.udc.psi1718.project.view.customviews.controllers;
 import android.content.Context;
 import android.util.Log;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -12,22 +11,20 @@ import es.udc.psi1718.project.arduinomanager.ArduinoCommunicationManager;
 import es.udc.psi1718.project.util.Constants;
 
 
-public class ControllerSliderView extends ControllerView {
+public class ControllerAnalogWriteView extends ControllerView {
 
 	private String TAG = "ControllerSwitchView";
 
 	// Layout variables
 	private View view;
-	private TextView nameTextView, positionTextView;
-	private SeekBar mSeekbar;
-	private LinearLayout cardViewLayout;
+	private TextView nameTextView;
 
-	//
+	// Temporal fix for sliders
 	private long timeInMillis;
 
 
-	public ControllerSliderView(Context context, String name, String arduinoPin) {
-		super(context, name, arduinoPin,
+	public ControllerAnalogWriteView(Context context, String name, int controllerType, String arduinoPin) {
+		super(context, name, controllerType, arduinoPin,
 				ArduinoCommunicationManager.PINTYPE_ANALOG,
 				ArduinoCommunicationManager.COMMANDTYPE_WRITE);
 		initializeLayout(name, arduinoPin);
@@ -39,10 +36,9 @@ public class ControllerSliderView extends ControllerView {
 		view = inflate(getContext(), R.layout.controller_slider_layout, null);
 
 		// Initialize variables
-		cardViewLayout = (LinearLayout) view.findViewById(R.id.card_view_main_layout);
 		nameTextView = (TextView) view.findViewById(R.id.controller_name_text_view);
-		positionTextView = (TextView) view.findViewById(R.id.tv_controller_position);
-		mSeekbar = (SeekBar) view.findViewById(R.id.controller_seekbar);
+		TextView tvPinNumber = (TextView) view.findViewById(R.id.tv_controller_position);
+		SeekBar mSeekbar = (SeekBar) view.findViewById(R.id.controller_seekbar);
 
 		// Create listeners
 		SeekBar.OnSeekBarChangeListener onSeekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
@@ -51,7 +47,7 @@ public class ControllerSliderView extends ControllerView {
 				if (fromUser) {
 					if (System.currentTimeMillis() - timeInMillis >= Constants.MAX_DELAY_TIME_SLIDER) {
 						Log.d(TAG, "Can send data");
-						ControllerSliderView.super.sendCommand(progressValue);
+						ControllerAnalogWriteView.super.sendCommand(progressValue);
 						timeInMillis = System.currentTimeMillis();
 					}
 				}
@@ -65,7 +61,7 @@ public class ControllerSliderView extends ControllerView {
 			@Override
 			public void onStopTrackingTouch(SeekBar seekBar) {
 				// TODO IT2-3-4 still not working properly when the seekbar is moved quickly
-				ControllerSliderView.super.sendCommand(seekBar.getProgress());
+				ControllerAnalogWriteView.super.sendCommand(seekBar.getProgress());
 			}
 		};
 
@@ -89,6 +85,7 @@ public class ControllerSliderView extends ControllerView {
 		// cardViewLayout.setOnLongClickListener(onLongClickListener);
 		mSeekbar.setOnSeekBarChangeListener(onSeekBarChangeListener);
 		nameTextView.setText(name);
+		tvPinNumber.setText("Pin : " + arduinoPin);
 	}
 
 
@@ -100,11 +97,6 @@ public class ControllerSliderView extends ControllerView {
 	@Override
 	public void setName(String newName) {
 		nameTextView.setText(newName);
-	}
-
-	@Override
-	public void setPosition(int position) {
-		positionTextView.setText("" + position);
 	}
 
 }

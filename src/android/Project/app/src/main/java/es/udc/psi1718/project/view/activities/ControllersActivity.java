@@ -24,6 +24,8 @@ import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -31,7 +33,6 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import es.udc.psi1718.project.MyBroadcastReceiver;
 import es.udc.psi1718.project.R;
@@ -43,9 +44,9 @@ import es.udc.psi1718.project.storage.database.MySQLiteHelper;
 import es.udc.psi1718.project.storage.database.daos.Controller;
 import es.udc.psi1718.project.util.Constants;
 import es.udc.psi1718.project.util.Util;
-import es.udc.psi1718.project.view.customviews.controllers.ControllerSliderView;
-import es.udc.psi1718.project.view.customviews.controllers.ControllerSwitchView;
+import es.udc.psi1718.project.view.customviews.controllers.ControllerView;
 import es.udc.psi1718.project.view.customviews.controllers.ControllerViewEventListener;
+import es.udc.psi1718.project.view.customviews.controllers.ControllerViewManager;
 import es.udc.psi1718.project.view.customviews.controllersgrid.ControllersGridLayout;
 import es.udc.psi1718.project.view.customviews.controllersgrid.ControllersGridListener;
 
@@ -77,6 +78,8 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	private Button btnCreate, btnCancel;
 	private LinearLayout fadeLayout;
 	private LinearLayout customAlertLayout;
+	private String[] controllersType;
+	private ControllerViewManager controllerViewManager;
 
 	// Layout variables
 	private FloatingActionButton fabNewController;
@@ -86,14 +89,15 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	private ControllersGridLayout customGridLayout;
 	private RelativeLayout loadingLayout;
 	private RelativeLayout normalLayout;
+	private EditText newControllerEditText, pinNumberEditText;
+	private Spinner pinTypeSpinner, dataTypeSpinner;
+	private Spinner controllerTypeSpinner;
 
 	// Arduino communication Manager
 	private ArduinoCommunicationManager arduinoCommunication;
 	private BroadcastReceiver broadcastReceiver;
 	private IntentFilter intentFilter;
 	private Boolean connectionIsActive = false;
-	private EditText newControllerEditText, pinNumberEditText;
-	private Spinner pinTypeSpinner, dataTypeSpinner;
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
@@ -123,8 +127,9 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 		}
 
 
-		// Database
+		// Managers
 		mySQLiteHelper = new MySQLiteHelper(context);
+		controllerViewManager = new ControllerViewManager(context);
 
 		// Arduino communication
 		arduinoCommunication = new ArduinoCommunicationManager(context);
@@ -272,11 +277,12 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 			do {
 				Log.e(TAG, "Creating new controller");
 				String name = cursor.getString(cursor.getColumnIndex(MySQLiteHelper.COL_CONTROLLER_NAME));
+				int controllerType = cursor.getInt(cursor.getColumnIndex(MySQLiteHelper.COL_CONTROLLER_CONTROLLERTYPE));
 				String dataType = cursor.getString(cursor.getColumnIndex(MySQLiteHelper.COL_CONTROLLER_DATATYPE));
 				String pinType = cursor.getString(cursor.getColumnIndex(MySQLiteHelper.COL_CONTROLLER_PINTYPE));
 				String pinNumber = cursor.getString(cursor.getColumnIndex(MySQLiteHelper.COL_CONTROLLER_PINNUMBER));
 				// int position = cursor.getInt(cursor.getColumnIndexOrThrow(MySQLiteHelper.COL_CONTROLLER_POSITION));
-				createNewController(name, pinNumber, pinType, dataType);
+				createNewController(name, controllerType, pinNumber, pinType, dataType);
 			} while (cursor.moveToNext());
 		}
 		cursor.close();
@@ -343,15 +349,25 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 
 
 	private void initializeCustomAlertDialogLayout() {
+		controllersType = new String[]{
+				getString(R.string.controllertype_led),
+				getString(R.string.controllertype_servo),
+				getString(R.string.controllertype_tempsensor),
+				getString(R.string.controllertype_humidsensor),
+				getString(R.string.controllertype_generalcontroller)};
+
 		mDisplayMetrics = getResources().getDisplayMetrics();
 		fadeLayout = (LinearLayout) findViewById(R.id.customalertdialog_layout_fade);
 		customAlertLayout = (LinearLayout) findViewById(R.id.customalertdialog_layout_newpanel);
 		btnCancel = (Button) findViewById(R.id.btn_customalertdialog_cancel);
 		btnCreate = (Button) findViewById(R.id.btn_customalertdialog_create);
-		newControllerEditText = (EditText) findViewById(R.id.new_controller_name_edit_text);
-		pinNumberEditText = (EditText) findViewById(R.id.new_controller_pin_number_edit_text);
-		pinTypeSpinner = (Spinner) findViewById(R.id.new_controller_pin_type_spinner);
-		dataTypeSpinner = (Spinner) findViewById(R.id.new_controller_data_type_spinner);
+		newControllerEditText = (EditText) findViewById(R.id.et_newcontroller_name);
+		pinNumberEditText = (EditText) findViewById(R.id.et_newcontroller_pinnumber);
+		controllerTypeSpinner = (Spinner) findViewById(R.id.spinner_newcontroller_type);
+		pinTypeSpinner = (Spinner) findViewById(R.id.spinner_newcontroller_pintype);
+		dataTypeSpinner = (Spinner) findViewById(R.id.spinner_newcontroller_datatype);
+		final LinearLayout layoutPinType = (LinearLayout) findViewById(R.id.layout_newcontroller_pintype);
+		final LinearLayout layoutDataType = (LinearLayout) findViewById(R.id.layout_newcontroller_datatype);
 
 		// Create one common listener for the buttons
 		View.OnClickListener buttonClickListener = new View.OnClickListener() {
@@ -362,44 +378,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 						closeCustomAlertDialog();
 						break;
 					case R.id.btn_customalertdialog_create:
-						String controllerNameString = newControllerEditText.getText().toString();
-						String arduinoPinString = pinNumberEditText.getText().toString();
-
-						// Check if the user completed all the fields
-						if ((!Util.isEmptyString(controllerNameString)) && (!Util.isEmptyString(arduinoPinString))) {
-
-							// TODO IT3 remove this line when readData controllers have been created
-							if (dataTypeSpinner.getSelectedItem().toString().equalsIgnoreCase("read")) {
-								Toast.makeText(context,
-										"Error creating 'Read' controller, " + getString(R.string.err_not_implemented_yet),
-										Toast.LENGTH_SHORT).show();
-								return;
-							}
-
-							// Create new controller
-							Controller controller = new Controller(
-									controllerNameString,
-									dataTypeSpinner.getSelectedItem().toString(),
-									pinTypeSpinner.getSelectedItem().toString(),
-									arduinoPinString,
-									customGridLayout.getControllersCount(),
-									panelId
-							);
-							mySQLiteHelper.insertController(controller);
-
-							// Refresh view
-							createNewController(
-									controllerNameString,
-									arduinoPinString,
-									pinTypeSpinner.getSelectedItem().toString(),
-									dataTypeSpinner.getSelectedItem().toString());
-
-							// Dismiss the dialog
-							closeCustomAlertDialog();
-						} else {
-							// Don't dismiss the dialog
-							Util.displayMessage(context, getString(R.string.err_completeallfields));
-						}
+						handleCreateNewControllerButton();
 						break;
 					default:
 						break;
@@ -407,133 +386,151 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 			}
 		};
 
-		// Add listener to the views
+		// Add listener to the buttons
 		btnCancel.setOnClickListener(buttonClickListener);
 		btnCreate.setOnClickListener(buttonClickListener);
+
+		// Set spinner entries
+		ArrayAdapter<String> controllersTypeAdapter = new ArrayAdapter<String>(this,
+				android.R.layout.simple_spinner_item, controllersType);
+		controllersTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		controllerTypeSpinner.setAdapter(controllersTypeAdapter);
+
+		// Create listener for the controllerType spinner
+		final AdapterView.OnItemSelectedListener spinnerListener = new AdapterView.OnItemSelectedListener() {
+			@Override
+			public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+				String itemSelected = controllersType[position];
+				if (itemSelected.equals(getString(R.string.controllertype_led))) {
+					// Toast.makeText(context, "LED selected", Toast.LENGTH_SHORT).show();
+					layoutDataType.setVisibility(View.GONE);
+					layoutPinType.setVisibility(View.VISIBLE);
+				} else if (itemSelected.equals(getString(R.string.controllertype_generalcontroller))) {
+					// Toast.makeText(context, "General purpose one", Toast.LENGTH_SHORT).show();
+					layoutDataType.setVisibility(View.VISIBLE);
+					layoutPinType.setVisibility(View.VISIBLE);
+				} else {
+					// Toast.makeText(context, "normal ones selected", Toast.LENGTH_SHORT).show();
+					layoutDataType.setVisibility(View.GONE);
+					layoutPinType.setVisibility(View.GONE);
+				}
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> adapterView) {
+			}
+		};
+
+		// Add listener to the spinner
+		controllerTypeSpinner.setOnItemSelectedListener(spinnerListener);
+	}
+
+	private void handleCreateNewControllerButton() {
+		String controllerNameString = newControllerEditText.getText().toString();
+		String arduinoPinString = pinNumberEditText.getText().toString();
+
+		// Check if the user completed all the fields
+		if ((!Util.isEmptyString(controllerNameString)) && (!Util.isEmptyString(arduinoPinString))) {
+
+			// Initialize variables
+			int position = customGridLayout.getControllersCount();
+			String dataType = dataTypeSpinner.getSelectedItem().toString();
+			String pinType = pinTypeSpinner.getSelectedItem().toString();
+			String controllerTypeString = controllerTypeSpinner.getSelectedItem().toString();
+			int controllerType = matchControllerType(controllerTypeString, pinType);
+			if (controllerType == -1) {
+				Util.displayMessage(context, getString(R.string.err_invalidcontroller));
+				return;
+			}
+
+			// Create new controller
+			Controller controller = new Controller(
+					controllerNameString,
+					controllerType,
+					dataType,
+					pinType,
+					arduinoPinString,
+					position,
+					panelId
+			);
+			mySQLiteHelper.insertController(controller);
+
+			// Refresh view
+			createNewController(
+					controllerNameString,
+					controllerType,
+					arduinoPinString,
+					pinType,
+					dataType);
+
+			// Dismiss the dialog
+			closeCustomAlertDialog();
+		} else {
+			// Don't dismiss the dialog
+			Util.displayMessage(context, getString(R.string.err_completeallfields));
+		}
+	}
+
+	private int matchControllerType(String controllerTypeString, String pinTypeString) {
+		if (controllerTypeString.equals(getString(R.string.controllertype_led))) {
+			if (pinTypeString.equalsIgnoreCase("digital"))
+				return ArduinoCommunicationManager.CONTROLLER_LED_DIGITAL;
+			else
+				return ArduinoCommunicationManager.CONTROLLER_LED_ANALOG;
+		}
+
+		if (controllerTypeString.equals(getString(R.string.controllertype_servo)))
+			return ArduinoCommunicationManager.CONTROLLER_SERVO;
+
+		if (controllerTypeString.equals(getString(R.string.controllertype_humidsensor)))
+			return ArduinoCommunicationManager.CONTROLLER_HUMIDITY_SENSOR;
+
+		if (controllerTypeString.equals(getString(R.string.controllertype_tempsensor)))
+			return ArduinoCommunicationManager.CONTROLLER_TEMP_SENSOR;
+
+		if (controllerTypeString.equals(getString(R.string.controllertype_generalcontroller)))
+			return ArduinoCommunicationManager.CONTROLLER_GENERIC;
+
+		return -1;
 	}
 
 
 	/**
 	 * Creates a new Controller layout
 	 */
-	private void createNewController(String name, String arduinoPin, String pinType, String dataType) {
+	private void createNewController(String name, int controllerType, String arduinoPin, String pinType, String dataType) {
 
-		// Pin de escritura digital
-		if (pinType.equalsIgnoreCase("digital") && dataType.equalsIgnoreCase("write")) {
-			Log.d(TAG, "Creating new controller : digWrite");
-			ControllerSwitchView controllerSwitchView = new ControllerSwitchView(context, name, arduinoPin);
-			// mainLinearLayout.addView(controllerSwitchView.getView());
-			// customGridLayout.addCard(controllerSwitchView.getView());
-			customGridLayout.addController(controllerSwitchView);
-			return;
-		}
+		ControllerView controllerView = controllerViewManager.createControllerView(name, controllerType, arduinoPin, pinType, dataType);
+		customGridLayout.addController(controllerView);
 
-		// Pin de escritura analógica
-		if (pinType.equalsIgnoreCase("analog") && dataType.equalsIgnoreCase("write")) {
-			Log.d(TAG, "Creating new controller : anWrite");
-			ControllerSliderView controllerSliderView = new ControllerSliderView(context, name, arduinoPin);
-			// mainLinearLayout.addView(controllerSliderView.getView());
-			// customGridLayout.addCard(controllerSliderView.getView());
-			customGridLayout.addController(controllerSliderView);
-			return;
-		}
-
-		// Pin de lectura
-		if (dataType.equalsIgnoreCase("read")) {
-			Log.d(TAG, "Creating new controller : read");
-			// TODO IT3 Crear un cardview de lectura de valores
-			return;
-		}
-
-		Log.d(TAG, "Creating new controller : unknown");
-	}
-
-
-	/**
-	 * Inflates an Alert Dialog to create a new controller
-	 */
-	private void createNewControllerDialog() {
-		// // Create AlertDialog builder
-		// final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+		// // Pin de escritura digital
+		// if (pinType.equalsIgnoreCase("digital") && dataType.equalsIgnoreCase("write")) {
+		// 	Log.d(TAG, "Creating new controller : digWrite");
+		// 	ControllerDigitalWriteView controllerSwitchView = new ControllerDigitalWriteView(context, name, arduinoPin);
+		// 	// mainLinearLayout.addView(controllerSwitchView.getView());
+		// 	// customGridLayout.addCard(controllerSwitchView.getView());
+		// 	customGridLayout.addController(controllerSwitchView);
+		// 	return;
+		// }
 		//
-		// // Inflate and set the custom view
-		// LayoutInflater inflater = this.getLayoutInflater();
-		// View dialogView = inflater.inflate(R.layout.alertdialog_newcontroller_layout, null);
-		// dialogBuilder.setView(dialogView);
+		// // Pin de escritura analógica
+		// if (pinType.equalsIgnoreCase("analog") && dataType.equalsIgnoreCase("write")) {
+		// 	Log.d(TAG, "Creating new controller : anWrite");
+		// 	ControllerAnalogWriteView controllerSliderView = new ControllerAnalogWriteView(context, name, arduinoPin);
+		// 	// mainLinearLayout.addView(controllerSliderView.getView());
+		// 	// customGridLayout.addCard(controllerSliderView.getView());
+		// 	customGridLayout.addController(controllerSliderView);
+		// 	return;
+		// }
 		//
-		// // Save the views inside the alertDialog
-		// final EditText newControllerEditText = (EditText) dialogView.findViewById(R.id.new_controller_name_edit_text);
-		// final EditText pinNumberEditText = (EditText) dialogView.findViewById(R.id.new_controller_pin_number_edit_text);
-		// final Spinner pinTypeSpinner = (Spinner) dialogView.findViewById(R.id.new_controller_pin_type_spinner);
-		// final Spinner dataTypeSpinner = (Spinner) dialogView.findViewById(R.id.new_controller_data_type_spinner);
+		// // Pin de lectura
+		// if (dataType.equalsIgnoreCase("read")) {
+		// 	Log.d(TAG, "Creating new controller : read");
+		// 	// TODO IT3 Crear un cardview de lectura de valores
+		// 	return;
+		// }
 		//
-		// // Set the rest of the options
-		// dialogBuilder
-		// 		.setCancelable(false)
-		// 		.setPositiveButton("Create", null)
-		// 		.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-		// 			@Override
-		// 			public void onClick(DialogInterface dialogInterface, int i) {
-		// 				dialogInterface.dismiss();
-		// 			}
-		// 		});
-		//
-		// // Display AlertDialog
-		// final AlertDialog alertDialog = dialogBuilder.create();
-		// alertDialog.show();
-		// Log.d(TAG, "createNewControllerDialog : created AlertDialog");
-		//
-		// // Change opacity of negative button
-		// alertDialog
-		// 		.getButton(AlertDialog.BUTTON_NEGATIVE)
-		// 		.setAlpha(0.7f);
-		//
-		// // Override onClickListener so that we can control when alertDialog closes
-		// alertDialog
-		// 		.getButton(AlertDialog.BUTTON_POSITIVE)
-		// 		.setOnClickListener(new View.OnClickListener() {
-		// 			@Override
-		// 			public void onClick(View v) {
-		// 				String controllerNameString = newControllerEditText.getText().toString();
-		// 				String arduinoPinString = pinNumberEditText.getText().toString();
-		//
-		// 				// Check if the user completed all the fields
-		// 				if ((!Util.isEmptyString(controllerNameString)) && (!Util.isEmptyString(arduinoPinString))) {
-		//
-		// 					// TODO IT3 remove this line when readData controllers have been created
-		// 					if (dataTypeSpinner.getSelectedItem().toString().equalsIgnoreCase("read")) {
-		// 						Toast.makeText(context
-		// 								, "Error creating 'Read' controller, " + getString(R.string.err_not_implemented_yet)
-		// 								, Toast.LENGTH_SHORT).show();
-		// 						return;
-		// 					}
-		//
-		// 					// Create new controller
-		// 					Controller controller = new Controller(
-		// 							controllerNameString,
-		// 							dataTypeSpinner.getSelectedItem().toString(),
-		// 							pinTypeSpinner.getSelectedItem().toString(),
-		// 							arduinoPinString,
-		// 							customGridLayout.getControllersCount(),
-		// 							panelId
-		// 					);
-		// 					mySQLiteHelper.insertController(controller);
-		//
-		// 					// Refresh view
-		// 					createNewController(
-		// 							controllerNameString,
-		// 							arduinoPinString,
-		// 							pinTypeSpinner.getSelectedItem().toString(),
-		// 							dataTypeSpinner.getSelectedItem().toString());
-		//
-		// 					// Dismiss the dialog
-		// 					alertDialog.dismiss();
-		// 				} else {
-		// 					// Don't dismiss the dialog
-		// 					Util.displayMessage(context, getString(R.string.err_completeallfields));
-		// 				}
-		// 			}
-		// 		});
+		// Log.d(TAG, "Creating new controller : unknown");
 	}
 
 	/**
@@ -624,6 +621,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 		isCustomAlertDialogOpened = true;
 	}
 
+
 	/**
 	 * Closes the custom alertDialog
 	 */
@@ -692,18 +690,6 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 
 
 	/**
-	 * Disables UI, user can only start communication with arduino
-	 */
-	private void enableUI() {
-		loadingLayout.setVisibility(View.GONE);
-		normalLayout.setVisibility(View.VISIBLE);
-		//buttonStartComm.setEnabled(false);
-		//buttonSendCommand.setEnabled(true);
-		//editText.setEnabled(true);
-	}
-
-
-	/**
 	 * Display loading layout
 	 *
 	 * @param loading Boolean to indicate whether it's loading or not
@@ -715,6 +701,18 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 		buttonStartComm.setEnabled(!loading);
 		loadingTextView.setText(loadingText);
 		progressBar.setVisibility(progressBarVisibility);
+	}
+
+
+	/**
+	 * Disables UI, user can only start communication with arduino
+	 */
+	private void enableUI() {
+		loadingLayout.setVisibility(View.GONE);
+		normalLayout.setVisibility(View.VISIBLE);
+		//buttonStartComm.setEnabled(false);
+		//buttonSendCommand.setEnabled(true);
+		//editText.setEnabled(true);
 	}
 
 
@@ -762,8 +760,8 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	/**
 	 * Sends command via Serial Port
 	 */
-	private void sendCommand(String arduinoPin, int pinType, int dataType, int data) {
-		ArduinoResponseCodes responseCode = arduinoCommunication.sendCommand(arduinoPin, pinType, dataType, data);
+	private void sendCommand(int controllerType, String arduinoPin, int pinType, int dataType, int data) {
+		ArduinoResponseCodes responseCode = arduinoCommunication.sendCommand(controllerType, arduinoPin, pinType, dataType, data);
 		if (responseCode.getCode() <= 0) {
 			Util.displayError(context, responseCode.getDescription());
 		}
@@ -837,9 +835,9 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	/* CONTROLLER VIEW LISTENER FUNCTIONS */
 
 	@Override
-	public void controllerSentCommand(final String arduinoPin, final int pinType, final int dataType, final int data) {
+	public void controllerSentCommand(int controllerType, final String arduinoPin, final int pinType, final int dataType, final int data) {
 		Log.d(TAG, "ControllerChangeState : Sending command to Arduino");
-		sendCommand(arduinoPin, pinType, dataType, data);
+		sendCommand(controllerType, arduinoPin, pinType, dataType, data);
 	}
 
 	@Override
