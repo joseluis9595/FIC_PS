@@ -68,9 +68,6 @@ public class TutorialActivity extends AppCompatActivity {
 		// Initialize listeners
 		initializeListeners();
 
-		// Load animation
-		// fadeOutAnim = AnimationUtils.loadAnimation(this, R.anim.anim_fade_out_08);
-
 		// Initialize variables
 		mViewPager = (ViewPagerCustomDuration) findViewById(R.id.view_pager);
 		dotsContainer = (LinearLayout) findViewById(R.id.layout_activtutorial_dotscontainer);
@@ -129,7 +126,6 @@ public class TutorialActivity extends AppCompatActivity {
 		Intent mainActivIntent = new Intent(TutorialActivity.this, MainActivity.class);
 		startActivity(mainActivIntent);
 		finish();
-
 	}
 
 
@@ -144,6 +140,9 @@ public class TutorialActivity extends AppCompatActivity {
 		}
 	}
 
+	/**
+	 * Initializes listeners for the view pager
+	 */
 	private void initializeListeners() {
 		final int[] colors = {
 				getResources().getColor(R.color.tutorial_color1),
@@ -168,13 +167,6 @@ public class TutorialActivity extends AppCompatActivity {
 			public void onPageSelected(int position) {
 				setNavigationDot(position);
 				if (position == screens.length - 1) {
-					// btnNext.setText(R.string.tutorial_btnnext_finish);
-					// TODO finish the animation
-					// Get Animated Vector Drawables
-					// Drawable btnNextDrawable = btnNext.getDrawable();
-					// if (btnNextDrawable instanceof Animatable) {
-					// 	((Animatable) btnNextDrawable).start();
-					// }
 					AnimatedVectorDrawable d = null;
 					if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
 						d = (AnimatedVectorDrawable) context.getResources().getDrawable(R.drawable.avd_next_to_check);
@@ -184,8 +176,6 @@ public class TutorialActivity extends AppCompatActivity {
 					}
 
 				} else {
-					// btnNext.setText(R.string.tutorial_btnnext_normal);
-					// TODO reverse animation
 					if (lastPageSelected) {
 						AnimatedVectorDrawable d = null;
 						if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {

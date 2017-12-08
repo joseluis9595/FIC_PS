@@ -63,7 +63,5 @@ public class TutorialStepItemLayout extends LinearLayout {
 		TextView tvContent = (TextView) view.findViewById(R.id.tv_tutorial_stepitem_content);
 		tvNumber.setText(numberString);
 		tvContent.setText(contentString);
-
-
 	}
 }

@@ -2,6 +2,7 @@ package es.udc.psi1718.project.view.activities;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
@@ -62,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
 	private Float initialFabX, initialFabY;
 	private int finalFabX, finalFabY = 0;
 	private final Float fadeAlpha = 0.8f;
+	private boolean isCustomAlertDialogOpened;
 
 	// Layout variables
 	private ListView lvPannels;
@@ -154,6 +156,15 @@ public class MainActivity extends AppCompatActivity {
 	protected void onDestroy() {
 		super.onDestroy();
 		Log.d(TAG, "onDestroy");
+	}
+
+	@Override
+	public void onBackPressed() {
+		if (isCustomAlertDialogOpened) {
+			closeCustomAlertDialog();
+			return;
+		}
+		super.onBackPressed();
 	}
 
 	@Override
@@ -323,44 +334,46 @@ public class MainActivity extends AppCompatActivity {
 			finalFabY = (int) (initialFabY - fabNewPanel.getHeight() * 2);
 		}
 
-		// Move fab to the new position
-		new Handler().postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				// Move fab to the new position
-				fabNewPanel.animate()
-						.x(finalFabX)
-						.y(finalFabY)
-						.setDuration(300)
-						.start();
-			}
-		}, 50);
+		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+			// Move fab to the new position
+			new Handler().postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					// Move fab to the new position
+					fabNewPanel.animate()
+							.x(finalFabX)
+							.y(finalFabY)
+							.setDuration(300)
+							.start();
+				}
+			}, 50);
 
-		// Inflate the new layout and add fade to the screen
-		new Handler().postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				// Add fade to the background
-				fadeLayout.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View view) {
-						closeCustomAlertDialog();
-					}
-				});
-				fadeLayout.setClickable(true);
-				fadeLayout.setFocusable(true);
-				fadeLayout.setAlpha(0f);
-				fadeLayout.setVisibility(View.VISIBLE);
-				fadeLayout.animate()
-						.alpha(fadeAlpha)
-						.setDuration(300)
-						.start();
+			// Inflate the new layout and add fade to the screen
+			new Handler().postDelayed(new Runnable() {
+				@SuppressLint("NewApi")
+				@Override
+				public void run() {
+					if (!isCustomAlertDialogOpened) return;
+					// Add fade to the background
+					fadeLayout.setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(View view) {
+							closeCustomAlertDialog();
+						}
+					});
+					fadeLayout.setClickable(true);
+					fadeLayout.setFocusable(true);
+					fadeLayout.setAlpha(0f);
+					fadeLayout.setVisibility(View.VISIBLE);
+					fadeLayout.animate()
+							.alpha(fadeAlpha)
+							.setDuration(300)
+							.start();
 
-				// Set visibility of the whole panel to VISIBLE
-				newPanelLayout.setVisibility(View.VISIBLE);
+					// Set visibility of the whole panel to VISIBLE
+					newPanelLayout.setVisibility(View.VISIBLE);
 
-				// If API > 21 animate with a circular material transition
-				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+					// Animate with a circular material transition
 					Animator a = ViewAnimationUtils.createCircularReveal(
 							newPanelLayout,
 							mDisplayMetrics.widthPixels / 2,
@@ -369,9 +382,30 @@ public class MainActivity extends AppCompatActivity {
 							newPanelLayout.getHeight() * 2f);
 
 					a.start();
+
 				}
-			}
-		}, 350);
+			}, 350);
+		} else {
+			// Add fade to the background
+			fadeLayout.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					closeCustomAlertDialog();
+				}
+			});
+			fadeLayout.setClickable(true);
+			fadeLayout.setFocusable(true);
+			fadeLayout.setAlpha(0f);
+			fadeLayout.setVisibility(View.VISIBLE);
+			fadeLayout.animate()
+					.alpha(fadeAlpha)
+					.setDuration(300)
+					.start();
+			// Show the main layout
+			newPanelLayout.setVisibility(View.VISIBLE);
+		}
+
+		isCustomAlertDialogOpened = true;
 	}
 
 
@@ -415,7 +449,7 @@ public class MainActivity extends AppCompatActivity {
 
 					a.start();
 				} else {
-					// TODO add this case scenario
+					newPanelLayout.setVisibility(View.INVISIBLE);
 				}
 			}
 		}, 50);
@@ -435,6 +469,7 @@ public class MainActivity extends AppCompatActivity {
 
 		// Clear the edit text
 		etNewPanelName.setText("");
+		isCustomAlertDialogOpened = false;
 	}
 }
 

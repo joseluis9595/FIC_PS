@@ -1,0 +1,74 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/mainactiv_layout_fade"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorBlack"
+        android:clickable="true"
+        android:focusable="true"
+        android:orientation="vertical"
+        android:visibility="visible">
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/mainactiv_layout_newpanel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="?attr/colorBackgroundFloating"
+        android:clickable="true"
+        android:elevation="13dp"
+        android:focusable="true"
+        android:gravity="bottom"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/main_margin"
+            android:text="@string/alertdialog_newpanel_title"
+            android:textColor="?attr/colorAccent"
+            android:textSize="16sp"/>
+
+        <EditText
+            android:id="@+id/et_newpanel_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/main_margin"
+            android:layout_marginStart="@dimen/main_margin"
+            android:inputType="textCapSentences"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center|end"
+            android:orientation="horizontal"
+            android:padding="@dimen/main_margin">
+
+            <Button
+                android:id="@+id/btn_newpanel_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:alpha="0.6"
+                android:background="?attr/selectableItemBackground"
+                android:text="cancel"
+                android:textColor="?attr/editTextColor"/>
+
+            <Button
+                android:id="@+id/btn_newpanel_create"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:alpha="0.7"
+                android:background="?attr/selectableItemBackground"
+                android:text="Create"
+                android:textColor="?attr/editTextColor"/>
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

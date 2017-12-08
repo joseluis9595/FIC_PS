@@ -56,3 +56,24 @@ v0.1.2.8
 - Code cleanup and renaming
 - Fixed issue with fade in the custom alert dialog
 - Added listener to the fade, so that the alert dialog is closed on touch outside
+
+v0.1.2.9
+- Press back button to close custom alertDialog
+- Added custom alertDialog to controllersActivity
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

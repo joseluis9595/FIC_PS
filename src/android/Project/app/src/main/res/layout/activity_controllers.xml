@@ -54,26 +54,14 @@
     <RelativeLayout
         android:id="@+id/controllers_parent_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingBottom="@dimen/main_margin">
-
-        <!--<ScrollView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent">-->
-
-        <!--<LinearLayout-->
-        <!--android:id="@+id/controllers_main_layout"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:orientation="vertical">-->
-
-        <!--</LinearLayout>-->
-        <!--</ScrollView>-->
+        android:layout_height="match_parent">
 
         <es.udc.psi1718.project.view.customviews.controllersgrid.ControllersGridLayout
             android:id="@+id/customgrid"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:paddingBottom="@dimen/main_margin">
+
 
         </es.udc.psi1718.project.view.customviews.controllersgrid.ControllersGridLayout>
 
@@ -88,6 +76,68 @@
             android:focusable="true"
             app:fabSize="mini"
             app:srcCompat="@drawable/ic_action_add"/>
+
+        <LinearLayout
+            android:id="@+id/customalertdialog_layout_fade"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorBlack"
+            android:clickable="true"
+            android:focusable="true"
+            android:orientation="vertical"
+            android:visibility="invisible">
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/customalertdialog_layout_newpanel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="?attr/colorBackgroundFloating"
+            android:clickable="true"
+            android:elevation="13dp"
+            android:focusable="true"
+            android:gravity="bottom"
+            android:orientation="vertical"
+            android:visibility="invisible">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/main_margin"
+                android:text="New controller"
+                android:textColor="?attr/colorAccent"
+                android:textSize="16sp"/>
+
+            <include layout="@layout/alertdialog_newcontroller_layout"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center|end"
+                android:orientation="horizontal"
+                android:padding="@dimen/main_margin">
+
+                <Button
+                    android:id="@+id/btn_customalertdialog_cancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:alpha="0.6"
+                    android:background="?attr/selectableItemBackground"
+                    android:text="cancel"
+                    android:textColor="?attr/editTextColor"/>
+
+                <Button
+                    android:id="@+id/btn_customalertdialog_create"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:alpha="0.7"
+                    android:background="?attr/selectableItemBackground"
+                    android:text="Create"
+                    android:textColor="?attr/editTextColor"/>
+            </LinearLayout>
+
+        </LinearLayout>
     </RelativeLayout>
 
 </LinearLayout>
