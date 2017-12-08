@@ -52,7 +52,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:background="?attr/colorBackgroundFloating"
+            android:clickable="true"
             android:elevation="13dp"
+            android:focusable="true"
             android:gravity="bottom"
             android:orientation="vertical"
             android:visibility="invisible">
@@ -71,6 +73,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/main_margin"
                 android:layout_marginStart="@dimen/main_margin"
+                android:inputType="textCapSentences"
                 />
 
             <LinearLayout

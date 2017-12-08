@@ -56,6 +56,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 
 	// Panel variables
 	private int panelId;
+	private String panelName;
 
 	// Database access
 	private MySQLiteHelper mySQLiteHelper;
@@ -92,28 +93,16 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 		setContentView(R.layout.activity_controllers);
 		Log.d(TAG, "ONCREATE");
 
-		// Add the toolbar
-		Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
-		setSupportActionBar(myToolbar);
-
 		// TODO tutorial, indicar como mover controllers de sitio, como crearlos, etc...
 
 		// Intent communication
 		panelId = getIntent().getIntExtra(Constants.INTENTCOMM_PANELID, -1);
-		String panelName = getIntent().getStringExtra(Constants.INTENTCOMM_PANELNAME);
+		panelName = getIntent().getStringExtra(Constants.INTENTCOMM_PANELNAME);
 		if (panelId == -1) {
 			Log.e(TAG, "Invalid pannel id");
 			this.finish();
 		}
 
-		// Add home button in the toolbar
-		try {
-			ActionBar actionBar = getSupportActionBar();
-			actionBar.setDisplayHomeAsUpEnabled(true);
-			actionBar.setTitle(panelName != null ? panelName : "Panel");
-		} catch (NullPointerException e) {
-			e.printStackTrace();
-		}
 
 		// Database
 		mySQLiteHelper = new MySQLiteHelper(context);
@@ -309,6 +298,18 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	 * Function to initialize all layout variables
 	 */
 	private void initializeLayout() {
+		// Add the toolbar
+		Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+		setSupportActionBar(myToolbar);
+
+		// Add home button in the toolbar
+		try {
+			ActionBar actionBar = getSupportActionBar();
+			actionBar.setDisplayHomeAsUpEnabled(true);
+			actionBar.setTitle(panelName != null ? panelName : "Panel");
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+		}
 		// Initialize layout variables
 		fab = (FloatingActionButton) findViewById(R.id.fab_new_controller);
 		// mainLinearLayout = (LinearLayout) findViewById(R.id.controllers_main_layout);

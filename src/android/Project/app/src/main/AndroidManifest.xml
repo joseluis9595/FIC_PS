@@ -13,7 +13,10 @@
         android:theme="@style/AppTheme.Default">
 
         <!-- TODO IT3 create widgets -->
-        <activity android:name=".view.activities.MainActivity">
+        <activity
+            android:name=".view.activities.MainActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            >
         </activity>
 
         <!-- Activity alias to be able to change icon of the application -->

@@ -3,10 +3,8 @@ package es.udc.psi1718.project.view.activities;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
@@ -20,7 +18,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -197,10 +194,7 @@ public class MainActivity extends AppCompatActivity {
 			@Override
 			public void onClick(View view) {
 				Log.d(TAG, "fab pressed");
-				// createNewPanelDialog();
-
-				myTestFunction();
-
+				openCustomAlertDialog();
 			}
 		});
 
@@ -216,14 +210,10 @@ public class MainActivity extends AppCompatActivity {
 				String panelName = selectedFromList.getString(selectedFromList.getColumnIndexOrThrow(MySQLiteHelper.COL_PANEL_NAME));
 				controllersIntent.putExtra(Constants.INTENTCOMM_PANELNAME, panelName);
 
-				// TODO buscar más componentes compartidos entre actividades
+				// Add shared components animation for a more fluid UX
 				if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+					// Shared components we'll add to the animation
 					View backgroundLayout = view.findViewById(R.id.panelitem_background);
-					// final ActivityOptionsCompat options = ActivityOptionsCompat.
-					// 		makeSceneTransitionAnimation(activity, backgroundLayout, "panelitem_background");
-					//
-					// startActivity(controllersIntent, options.toBundle());
-
 					View statusBar = findViewById(android.R.id.statusBarBackground);
 					View navigationBar = findViewById(android.R.id.navigationBarBackground);
 
@@ -235,25 +225,19 @@ public class MainActivity extends AppCompatActivity {
 					pairs.add(Pair.create(backgroundLayout, backgroundLayout.getTransitionName()));
 					pairs.add(Pair.create((View) myToolbar, myToolbar.getTransitionName()));
 
-					// ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity,
-					// 		Pair.create(backgroundLayout, backgroundLayout.getTransitionName()),
-					// 		Pair.create(statusBar, Window.STATUS_BAR_BACKGROUND_TRANSITION_NAME),
-					// 		Pair.create(navigationBar, Window.NAVIGATION_BAR_BACKGROUND_TRANSITION_NAME));
-
+					// Create the bundle with previous options
 					Bundle optionsBundle = ActivityOptionsCompat.makeSceneTransitionAnimation(activity,
 							pairs.toArray(new Pair[pairs.size()])).toBundle();
 
+					// Start activity
 					startActivity(controllersIntent, optionsBundle);
-
 				} else {
 					startActivity(controllersIntent);
 				}
-
-
 			}
 		});
 
-		// Initialize listView with pannels information
+		// Initialize listView with panels information
 		refreshListView();
 
 		// Initialize custom alertDialog layout
@@ -315,68 +299,6 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 	/**
-	 * Inflates an Alert Dialog to create a new panel
-	 */
-	private void createNewPanelDialog() {
-		// Create AlertDialog builder
-		// final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this, R.style.AlertDialogCustomTheme);
-		final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-
-		// Inflate and set the custom view
-		LayoutInflater inflater = this.getLayoutInflater();
-		View dialogView = inflater.inflate(R.layout.alertdialog_newpanel_layout, null);
-		dialogBuilder.setView(dialogView);
-
-		// Save the views inside the alertDialog
-		final EditText etPanelName = (EditText) dialogView.findViewById(R.id.et_newpanel_name);
-
-		// Set the rest of the options
-		dialogBuilder
-				.setTitle(R.string.alertdialog_newpanel_title)
-				.setCancelable(false)
-				.setPositiveButton("Create", null)
-				.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialogInterface, int i) {
-						dialogInterface.dismiss();
-					}
-				});
-
-		// Display AlertDialog
-		final AlertDialog alertDialog = dialogBuilder.create();
-		alertDialog.show();
-
-		// Add animation to the view inside the alertDialog
-		dialogView.startAnimation(AnimationUtils.loadAnimation(
-				context, android.R.anim.slide_in_left));
-
-		// Change opacity of negative button
-		alertDialog
-				.getButton(AlertDialog.BUTTON_NEGATIVE)
-				.setAlpha(0.7f);
-
-		// Override onClickListener so that we can control when alertDialog closes
-		alertDialog
-				.getButton(AlertDialog.BUTTON_POSITIVE)
-				.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						String controllerNameString = etPanelName.getText().toString();
-						if (Util.isEmptyEditText(etPanelName)) {
-							// Don't dismiss the dialog
-							Util.displayMessage(context, getString(R.string.err_completeallfields));
-						} else {
-							// Create a new controller
-							mySQLiteHelper.insertPanel(new Panel(etPanelName.getText().toString()));
-							refreshListView();
-							alertDialog.dismiss();
-						}
-
-					}
-				});
-	}
-
-	/**
 	 * Starts the tutorial activity and finished this one
 	 */
 	private void startTutorial(Boolean finishActivity) {
@@ -390,9 +312,9 @@ public class MainActivity extends AppCompatActivity {
 	/**
 	 * Shows a custom alert dialog for creating a new panel
 	 */
-	private void myTestFunction() {
+	private void openCustomAlertDialog() {
+		// Initialize measurement variables
 		if (finalFabY == 0) {
-			// Initialize measurement variables
 			initialFabX = fabNewPanel.getX();
 			initialFabY = fabNewPanel.getY();
 			finalFabX = (mDisplayMetrics.widthPixels / 2) - fabNewPanel.getWidth() / 2;
@@ -401,6 +323,7 @@ public class MainActivity extends AppCompatActivity {
 			finalFabY = (int) (initialFabY - fabNewPanel.getHeight() * 2);
 		}
 
+		// Move fab to the new position
 		new Handler().postDelayed(new Runnable() {
 			@Override
 			public void run() {
@@ -413,10 +336,19 @@ public class MainActivity extends AppCompatActivity {
 			}
 		}, 50);
 
+		// Inflate the new layout and add fade to the screen
 		new Handler().postDelayed(new Runnable() {
 			@Override
 			public void run() {
 				// Add fade to the background
+				fadeLayout.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
+						closeCustomAlertDialog();
+					}
+				});
+				fadeLayout.setClickable(true);
+				fadeLayout.setFocusable(true);
 				fadeLayout.setAlpha(0f);
 				fadeLayout.setVisibility(View.VISIBLE);
 				fadeLayout.animate()
@@ -440,139 +372,23 @@ public class MainActivity extends AppCompatActivity {
 				}
 			}
 		}, 350);
-
-
-		// 				// Add fade to the background
-		// 				fadeLayout.setAlpha(0f);
-		// 				fadeLayout.setVisibility(View.VISIBLE);
-		// 				fadeLayout.animate()
-		// 						.alpha(0.8f)
-		// 						.setDuration(300)
-		// 						.start();
-		//
-		// 				// Set visibility of the whole panel to VISIBLE
-		// 				newPanelLayout.setVisibility(View.VISIBLE);
-		//
-		// 				// If API > 21 animate with a circular material transition
-		// 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-		// 					Animator a = ViewAnimationUtils.createCircularReveal(
-		// 							newPanelLayout,
-		// 							finalFabX,
-		// 							(int) (finalFabY - newPanelLayout.getY()) + fabNewPanel.getSize() / 2,
-		// 							fabNewPanel.getSize() / 2,
-		// 							newPanelLayout.getHeight() * 2f);
-		//
-		// 					a.start();
-
-
-		// Move fab to the new position
-		// fabNewPanel.animate()
-		// 		.x(finalFabX)
-		// 		.y(finalFabY)
-		// 		.setDuration(300)
-		// 		.setListener(new AnimatorListenerAdapter() {
-		// 			@Override
-		// 			public void onAnimationEnd(Animator animation) {
-		// 				super.onAnimationEnd(animation);
-		//
-		// 				// TODO hide fab
-		//
-		// 				// Add fade to the background
-		// 				fadeLayout.setAlpha(0f);
-		// 				fadeLayout.setVisibility(View.VISIBLE);
-		// 				fadeLayout.animate()
-		// 						.alpha(0.8f)
-		// 						.setDuration(300)
-		// 						.start();
-		//
-		// 				// Set visibility of the whole panel to VISIBLE
-		// 				newPanelLayout.setVisibility(View.VISIBLE);
-		//
-		// 				// If API > 21 animate with a circular material transition
-		// 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-		// 					Animator a = ViewAnimationUtils.createCircularReveal(
-		// 							newPanelLayout,
-		// 							finalFabX,
-		// 							(int) (finalFabY - newPanelLayout.getY()) + fabNewPanel.getSize() / 2,
-		// 							fabNewPanel.getSize() / 2,
-		// 							newPanelLayout.getHeight() * 2f);
-		//
-		// 					a.start();
-		// 				}
-		// 			}
-		// 		})
-		// 		.start();
-
-		// final Float mStartX = fabNewPanel.getX();
-		// final Float mStartY = fabNewPanel.getY();
-		// int marginBottom = (int) mDisplayMetrics.density;
-		// final int x = mDisplayMetrics.widthPixels / 2 - fabNewPanel.getSize() / 2;
-		// final int y = mDisplayMetrics.heightPixels - marginBottom * 250 + fabNewPanel.getSize() / 2;
-		//
-		// // Initialize the animator variable
-		// ValueAnimator animator = ValueAnimator.ofFloat(0f, 1f);
-		// animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-		// 	@Override
-		// 	public void onAnimationUpdate(ValueAnimator animation) {
-		// 		float v = (float) animation.getAnimatedValue();
-		//
-		// 		fabNewPanel.setX(
-		// 				x + (mStartX - x - ((mStartX - x) * v))
-		// 		);
-		//
-		// 		fabNewPanel.setY(
-		// 				y + (mStartY - y - ((mStartY - y) * (v * v)))
-		// 		);
-		// 	}
-		// });
-		//
-		// // Add animationEnd listener
-		// animator.addListener(new AnimatorListenerAdapter() {
-		// 	@Override
-		// 	public void onAnimationEnd(Animator animation) {
-		// 		super.onAnimationEnd(animation);
-		//
-		// 		// Add fade to the background
-		// 		fadeLayout.setAlpha(0f);
-		// 		fadeLayout.setVisibility(View.VISIBLE);
-		// 		fadeLayout.animate()
-		// 				.alpha(0.8f)
-		// 				.setDuration(300)
-		// 				.start();
-		//
-		// 		// Hide fab
-		// 		fabNewPanel.setVisibility(View.INVISIBLE);
-		//
-		// 		// Set visibility of the whole panel to VISIBLE
-		// 		newPanelLayout.setVisibility(View.VISIBLE);
-		//
-		// 		// If API > 21 animate with a circular material transition
-		// 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-		// 			Animator a = ViewAnimationUtils.createCircularReveal(
-		// 					newPanelLayout,
-		// 					mDisplayMetrics.widthPixels / 2,
-		// 					(int) (y - newPanelLayout.getY()) + fabNewPanel.getSize() / 2,
-		// 					fabNewPanel.getSize() / 2,
-		// 					newPanelLayout.getHeight() * 2f);
-		//
-		// 			a.start();
-		// 		}
-		//
-		//
-		// 	}
-		// });
-		//
-		// // Start animation
-		// animator.start();
 	}
 
 
+	/**
+	 * Closes the custom alertDialog
+	 */
 	private void closeCustomAlertDialog() {
+		// Hide the keyboard
+		Util.hideKeyboard(activity);
 
+		// Hide layout and fade
 		new Handler().postDelayed(new Runnable() {
 			@Override
 			public void run() {
 				// Remove fade from the background
+				fadeLayout.setClickable(false);
+				fadeLayout.setFocusable(false);
 				fadeLayout.animate()
 						.alpha(0f)
 						.setDuration(300)
@@ -598,10 +414,13 @@ public class MainActivity extends AppCompatActivity {
 					});
 
 					a.start();
+				} else {
+					// TODO add this case scenario
 				}
 			}
 		}, 50);
 
+		// Move fab back to its position
 		new Handler().postDelayed(new Runnable() {
 			@Override
 			public void run() {
@@ -614,82 +433,8 @@ public class MainActivity extends AppCompatActivity {
 			}
 		}, 350);
 
-		// Hide the keyboard
-		Util.hideKeyboard(activity);
-
-
-		// int marginBottom = (int) mDisplayMetrics.density;
-		// final int fabStartX = (int) fabNewPanel.getX();
-		// final int fabStartY = (int) fabNewPanel.getY();
-		// final int fabFinalX = mDisplayMetrics.widthPixels / 2 - fabNewPanel.getSize() / 2;
-		// final int fabFinalY = mDisplayMetrics.heightPixels - marginBottom * 250 + fabNewPanel.getSize() / 2;
-		//
-		// Hide fade layout
-		// fadeLayout.animate()
-		// 		.alpha(0f)
-		// 		.setDuration(300)
-		// 		.setListener(new AnimatorListenerAdapter() {
-		// 			@Override
-		// 			public void onAnimationEnd(Animator animation) {
-		// 				super.onAnimationEnd(animation);
-		// 				Log.e(TAG, "Entra en el bucle");
-		// 				fadeLayout.setVisibility(View.GONE);
-		//
-		// 				// If API > 21 animate with a circular material transition
-		// 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-		// 					Animator a = ViewAnimationUtils.createCircularReveal(
-		// 							newPanelLayout,
-		// 							mDisplayMetrics.widthPixels / 2,
-		// 							(int) (finalFabY - newPanelLayout.getY()) + fabNewPanel.getSize() / 2,
-		// 							newPanelLayout.getHeight() * 2f,
-		// 							fabNewPanel.getSize() / 2);
-		//
-		// 					a.addListener(new AnimatorListenerAdapter() {
-		// 						@Override
-		// 						public void onAnimationEnd(Animator animation) {
-		// 							super.onAnimationEnd(animation);
-		// 							// Set visibility of the whole panel to INVISIBLE
-		// 							newPanelLayout.setVisibility(View.GONE);
-		// 						}
-		// 					});
-		//
-		// 					// Start animation
-		// 					a.start();
-		// 				} else {
-		// 					// Set visibility of the whole panel to INVISIBLE
-		// 					newPanelLayout.setVisibility(View.GONE);
-		// 				}
-		// 			}
-		// 		})
-		// 		.start();
-
-		// new Handler().postDelayed(new Runnable() {
-		// 	@Override
-		// 	public void run() {
-		// 		fabNewPanel.animate()
-		// 				.x(initialFabX)
-		// 				.y(initialFabY)
-		// 				.setDuration(300)
-		// 				.start();
-		//
-		// 	}
-		// }, 350);
-
-		//
-		// // TODO Change fab visibility
-		// // TODO Move fab to its original position
-		//
-		// ValueAnimator animator = ValueAnimator.ofFloat(0f, 1f);
-		// animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-		// 	@Override
-		// 	public void onAnimationUpdate(ValueAnimator animation) {
-		// 		float v = (float) animation.getAnimatedValue();
-		// 		fabNewPanel.setX(fabFinalX + ((fabStartX - fabFinalX) * v));
-		// 		fabNewPanel.setY((float) (fabFinalY + (fabStartY - fabFinalY) * (Math.pow(v, .5f))));
-		// 	}
-		// });
-		// animator.start();
-
+		// Clear the edit text
+		etNewPanelName.setText("");
 	}
 }
 

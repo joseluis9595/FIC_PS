@@ -51,3 +51,8 @@ v0.1.2.7
 - Created custom toolbar for the activities
 - Minor fixes
 - Implemented custom alertdialog for creating new panels, with custom and complex animations
+
+v0.1.2.8
+- Code cleanup and renaming
+- Fixed issue with fade in the custom alert dialog
+- Added listener to the fade, so that the alert dialog is closed on touch outside
