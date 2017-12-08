@@ -5,6 +5,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <include layout="@layout/my_toolbar"/>
+
     <fragment
         android:id="@+id/fragment1"
         android:name="es.udc.psi1718.project.view.activities.SettingsActivity$Prefs1Fragment"

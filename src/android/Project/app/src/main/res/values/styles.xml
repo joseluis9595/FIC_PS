@@ -1,40 +1,57 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+
+    <!--<style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">-->
+
+    <!--</style>-->
 
     <!-- Main styles -->
-
-    <style name="AppTheme.Dark" parent="Theme.AppCompat">
+    <style name="AppTheme.Dark" parent="Theme.AppCompat.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary_dark</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark_dark</item>
         <item name="colorAccent">@color/colorAccent_dark</item>
+        <item name="android:windowContentTransitions" tools:targetApi="lollipop">true</item>
         <!-- custom attrs -->
-        <item name="themeColorAccent">@color/colorAccent_dark</item>
+        <item name="themeActionBarPopupTheme">@style/Theme.AppCompat</item>
     </style>
 
-    <style name="AppTheme.Light" parent="Theme.AppCompat.Light">
+
+    <style name="AppTheme.Light" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary_light</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark_light</item>
         <item name="colorAccent">@color/colorAccent_light</item>
+        <item name="android:windowContentTransitions" tools:targetApi="lollipop">true</item>
         <!-- custom attrs -->
-        <item name="themeColorAccent">@color/colorAccent_light</item>
+        <item name="themeActionBarPopupTheme">@style/Theme.AppCompat.Light</item>
     </style>
+
 
     <style name="AppTheme.Default" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowContentTransitions" tools:targetApi="lollipop">true</item>
         <!-- custom attrs -->
-        <item name="themeColorAccent">@color/colorAccent</item>s
+        <item name="themeActionBarPopupTheme">@style/Theme.AppCompat.Light</item>
     </style>
+
 
     <style name="AppTheme.TealOrange" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/colorPrimary_custom</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark_custom</item>
         <item name="colorAccent">@color/colorAccent_custom</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowContentTransitions" tools:targetApi="lollipop">true</item>
         <!-- custom attrs -->
-        <item name="themeColorAccent">@color/colorAccent_custom</item>
+        <item name="themeActionBarPopupTheme">@style/Theme.AppCompat.Light</item>
     </style>
 
-    <!-- TODO modify this animation -->
+
+    <!--<style name="AppTheme.PopupOverlay"-->
+
     <!--<style name="AlertDialogCustomTheme" parent="AlertDialog.AppCompat">-->
     <!--<item name="android:windowAnimationStyle">@style/MyAnimation.Window</item>-->
     <!--</style>-->

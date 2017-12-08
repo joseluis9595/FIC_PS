@@ -1,32 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center_horizontal"
-    android:orientation="vertical"
-    android:padding="@dimen/main_margin"
-    tools:context="es.udc.psi1718.project.view.activities.MainActivity">
+    android:orientation="vertical">
 
-    <!-- TODO add animations -->
-    <ListView
-        android:id="@+id/lv_mainactiv"
+    <include layout="@layout/my_toolbar"/>
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </ListView>
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        tools:context="es.udc.psi1718.project.view.activities.MainActivity">
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_mainactiv_newpanel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_margin="@dimen/fab_margin"
-        android:clickable="true"
-        android:focusable="true"
-        app:fabSize="mini"
-        app:srcCompat="@drawable/ic_action_add"/>
+        <!-- TODO add animations -->
+        <ListView
+            android:id="@+id/lv_mainactiv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </ListView>
 
-</RelativeLayout>
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_mainactiv_newpanel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="@dimen/fab_margin"
+            android:clickable="true"
+            android:focusable="true"
+            app:fabSize="mini"
+            app:srcCompat="@drawable/ic_action_add"/>
+
+        <LinearLayout
+            android:id="@+id/mainactiv_layout_fade"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorBlack"
+            android:clickable="true"
+            android:focusable="true"
+            android:orientation="vertical"
+            android:visibility="invisible">
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/mainactiv_layout_newpanel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="?attr/colorBackgroundFloating"
+            android:elevation="13dp"
+            android:gravity="bottom"
+            android:orientation="vertical"
+            android:visibility="invisible">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/main_margin"
+                android:text="@string/alertdialog_newpanel_title"
+                android:textColor="?attr/colorAccent"
+                android:textSize="16sp"/>
+
+            <EditText
+                android:id="@+id/et_newpanel_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/main_margin"
+                android:layout_marginStart="@dimen/main_margin"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center|end"
+                android:orientation="horizontal"
+                android:padding="@dimen/main_margin">
+
+                <Button
+                    android:id="@+id/btn_newpanel_cancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:alpha="0.6"
+                    android:background="?attr/selectableItemBackground"
+                    android:text="cancel"
+                    android:textColor="?attr/editTextColor"/>
+
+                <Button
+                    android:id="@+id/btn_newpanel_create"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:alpha="0.7"
+                    android:background="?attr/selectableItemBackground"
+                    android:text="Create"
+                    android:textColor="?attr/editTextColor"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+
+</LinearLayout>

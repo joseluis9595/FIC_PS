@@ -10,7 +10,9 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -90,19 +92,27 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 		setContentView(R.layout.activity_controllers);
 		Log.d(TAG, "ONCREATE");
 
+		// Add the toolbar
+		Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+		setSupportActionBar(myToolbar);
+
 		// TODO tutorial, indicar como mover controllers de sitio, como crearlos, etc...
 
-		// Intents
+		// Intent communication
 		panelId = getIntent().getIntExtra(Constants.INTENTCOMM_PANELID, -1);
 		String panelName = getIntent().getStringExtra(Constants.INTENTCOMM_PANELNAME);
 		if (panelId == -1) {
 			Log.e(TAG, "Invalid pannel id");
 			this.finish();
-		} else {
-			android.support.v7.app.ActionBar actionBar = getSupportActionBar();
-			if (actionBar != null) {
-				actionBar.setTitle(panelName != null ? panelName : "Panel");
-			}
+		}
+
+		// Add home button in the toolbar
+		try {
+			ActionBar actionBar = getSupportActionBar();
+			actionBar.setDisplayHomeAsUpEnabled(true);
+			actionBar.setTitle(panelName != null ? panelName : "Panel");
+		} catch (NullPointerException e) {
+			e.printStackTrace();
 		}
 
 		// Database
@@ -145,6 +155,10 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 		// Set active flag to true
 		active = true;
 
+		// Add animation to the fab
+		Animation animation = AnimationUtils.loadAnimation(context, R.anim.fab_grow_anim);
+		fab.startAnimation(animation);
+
 		// Check if the activity was called from the broadcast receiver
 		// Bundle extras = getIntent().getExtras();
 		// if (extras == null) return;
@@ -165,11 +179,6 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	protected void onResume() {
 		super.onResume();
 		Log.d(TAG, "onResume");
-
-		// TODO move this animation to enableUI or similar
-		// Add animation to the fab
-		Animation animation = AnimationUtils.loadAnimation(context, R.anim.fab_grow_anim);
-		fab.startAnimation(animation);
 	}
 
 	@Override
@@ -205,7 +214,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 
 		// TODO IT2 remove - Set result for the activity (only for IT1)
 		setResult(RESULT_OK, null);
-		finish();
+		//finish();
 	}
 
 	@Override
@@ -213,6 +222,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 		super.onBackPressed();
 		Log.e(TAG, "onBackPressed");
 		// finish();
+		supportFinishAfterTransition();
 	}
 
 	@Override
@@ -221,9 +231,10 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 		int id = item.getItemId();
 		if (id == android.R.id.home) {
 			// setResult(RESULT_OK, null);
-			finish();
+			supportFinishAfterTransition();
+			return true;
 		}
-		return true;
+		return super.onOptionsItemSelected(item);
 	}
 
 	/**
@@ -279,6 +290,19 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 		// 	cursor.close();
 		// }
 	}
+
+	// /**
+	//  * Gets the textView of the action bar
+	//  *
+	//  * @param window Window object
+	//  *
+	//  * @return TextView
+	//  */
+	// private TextView getActionBarTextView(Window window) {
+	// 	View v = window.getDecorView();
+	// 	int resId = getResources().getIdentifier("action_bar_title", "id", "android");
+	// 	return (TextView) v.findViewById(resId);
+	// }
 
 
 	/**

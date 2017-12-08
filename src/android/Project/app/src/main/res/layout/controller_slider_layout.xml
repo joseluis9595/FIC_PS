@@ -30,7 +30,7 @@
                 android:ellipsize="end"
                 android:text="Titulo"
                 android:textAllCaps="true"
-                android:textColor="?attr/themeColorAccent"
+                android:textColor="?attr/colorAccent"
                 android:textSize="@dimen/controller_title_size"/>
 
         </LinearLayout>

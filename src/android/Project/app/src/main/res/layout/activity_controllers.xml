@@ -5,8 +5,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/colorPrimary"
     android:orientation="vertical"
+    android:transitionName="panelitem_background"
     tools:context="es.udc.psi1718.project.view.activities.ControllersActivity">
+
+    <include layout="@layout/my_toolbar"/>
 
     <!-- TODO DEBUG eliminar android:visibility="gone" -->
     <RelativeLayout

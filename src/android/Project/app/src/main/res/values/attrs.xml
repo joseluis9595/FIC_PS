@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <attr name="themeColorAccent" format="reference"/>
+    <!-- For referencing colors according to each theme -->
+    <!--<attr name="themeColorAccent" format="reference"/>-->
+    <!--<attr name="themeColorPrimary" format="reference"/>-->
+    <attr name="themeActionBarPopupTheme" format="reference"/>
+    <attr name="themeActionBarStyle" format="reference"/>
 
+    <!-- Atributes for each instruction in the tutorial -->
     <declare-styleable name="TutorialStepItemLayout">
         <attr name="tutorialItem_text" format="reference"/>
         <attr name="tutorialItem_number" format="integer"/>

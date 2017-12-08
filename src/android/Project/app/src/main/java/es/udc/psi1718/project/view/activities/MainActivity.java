@@ -1,5 +1,8 @@
 package es.udc.psi1718.project.view.activities;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
@@ -7,19 +10,32 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewAnimationUtils;
+import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import es.udc.psi1718.project.R;
 import es.udc.psi1718.project.storage.MySharedPrefsManager;
@@ -34,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
 	public static Boolean active = false;
 	private Context context = this;
+	private Activity activity = this;
 	private String TAG = "MainActivity";
 
 	// Intents
@@ -43,9 +60,20 @@ public class MainActivity extends AppCompatActivity {
 	// Database helper
 	private MySQLiteHelper mySQLiteHelper;
 
+	// Custom Alert Dialog
+	private DisplayMetrics mDisplayMetrics;
+	private Float initialFabX, initialFabY;
+	private int finalFabX, finalFabY = 0;
+	private final Float fadeAlpha = 0.8f;
+
 	// Layout variables
 	private ListView lvPannels;
 	private FloatingActionButton fabNewPanel;
+	private Toolbar myToolbar;
+	private LinearLayout fadeLayout;
+	private LinearLayout newPanelLayout;
+	private EditText etNewPanelName;
+	private Button btnCancel, btnCreate;
 
 
 	@Override
@@ -56,6 +84,10 @@ public class MainActivity extends AppCompatActivity {
 		setTheme(UserPreferencesManager.getInstance(this).getAppTheme());
 		setContentView(R.layout.activity_main);
 		Log.d(TAG, "onCreate");
+
+		// Add the toolbar
+		myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+		setSupportActionBar(myToolbar);
 
 		// If first time opening the app, disable light-icon activity-alias
 		if (MySharedPrefsManager.getInstance(context).isFirstTimeOpening()) {
@@ -83,6 +115,10 @@ public class MainActivity extends AppCompatActivity {
 		super.onStart();
 		Log.d(TAG, "onStart");
 		active = true;
+
+		// Add animation to the fab
+		Animation animation = AnimationUtils.loadAnimation(context, R.anim.fab_grow_anim);
+		fabNewPanel.startAnimation(animation);
 	}
 
 	@Override
@@ -102,10 +138,6 @@ public class MainActivity extends AppCompatActivity {
 	protected void onResume() {
 		super.onResume();
 		Log.d(TAG, "onResume");
-
-		// Add animation to the fab
-		Animation animation = AnimationUtils.loadAnimation(context, R.anim.fab_grow_anim);
-		fabNewPanel.startAnimation(animation);
 	}
 
 	@Override
@@ -165,7 +197,10 @@ public class MainActivity extends AppCompatActivity {
 			@Override
 			public void onClick(View view) {
 				Log.d(TAG, "fab pressed");
-				createNewPanelDialog();
+				// createNewPanelDialog();
+
+				myTestFunction();
+
 			}
 		});
 
@@ -181,12 +216,89 @@ public class MainActivity extends AppCompatActivity {
 				String panelName = selectedFromList.getString(selectedFromList.getColumnIndexOrThrow(MySQLiteHelper.COL_PANEL_NAME));
 				controllersIntent.putExtra(Constants.INTENTCOMM_PANELNAME, panelName);
 
-				startActivity(controllersIntent);
+				// TODO buscar más componentes compartidos entre actividades
+				if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+					View backgroundLayout = view.findViewById(R.id.panelitem_background);
+					// final ActivityOptionsCompat options = ActivityOptionsCompat.
+					// 		makeSceneTransitionAnimation(activity, backgroundLayout, "panelitem_background");
+					//
+					// startActivity(controllersIntent, options.toBundle());
+
+					View statusBar = findViewById(android.R.id.statusBarBackground);
+					View navigationBar = findViewById(android.R.id.navigationBarBackground);
+
+					List<Pair<View, String>> pairs = new ArrayList<>();
+					if (navigationBar != null) {
+						pairs.add(Pair.create(navigationBar, Window.NAVIGATION_BAR_BACKGROUND_TRANSITION_NAME));
+					}
+					pairs.add(Pair.create(statusBar, Window.STATUS_BAR_BACKGROUND_TRANSITION_NAME));
+					pairs.add(Pair.create(backgroundLayout, backgroundLayout.getTransitionName()));
+					pairs.add(Pair.create((View) myToolbar, myToolbar.getTransitionName()));
+
+					// ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity,
+					// 		Pair.create(backgroundLayout, backgroundLayout.getTransitionName()),
+					// 		Pair.create(statusBar, Window.STATUS_BAR_BACKGROUND_TRANSITION_NAME),
+					// 		Pair.create(navigationBar, Window.NAVIGATION_BAR_BACKGROUND_TRANSITION_NAME));
+
+					Bundle optionsBundle = ActivityOptionsCompat.makeSceneTransitionAnimation(activity,
+							pairs.toArray(new Pair[pairs.size()])).toBundle();
+
+					startActivity(controllersIntent, optionsBundle);
+
+				} else {
+					startActivity(controllersIntent);
+				}
+
+
 			}
 		});
 
 		// Initialize listView with pannels information
 		refreshListView();
+
+		// Initialize custom alertDialog layout
+		initializeCustomAlertDialogLayout();
+	}
+
+	/**
+	 * Initializes variables and layout from the custom alertDialog
+	 */
+	private void initializeCustomAlertDialogLayout() {
+		mDisplayMetrics = getResources().getDisplayMetrics();
+		fadeLayout = (LinearLayout) findViewById(R.id.mainactiv_layout_fade);
+		newPanelLayout = (LinearLayout) findViewById(R.id.mainactiv_layout_newpanel);
+		etNewPanelName = (EditText) findViewById(R.id.et_newpanel_name);
+		btnCancel = (Button) findViewById(R.id.btn_newpanel_cancel);
+		btnCreate = (Button) findViewById(R.id.btn_newpanel_create);
+
+		// Create one common listener for the buttons
+		View.OnClickListener buttonClickListener = new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				switch (view.getId()) {
+					case R.id.btn_newpanel_cancel:
+						closeCustomAlertDialog();
+						break;
+					case R.id.btn_newpanel_create:
+						if (Util.isEmptyEditText(etNewPanelName)) {
+							// Don't dismiss the dialog
+							Util.displayMessage(context, getString(R.string.err_completeallfields));
+						} else {
+							// Create a new controller
+							mySQLiteHelper.insertPanel(new Panel(etNewPanelName.getText().toString()));
+							refreshListView();
+							closeCustomAlertDialog();
+						}
+						break;
+					default:
+						break;
+				}
+			}
+		};
+
+		// Add listener to the views
+		btnCancel.setOnClickListener(buttonClickListener);
+		btnCreate.setOnClickListener(buttonClickListener);
 	}
 
 
@@ -272,6 +384,312 @@ public class MainActivity extends AppCompatActivity {
 		startActivity(tutorialIntent);
 		if (finishActivity)
 			this.finish();
+	}
+
+
+	/**
+	 * Shows a custom alert dialog for creating a new panel
+	 */
+	private void myTestFunction() {
+		if (finalFabY == 0) {
+			// Initialize measurement variables
+			initialFabX = fabNewPanel.getX();
+			initialFabY = fabNewPanel.getY();
+			finalFabX = (mDisplayMetrics.widthPixels / 2) - fabNewPanel.getWidth() / 2;
+			Log.e(TAG, "Value is : " + fabNewPanel.getWidth());
+			Log.e(TAG, "Screen is : " + mDisplayMetrics.widthPixels);
+			finalFabY = (int) (initialFabY - fabNewPanel.getHeight() * 2);
+		}
+
+		new Handler().postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				// Move fab to the new position
+				fabNewPanel.animate()
+						.x(finalFabX)
+						.y(finalFabY)
+						.setDuration(300)
+						.start();
+			}
+		}, 50);
+
+		new Handler().postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				// Add fade to the background
+				fadeLayout.setAlpha(0f);
+				fadeLayout.setVisibility(View.VISIBLE);
+				fadeLayout.animate()
+						.alpha(fadeAlpha)
+						.setDuration(300)
+						.start();
+
+				// Set visibility of the whole panel to VISIBLE
+				newPanelLayout.setVisibility(View.VISIBLE);
+
+				// If API > 21 animate with a circular material transition
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+					Animator a = ViewAnimationUtils.createCircularReveal(
+							newPanelLayout,
+							mDisplayMetrics.widthPixels / 2,
+							(int) (finalFabY - newPanelLayout.getY()) + fabNewPanel.getSize() / 2,
+							fabNewPanel.getSize() / 2,
+							newPanelLayout.getHeight() * 2f);
+
+					a.start();
+				}
+			}
+		}, 350);
+
+
+		// 				// Add fade to the background
+		// 				fadeLayout.setAlpha(0f);
+		// 				fadeLayout.setVisibility(View.VISIBLE);
+		// 				fadeLayout.animate()
+		// 						.alpha(0.8f)
+		// 						.setDuration(300)
+		// 						.start();
+		//
+		// 				// Set visibility of the whole panel to VISIBLE
+		// 				newPanelLayout.setVisibility(View.VISIBLE);
+		//
+		// 				// If API > 21 animate with a circular material transition
+		// 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+		// 					Animator a = ViewAnimationUtils.createCircularReveal(
+		// 							newPanelLayout,
+		// 							finalFabX,
+		// 							(int) (finalFabY - newPanelLayout.getY()) + fabNewPanel.getSize() / 2,
+		// 							fabNewPanel.getSize() / 2,
+		// 							newPanelLayout.getHeight() * 2f);
+		//
+		// 					a.start();
+
+
+		// Move fab to the new position
+		// fabNewPanel.animate()
+		// 		.x(finalFabX)
+		// 		.y(finalFabY)
+		// 		.setDuration(300)
+		// 		.setListener(new AnimatorListenerAdapter() {
+		// 			@Override
+		// 			public void onAnimationEnd(Animator animation) {
+		// 				super.onAnimationEnd(animation);
+		//
+		// 				// TODO hide fab
+		//
+		// 				// Add fade to the background
+		// 				fadeLayout.setAlpha(0f);
+		// 				fadeLayout.setVisibility(View.VISIBLE);
+		// 				fadeLayout.animate()
+		// 						.alpha(0.8f)
+		// 						.setDuration(300)
+		// 						.start();
+		//
+		// 				// Set visibility of the whole panel to VISIBLE
+		// 				newPanelLayout.setVisibility(View.VISIBLE);
+		//
+		// 				// If API > 21 animate with a circular material transition
+		// 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+		// 					Animator a = ViewAnimationUtils.createCircularReveal(
+		// 							newPanelLayout,
+		// 							finalFabX,
+		// 							(int) (finalFabY - newPanelLayout.getY()) + fabNewPanel.getSize() / 2,
+		// 							fabNewPanel.getSize() / 2,
+		// 							newPanelLayout.getHeight() * 2f);
+		//
+		// 					a.start();
+		// 				}
+		// 			}
+		// 		})
+		// 		.start();
+
+		// final Float mStartX = fabNewPanel.getX();
+		// final Float mStartY = fabNewPanel.getY();
+		// int marginBottom = (int) mDisplayMetrics.density;
+		// final int x = mDisplayMetrics.widthPixels / 2 - fabNewPanel.getSize() / 2;
+		// final int y = mDisplayMetrics.heightPixels - marginBottom * 250 + fabNewPanel.getSize() / 2;
+		//
+		// // Initialize the animator variable
+		// ValueAnimator animator = ValueAnimator.ofFloat(0f, 1f);
+		// animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+		// 	@Override
+		// 	public void onAnimationUpdate(ValueAnimator animation) {
+		// 		float v = (float) animation.getAnimatedValue();
+		//
+		// 		fabNewPanel.setX(
+		// 				x + (mStartX - x - ((mStartX - x) * v))
+		// 		);
+		//
+		// 		fabNewPanel.setY(
+		// 				y + (mStartY - y - ((mStartY - y) * (v * v)))
+		// 		);
+		// 	}
+		// });
+		//
+		// // Add animationEnd listener
+		// animator.addListener(new AnimatorListenerAdapter() {
+		// 	@Override
+		// 	public void onAnimationEnd(Animator animation) {
+		// 		super.onAnimationEnd(animation);
+		//
+		// 		// Add fade to the background
+		// 		fadeLayout.setAlpha(0f);
+		// 		fadeLayout.setVisibility(View.VISIBLE);
+		// 		fadeLayout.animate()
+		// 				.alpha(0.8f)
+		// 				.setDuration(300)
+		// 				.start();
+		//
+		// 		// Hide fab
+		// 		fabNewPanel.setVisibility(View.INVISIBLE);
+		//
+		// 		// Set visibility of the whole panel to VISIBLE
+		// 		newPanelLayout.setVisibility(View.VISIBLE);
+		//
+		// 		// If API > 21 animate with a circular material transition
+		// 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+		// 			Animator a = ViewAnimationUtils.createCircularReveal(
+		// 					newPanelLayout,
+		// 					mDisplayMetrics.widthPixels / 2,
+		// 					(int) (y - newPanelLayout.getY()) + fabNewPanel.getSize() / 2,
+		// 					fabNewPanel.getSize() / 2,
+		// 					newPanelLayout.getHeight() * 2f);
+		//
+		// 			a.start();
+		// 		}
+		//
+		//
+		// 	}
+		// });
+		//
+		// // Start animation
+		// animator.start();
+	}
+
+
+	private void closeCustomAlertDialog() {
+
+		new Handler().postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				// Remove fade from the background
+				fadeLayout.animate()
+						.alpha(0f)
+						.setDuration(300)
+						.start();
+
+				// Set visibility of the whole panel to INVISIBLE
+				// newPanelLayout.setVisibility(View.VISIBLE);
+
+				// If API > 21 animate with a circular material transition
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+					Animator a = ViewAnimationUtils.createCircularReveal(
+							newPanelLayout,
+							mDisplayMetrics.widthPixels / 2,
+							(int) (finalFabY - newPanelLayout.getY()) + fabNewPanel.getSize() / 2,
+							newPanelLayout.getHeight() * 2f,
+							fabNewPanel.getSize() / 2);
+					a.addListener(new AnimatorListenerAdapter() {
+						@Override
+						public void onAnimationEnd(Animator animation) {
+							super.onAnimationEnd(animation);
+							newPanelLayout.setVisibility(View.INVISIBLE);
+						}
+					});
+
+					a.start();
+				}
+			}
+		}, 50);
+
+		new Handler().postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				// Move fab to the new position
+				fabNewPanel.animate()
+						.x(initialFabX)
+						.y(initialFabY)
+						.setDuration(300)
+						.start();
+			}
+		}, 350);
+
+		// Hide the keyboard
+		Util.hideKeyboard(activity);
+
+
+		// int marginBottom = (int) mDisplayMetrics.density;
+		// final int fabStartX = (int) fabNewPanel.getX();
+		// final int fabStartY = (int) fabNewPanel.getY();
+		// final int fabFinalX = mDisplayMetrics.widthPixels / 2 - fabNewPanel.getSize() / 2;
+		// final int fabFinalY = mDisplayMetrics.heightPixels - marginBottom * 250 + fabNewPanel.getSize() / 2;
+		//
+		// Hide fade layout
+		// fadeLayout.animate()
+		// 		.alpha(0f)
+		// 		.setDuration(300)
+		// 		.setListener(new AnimatorListenerAdapter() {
+		// 			@Override
+		// 			public void onAnimationEnd(Animator animation) {
+		// 				super.onAnimationEnd(animation);
+		// 				Log.e(TAG, "Entra en el bucle");
+		// 				fadeLayout.setVisibility(View.GONE);
+		//
+		// 				// If API > 21 animate with a circular material transition
+		// 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+		// 					Animator a = ViewAnimationUtils.createCircularReveal(
+		// 							newPanelLayout,
+		// 							mDisplayMetrics.widthPixels / 2,
+		// 							(int) (finalFabY - newPanelLayout.getY()) + fabNewPanel.getSize() / 2,
+		// 							newPanelLayout.getHeight() * 2f,
+		// 							fabNewPanel.getSize() / 2);
+		//
+		// 					a.addListener(new AnimatorListenerAdapter() {
+		// 						@Override
+		// 						public void onAnimationEnd(Animator animation) {
+		// 							super.onAnimationEnd(animation);
+		// 							// Set visibility of the whole panel to INVISIBLE
+		// 							newPanelLayout.setVisibility(View.GONE);
+		// 						}
+		// 					});
+		//
+		// 					// Start animation
+		// 					a.start();
+		// 				} else {
+		// 					// Set visibility of the whole panel to INVISIBLE
+		// 					newPanelLayout.setVisibility(View.GONE);
+		// 				}
+		// 			}
+		// 		})
+		// 		.start();
+
+		// new Handler().postDelayed(new Runnable() {
+		// 	@Override
+		// 	public void run() {
+		// 		fabNewPanel.animate()
+		// 				.x(initialFabX)
+		// 				.y(initialFabY)
+		// 				.setDuration(300)
+		// 				.start();
+		//
+		// 	}
+		// }, 350);
+
+		//
+		// // TODO Change fab visibility
+		// // TODO Move fab to its original position
+		//
+		// ValueAnimator animator = ValueAnimator.ofFloat(0f, 1f);
+		// animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+		// 	@Override
+		// 	public void onAnimationUpdate(ValueAnimator animation) {
+		// 		float v = (float) animation.getAnimatedValue();
+		// 		fabNewPanel.setX(fabFinalX + ((fabStartX - fabFinalX) * v));
+		// 		fabNewPanel.setY((float) (fabFinalY + (fabStartY - fabFinalY) * (Math.pow(v, .5f))));
+		// 	}
+		// });
+		// animator.start();
+
 	}
 }
 

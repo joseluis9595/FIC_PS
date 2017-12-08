@@ -45,3 +45,9 @@ v0.1.2.6
 - Added animation to the 'next' button on the tutorial (AnimatedVectorDrawable, only API > 21)
 - Fixed bug when pressing 'back' on the tutorial activity, when launched from the menu
 - Added new items in colors.xml
+
+v0.1.2.7
+- Shared element animation between activities
+- Created custom toolbar for the activities
+- Minor fixes
+- Implemented custom alertdialog for creating new panels, with custom and complex animations

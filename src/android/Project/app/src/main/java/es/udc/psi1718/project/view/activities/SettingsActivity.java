@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 
@@ -35,8 +36,13 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
 		Log.d(TAG, "onCreate");
 		setContentView(R.layout.activity_settings);
 
+		// Add the toolbar
+		Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+		setSupportActionBar(myToolbar);
+
+		// Add home button in the toolbar
 		try {
-			getSupportActionBar().setHomeButtonEnabled(true);
+			this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		} catch (NullPointerException e) {
 			e.printStackTrace();
 		}
