@@ -44,7 +44,7 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
 					int deviceID = device.getVendorId();
 					if (deviceID == 0x2341) {
 						Log.d(TAG, "BROADCAST : USB device detached");
-						arduinoCommunicationManager.closeConnection();
+						arduinoCommunicationManager.endCommunication();
 					}
 				}
 				break;

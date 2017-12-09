@@ -132,7 +132,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 		controllerViewManager = new ControllerViewManager(context);
 
 		// Arduino communication
-		arduinoCommunication = new ArduinoCommunicationManager(context);
+		arduinoCommunication = ArduinoCommunicationManager.getInstance(context);
 
 		// USB attached/detached broadacast Receiver
 		broadcastReceiver = new MyBroadcastReceiver(this, arduinoCommunication);
@@ -750,7 +750,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	 * End communication with Arduino
 	 */
 	private void endCommunication() {
-		arduinoCommunication.closeConnection();
+		arduinoCommunication.endCommunication();
 		// if (responseCode.getCode() <= 0) {
 		// 	Util.displayError(context, responseCode.getDescription());
 		// }

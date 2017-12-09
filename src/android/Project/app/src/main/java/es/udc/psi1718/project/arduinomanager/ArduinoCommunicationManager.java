@@ -9,12 +9,14 @@ import android.content.IntentFilter;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbDeviceConnection;
 import android.hardware.usb.UsbManager;
+import android.os.AsyncTask;
 import android.util.Log;
 
 import com.felhr.usbserial.UsbSerialDevice;
 import com.felhr.usbserial.UsbSerialInterface;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,6 +30,8 @@ public class ArduinoCommunicationManager {
 
 	private final String TAG = "ArduinoCommunication";
 	private Context fromContext;
+
+	private static ArduinoCommunicationManager INSTANCE = null;
 
 	// Constants
 	private final int ARDUINO_VENDORID = 0x2341;
@@ -63,7 +67,11 @@ public class ArduinoCommunicationManager {
 	private UsbManager usbManager;
 	private UsbSerialDevice serialPort;
 	private UsbDeviceConnection connection;
+	private Boolean connectionIsActive = false;
+	private CommunicationThread communicationThread;
 
+	// Buffer for commands to be sent to the arduino
+	private ArrayList<String> commandBuffer;
 
 	// Reading via Serial port variables
 	private byte[] buffer = new byte[0];
@@ -74,25 +82,37 @@ public class ArduinoCommunicationManager {
 	/**
 	 * Constructor
 	 *
-	 * @param fromContext
+	 * @param fromContext context
 	 */
-	public ArduinoCommunicationManager(Context fromContext) {
+	private ArduinoCommunicationManager(Context fromContext) {
 		this.fromContext = fromContext;
 		usbManager = (UsbManager) fromContext.getSystemService(USB_SERVICE);
 		arduinoSerialListener = (ArduinoSerialListener) fromContext;
+		commandBuffer = new ArrayList<>();
 		// createBroadcastReceiver();
 	}
 
-	// private void createBroadcastReceiver() {
-	// 	filter = new IntentFilter();
-	// 	filter.addAction(ACTION_USB_PERMISSION);
+	/**
+	 * Get instance to make the class a singleton object
+	 *
+	 * @param fromContext context
+	 *
+	 * @return instance of the class
+	 */
+	public static ArduinoCommunicationManager getInstance(Context fromContext) {
+		if (INSTANCE == null) {
+			INSTANCE = new ArduinoCommunicationManager(fromContext);
+		}
+		return INSTANCE;
+	}
+
 
 	private final BroadcastReceiver mPermissionReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			// TODO IT1 comprobar por que no se activa el Broadcast Receiver cuando se quiere iniciar una conexión (tarda mucho)
 			String action = intent.getAction();
-
+			if (action == null) return;
 			Log.d(TAG, "mPermissionReceiver : is called : " + action);
 
 			switch (action) {
@@ -221,7 +241,8 @@ public class ArduinoCommunicationManager {
 			if (command.equals("ERROR")) return ArduinoResponseCodes.ERROR_INVALID_COMMAND;
 
 			Log.d(TAG, "SENDCOMMAND : sending command - " + command);
-			serialPort.write(command.getBytes());
+			// serialPort.write(command.getBytes());
+			commandBuffer.add(0, command);
 			return ArduinoResponseCodes.RESPONSE_OK;
 		} else {
 			Log.e(TAG, "SENDCOMMAND : serialPort null");
@@ -260,7 +281,7 @@ public class ArduinoCommunicationManager {
 	/**
 	 * 'UsbReadCallback' auxiliary function
 	 *
-	 * @param buf
+	 * @param buf buffer
 	 */
 	private void appendBytes(byte[] buf) {
 		System.arraycopy(buf, 0, buffer, bufferSize, buf.length);
@@ -407,6 +428,9 @@ public class ArduinoCommunicationManager {
 				serialPort.setFlowControl(UsbSerialInterface.FLOW_CONTROL_OFF);
 				serialPort.read(mCallback);
 				arduinoSerialListener.connectionOpened();
+				connectionIsActive = true;
+				communicationThread = new CommunicationThread();
+				communicationThread.execute();
 
 				//tvAppend(textView, "Serial Connection Opened!\n");
 				Log.d(TAG, "OPENCONNECTION : Connection opened");
@@ -424,7 +448,7 @@ public class ArduinoCommunicationManager {
 	/**
 	 * Close serial communication with device
 	 */
-	public void closeConnection() {
+	public void endCommunication() {
 		if (serialPort != null) {
 			serialPort.close();
 			Log.d(TAG, "CLOSECONN : Serial connection closed");
@@ -434,6 +458,34 @@ public class ArduinoCommunicationManager {
 			arduinoSerialListener.connectionClosed(ArduinoResponseCodes.ERROR_NO_COMMUNICATION);
 			//return ArduinoResponseCodes.ERROR_NO_COMMUNICATION;
 		}
+		if (communicationThread != null)
+			communicationThread.cancel(true);
+		connectionIsActive = false;
 
+	}
+
+
+	private class CommunicationThread extends AsyncTask<String, Void, Void> {
+
+		@Override
+		protected Void doInBackground(String... params) {
+			// TODO send code as first message
+			try {
+				while (connectionIsActive) {
+					if (!commandBuffer.isEmpty()) {
+						String command = commandBuffer.get(commandBuffer.size() - 1);
+						commandBuffer.remove(commandBuffer.size() - 1);
+						Log.e(TAG, "Sending command : " + command);
+						serialPort.write(command.getBytes());
+
+						Thread.sleep(20);
+					}
+					// Log.e(TAG, "Running");
+				}
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
 	}
 }

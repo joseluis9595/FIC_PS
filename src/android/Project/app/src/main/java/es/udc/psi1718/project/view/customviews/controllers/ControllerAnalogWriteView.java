@@ -85,7 +85,8 @@ public class ControllerAnalogWriteView extends ControllerView {
 		// cardViewLayout.setOnLongClickListener(onLongClickListener);
 		mSeekbar.setOnSeekBarChangeListener(onSeekBarChangeListener);
 		nameTextView.setText(name);
-		tvPinNumber.setText("Pin : " + arduinoPin);
+		// Change view
+		tvPinNumber.setText("Pin : "+arduinoPin);
 	}
 
 
