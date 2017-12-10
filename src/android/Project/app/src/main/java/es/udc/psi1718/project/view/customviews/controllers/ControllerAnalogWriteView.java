@@ -96,7 +96,7 @@ public class ControllerAnalogWriteView extends ControllerView {
 	}
 
 	@Override
-	void receivedData(String data) {
+	void refreshController(String data) {
 		// setName(data);
 	}
 

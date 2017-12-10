@@ -71,7 +71,7 @@ public class ControllerDigitalWriteView extends ControllerView {
 	}
 
 	@Override
-	void receivedData(String data) {
+	void refreshController(String data) {
 		// setName(data);
 	}
 

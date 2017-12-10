@@ -75,17 +75,20 @@ public class ControllerViewManager {
 		return controllerView;
 	}
 
-
-	/**
-	 * Called when data is received
-	 *
-	 * @param panelId      id of the panel
-	 * @param controllerId id of the controller
-	 * @param data         data received
-	 */
-	public void receivedData(int panelId, int controllerId, String data) {
-		for (ControllerView controller : controllers) {
-			controller.receivedData(panelId, controllerId, data);
-		}
+	public ArrayList<ControllerView> getControllers() {
+		return controllers;
 	}
+
+	// /**
+	//  * Called when data is received
+	//  *
+	//  * @param panelId      id of the panel
+	//  * @param controllerId id of the controller
+	//  * @param data         data received
+	//  */
+	// public void refreshController(int panelId, int controllerId, String data) {
+	// 	for (ControllerView controller : controllers) {
+	// 		controller.refreshController(panelId, controllerId, data);
+	// 	}
+	// }
 }

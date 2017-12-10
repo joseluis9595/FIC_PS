@@ -34,10 +34,17 @@ public abstract class ControllerView extends LinearLayout {
 		listener = (ControllerViewEventListener) context;
 	}
 
+	/**
+	 * Called when data is received
+	 *
+	 * @param panelId      id of the panel
+	 * @param controllerId id of the controller
+	 * @param data         data received
+	 */
 	public void receivedData(int panelId, int controllerId, String data) {
 		if (controllerId == this.controllerId) {
 			Log.e(TAG, "Received data : " + data);
-			receivedData(data);
+			refreshController(data);
 		}
 
 	}
@@ -47,7 +54,7 @@ public abstract class ControllerView extends LinearLayout {
 	 *
 	 * @param data data received
 	 */
-	abstract void receivedData(String data);
+	abstract void refreshController(String data);
 
 
 	/**

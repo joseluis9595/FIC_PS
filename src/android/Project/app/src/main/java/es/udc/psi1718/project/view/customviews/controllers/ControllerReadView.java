@@ -35,8 +35,8 @@ public class ControllerReadView extends ControllerView {
 	}
 
 	@Override
-	void receivedData(String data) {
-		// setName(data);
+	void refreshController(String data) {
+		setName(data);
 	}
 
 	@Override

@@ -42,9 +42,9 @@ public class ArduinoCommunicationManager {
 	// String command
 	private final char COMMAND_FIRST_BYTE = '*';
 	private final char COMMAND_SEPARATOR = '-';
-	private final int COMMAND_DATA_LENGTH = 4;
-	private final int COMMAND_ARDUINO_PIN_LENGTH = 2;
-	private final int COMMAND_LENGTH = 12;
+	// private final int COMMAND_DATA_LENGTH = 4;
+	// private final int COMMAND_ARDUINO_PIN_LENGTH = 2;
+	private final int COMMAND_LENGTH = 8; // ID(3char) SEPARATOR(1char) DATA(4char)
 
 	// Pin and command type
 	public final static int PINTYPE_DIGITAL = 1;
@@ -154,6 +154,14 @@ public class ArduinoCommunicationManager {
 		String command = "";
 		command += COMMAND_FIRST_BYTE;
 
+		// Id of the controller that sent the petition
+		command += controllerId;
+		command += COMMAND_SEPARATOR;
+
+		// Type of controller
+		command += controllerType;
+		command += COMMAND_SEPARATOR;
+
 		// TODO handle errors properly
 		// PinType (Analog or Digital)
 		switch (pinType) {
@@ -182,29 +190,29 @@ public class ArduinoCommunicationManager {
 		command += COMMAND_SEPARATOR;
 
 		// arduinoPin
-		int arduinoPinLength = arduinoPin.length();
-		if (arduinoPinLength == 1) {
-			command += "0";
-		} else if (arduinoPinLength > 2 || arduinoPinLength < 1) {
-			return "ERROR";
-		}
+		// int arduinoPinLength = arduinoPin.length();
+		// if (arduinoPinLength == 1) {
+		// 	command += "0";
+		// } else if (arduinoPinLength > 2 || arduinoPinLength < 1) {
+		// 	return "ERROR";
+		// }
 		command += arduinoPin;
 		command += COMMAND_SEPARATOR;
 
 		// Data (0-1024)
-		int dataLength = String.valueOf(data).length();
-		int dataZeroes = COMMAND_DATA_LENGTH - dataLength;
-		if (dataZeroes <= 0) dataZeroes = 0;
-		while (dataZeroes > 0) {
-			command += "0";
-			dataZeroes -= 1;
-		}
+		// int dataLength = String.valueOf(data).length();
+		// int dataZeroes = COMMAND_DATA_LENGTH - dataLength;
+		// if (dataZeroes <= 0) dataZeroes = 0;
+		// while (dataZeroes > 0) {
+		// 	command += "0";
+		// 	dataZeroes -= 1;
+		// }
 		command += data;
 
 		// Check if it has the proper length
-		if (command.length() != COMMAND_LENGTH) {
-			return "ERROR";
-		}
+		// if (command.length() != COMMAND_LENGTH) {
+		// 	return "ERROR";
+		// }
 		Log.d(TAG, "Command : " + command);
 
 		return command;
@@ -287,14 +295,15 @@ public class ArduinoCommunicationManager {
 		try {
 
 			String aux = new String(buffer, "UTF-8");    // Creating String with the read buffer
+			// TODO va a devolver un comando de tipo ID-DATA
 			String finalData = aux.substring(0, COMMAND_LENGTH);      // We just need the first 9 chars
 
 			// TODO parse this information
-			int panelId = 1;
-			int controllerId = 1;
+			// int panelId = 1;
+			// int controllerId = xamones cocidos;
 
 			// Sending data through interface
-			arduinoSerialConnectionListener.receivedData(panelId, controllerId, finalData);
+			// arduinoSerialConnectionListener.receivedData(panelId, controllerId, finalData);
 			Log.e(TAG, "checkData : received RAW String : " + finalData);
 
 		} catch (UnsupportedEncodingException e) {

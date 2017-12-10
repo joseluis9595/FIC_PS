@@ -739,10 +739,19 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	/* ARDUINO SERIAL LISTENER FUNCTIONS */
 
 	@Override
-	public void receivedData(int panelId, int controllerId, String data) {
+	public void receivedData(final int panelId, final int controllerId, final String data) {
 		Log.d(TAG, "RECEIVEDDATA : Data received - " + data);
 		final String auxData = data;
-		controllerViewManager.receivedData(panelId, controllerId, data);
+		// controllerViewManager.receivedData(panelId, controllerId, data);
+
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				for (ControllerView controller : controllerViewManager.getControllers()) {
+					controller.receivedData(panelId, controllerId, data);
+				}
+			}
+		});
 		// runOnUiThread(new Runnable() {
 		// 	@Override
 		// 	public void run() {
