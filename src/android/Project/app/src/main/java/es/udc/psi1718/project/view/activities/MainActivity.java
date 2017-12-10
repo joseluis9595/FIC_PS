@@ -101,9 +101,6 @@ public class MainActivity extends AppCompatActivity {
 		// Database helper
 		mySQLiteHelper = new MySQLiteHelper(this);
 
-		// Intents
-		controllersIntent = new Intent(context, ControllersActivity.class);
-
 		// Initialize layout
 		initializeLayout();
 	}
@@ -214,12 +211,15 @@ public class MainActivity extends AppCompatActivity {
 			@Override
 			public void onItemClick(AdapterView<?> adapterView, View view, int i, long cursorID) {
 				Log.d(TAG, "Pressed item " + i + " on the listview, cursorID : " + cursorID);
+				// Intents
+				controllersIntent = new Intent(context, ControllersActivity.class);
 				controllersIntent.putExtra(Constants.INTENTCOMM_PANELID, (int) cursorID);
 
 				// TODO mejorar esto, poca independencia con base de datos
 				Cursor selectedFromList = (Cursor) lvPannels.getItemAtPosition(i);
 				String panelName = selectedFromList.getString(selectedFromList.getColumnIndexOrThrow(MySQLiteHelper.COL_PANEL_NAME));
 				controllersIntent.putExtra(Constants.INTENTCOMM_PANELNAME, panelName);
+				controllersIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
 				// Add shared components animation for a more fluid UX
 				if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {

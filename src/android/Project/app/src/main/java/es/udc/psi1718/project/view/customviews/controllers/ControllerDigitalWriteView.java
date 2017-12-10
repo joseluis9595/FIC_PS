@@ -70,6 +70,10 @@ public class ControllerDigitalWriteView extends ControllerView {
 		// tvPinNumber.setText("ID : " + controllerId);
 	}
 
+	@Override
+	void receivedData(String data) {
+		// setName(data);
+	}
 
 	@Override
 	public View getView() {

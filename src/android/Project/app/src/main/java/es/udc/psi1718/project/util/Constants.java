@@ -10,6 +10,9 @@ public final class Constants {
 	private Constants() {
 	}
 
+	// Change to True for debugging purposes
+	public final static Boolean DEBUG = false;
+
 	// Broadcast receiver
 	public final static String ACTION_USB_PERMISSION = "es.udc.psi1718.project.USB_PERMISSION";
 

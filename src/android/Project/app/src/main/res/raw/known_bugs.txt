@@ -5,7 +5,6 @@ Active
 - When finishing the tutorial, a new MainActivity instance is created on top of the previous one
 - User cannot delete nor modify panels
 - Status bar flickers when passing through activities (very subtle)
-- Home button animation (ripple effect) in the toolbar only works eventually
 
 
 
@@ -13,3 +12,5 @@ Active
 Completed
 
 - AlertDialogs in 'ControllersActivity' and 'MainActivity' are different
+- Home button animation (ripple effect) in the toolbar only works eventually
+- ControllerActivity second time opening doesn't react to listener

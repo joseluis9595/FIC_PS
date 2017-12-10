@@ -38,7 +38,7 @@ import es.udc.psi1718.project.MyBroadcastReceiver;
 import es.udc.psi1718.project.R;
 import es.udc.psi1718.project.arduinomanager.ArduinoCommunicationManager;
 import es.udc.psi1718.project.arduinomanager.ArduinoResponseCodes;
-import es.udc.psi1718.project.arduinomanager.ArduinoSerialListener;
+import es.udc.psi1718.project.arduinomanager.ArduinoSerialConnectionListener;
 import es.udc.psi1718.project.storage.UserPreferencesManager;
 import es.udc.psi1718.project.storage.database.MySQLiteHelper;
 import es.udc.psi1718.project.storage.database.daos.Controller;
@@ -53,14 +53,12 @@ import es.udc.psi1718.project.view.customviews.controllersgrid.ControllersGridLi
 import static android.hardware.usb.UsbManager.ACTION_USB_DEVICE_ATTACHED;
 import static android.hardware.usb.UsbManager.ACTION_USB_DEVICE_DETACHED;
 
-public class ControllersActivity extends AppCompatActivity implements ArduinoSerialListener, ControllerViewEventListener, ControllersGridListener {
+public class ControllersActivity extends AppCompatActivity implements ArduinoSerialConnectionListener, ControllerViewEventListener, ControllersGridListener {
 
 	private Context context = this;
 	private Activity activity = this;
 	private String TAG = "ControllersActivity";
 	public static Boolean active = false;
-
-	private final Boolean DEBUG = true;        // TODO DEBUG remove this constant
 
 	// Panel variables
 	private int panelId;
@@ -102,7 +100,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
-		if (connectionIsActive || DEBUG) {
+		if (connectionIsActive || Constants.DEBUG) {
 			setContentView(R.layout.activity_controllers);
 			initializeLayout();
 		}
@@ -115,6 +113,9 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 		setTheme(UserPreferencesManager.getInstance(this).getAppTheme());
 		setContentView(R.layout.activity_controllers);
 		Log.d(TAG, "ONCREATE");
+
+		// Set active flag to true
+		active = true;
 
 		// TODO tutorial, indicar como mover controllers de sitio, como crearlos, etc...
 
@@ -132,7 +133,8 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 		controllerViewManager = new ControllerViewManager(context);
 
 		// Arduino communication
-		arduinoCommunication = ArduinoCommunicationManager.getInstance(context);
+		// arduinoCommunication = ArduinoCommunicationManager.getInstance(context);
+		arduinoCommunication = new ArduinoCommunicationManager(context);
 
 		// USB attached/detached broadacast Receiver
 		broadcastReceiver = new MyBroadcastReceiver(this, arduinoCommunication);
@@ -142,15 +144,6 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 
 		// Initialize layout
 		initializeLayout();
-
-		// By default, layout is disabled
-		// TODO DEBUG uncomment this when not debugging
-		if (DEBUG) {
-			enableUI();
-		} else {
-			disableUI();
-			setLoading(false);
-		}
 	}
 
 	@Override
@@ -158,28 +151,19 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 		super.onStart();
 		Log.d(TAG, "ONSTART");
 
+		// Set active flag to true
+		active = true;
+
 		// Register USB receiver
 		Log.e(TAG, "onStart : REGISTER RECEIVER USB");
 		registerReceiver(broadcastReceiver, intentFilter);
 
 		// Start communication
-		startCommunication();
-
-		// Set active flag to true
-		active = true;
+		if (!connectionIsActive) startCommunication();
 
 		// Add animation to the fabNewController
 		Animation animation = AnimationUtils.loadAnimation(context, R.anim.fab_grow_anim);
 		fabNewController.startAnimation(animation);
-
-		// Check if the activity was called from the broadcast receiver
-		// Bundle extras = getIntent().getExtras();
-		// if (extras == null) return;
-		// Boolean fromBroadcastReceiver = extras.getBoolean(Constants.INTENTCOMM_CONTACTIV_LAUNCHEDFROMBR, false);
-		// if (fromBroadcastReceiver) {
-		// 	Log.d(TAG, "Starting activity from broadcasReceiver");
-		// 	startCommunication();
-		// }
 	}
 
 	@Override
@@ -215,7 +199,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 		Log.d(TAG, "onDestroy");
 		Log.e(TAG, "onDestroy : UNREGISTER RECEIVER USB");
 
-		// TODO Unregister broadcast receiver
+		// Unregister broadcast receiver
 		try {
 			unregisterReceiver(broadcastReceiver);
 		} catch (Exception e) {
@@ -225,9 +209,8 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 		// End communication with Arduino
 		endCommunication();
 
-		// TODO IT2 remove - Set result for the activity (only for IT1)
-		setResult(RESULT_OK, null);
-		//finish();
+		// setResult(RESULT_OK, null);
+		// finish();
 	}
 
 	@Override
@@ -243,7 +226,6 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 		//Overriding the home button behaviour so that the animation feels more natural
 		int id = item.getItemId();
 		if (id == android.R.id.home) {
-			// setResult(RESULT_OK, null);
 			supportFinishAfterTransition();
 			return true;
 		}
@@ -254,38 +236,8 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	 * Gets previous saved controllers and displays them on the sc
 	 */
 	private void loadSavedControllers() {
-		// TODO DEBUG remove this line when not debugging
-		// Create new Controller for test purposes
-		// createNewController("Controller prueba con nombre muy largo que ocupe al menos dos líneas", "8", "Digital", "Write");
-		// createNewController("Prueba2", "9", "Analog", "Write");
-		// createNewController("Prueba3", "9", "Analog", "Write");
-		// createNewController("Ja", "8", "Digital", "Write");
-
 		// Remove previous views from the layout
 		customGridLayout.reset();
-
-		// Get previous saved controllers
-		// Cursor cursor = mySQLiteHelper.getControllersByPanelId(panelId);
-		// if (cursor == null || cursor.getCount() <= 0) {
-		// 	Log.e(TAG, "loadSavedControllers : Cursor is empty");
-		// 	return;
-		// }
-		//
-		// String cursorString = DatabaseUtils.dumpCursorToString(cursor);
-		// Log.e(TAG, cursorString);
-		// if (cursor.moveToFirst()) {
-		// 	do {
-		// 		Log.e(TAG, "Creating new controller");
-		// 		String name = cursor.getString(cursor.getColumnIndex(MySQLiteHelper.COL_CONTROLLER_NAME));
-		// 		int controllerType = cursor.getInt(cursor.getColumnIndex(MySQLiteHelper.COL_CONTROLLER_CONTROLLERTYPE));
-		// 		String dataType = cursor.getString(cursor.getColumnIndex(MySQLiteHelper.COL_CONTROLLER_DATATYPE));
-		// 		String pinType = cursor.getString(cursor.getColumnIndex(MySQLiteHelper.COL_CONTROLLER_PINTYPE));
-		// 		String pinNumber = cursor.getString(cursor.getColumnIndex(MySQLiteHelper.COL_CONTROLLER_PINNUMBER));
-		// 		// int position = cursor.getInt(cursor.getColumnIndexOrThrow(MySQLiteHelper.COL_CONTROLLER_POSITION));
-		// 		createNewController(name, controllerType, pinNumber, pinType, dataType);
-		// 	} while (cursor.moveToNext());
-		// }
-		// cursor.close();
 
 		// Get the list of controllers
 		ArrayList<Controller> controllers = mySQLiteHelper.getControllersByPanelId(panelId);
@@ -343,7 +295,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 						break;
 					case R.id.controllers_retry_button:
 						// TODO DEBUG uncomment this when not debugging
-						if (!DEBUG) {
+						if (!Constants.DEBUG) {
 							startCommunication();
 						}
 						break;
@@ -357,6 +309,14 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 		fabNewController.setOnClickListener(onClickListener);
 		buttonStartComm.setOnClickListener(onClickListener);
 
+		// By default, layout is disabled
+		if (connectionIsActive || Constants.DEBUG) {
+			enableUI();
+		} else {
+			disableUI();
+			setLoading(false);
+		}
+
 		// Restore previous Controllers
 		loadSavedControllers();
 
@@ -365,6 +325,9 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	}
 
 
+	/**
+	 * Initialize all variables needed for custom alert dialog
+	 */
 	private void initializeCustomAlertDialogLayout() {
 		controllersType = new String[]{
 				getString(R.string.controllertype_led),
@@ -442,6 +405,10 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 		controllerTypeSpinner.setOnItemSelectedListener(spinnerListener);
 	}
 
+
+	/**
+	 * Handle the event of the button create new controller (onClick)
+	 */
 	private void handleCreateNewControllerButton() {
 		String controllerNameString = newControllerEditText.getText().toString();
 		String arduinoPinString = pinNumberEditText.getText().toString();
@@ -490,6 +457,14 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 		}
 	}
 
+	/**
+	 * Return int with the type of controller given the name and type as string
+	 *
+	 * @param controllerTypeString type of the controller as string
+	 * @param pinTypeString        type of pin as string (digital-analog)
+	 *
+	 * @return int
+	 */
 	private int matchControllerType(String controllerTypeString, String pinTypeString) {
 		if (controllerTypeString.equals(getString(R.string.controllertype_led))) {
 			if (pinTypeString.equalsIgnoreCase("digital"))
@@ -518,38 +493,8 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	 * Creates a new Controller layout
 	 */
 	private void createNewController(int controllerId, String name, int controllerType, String arduinoPin, String pinType, String dataType) {
-
 		ControllerView controllerView = controllerViewManager.createControllerView(controllerId, name, controllerType, arduinoPin, pinType, dataType);
 		customGridLayout.addController(controllerView);
-
-		// // Pin de escritura digital
-		// if (pinType.equalsIgnoreCase("digital") && dataType.equalsIgnoreCase("write")) {
-		// 	Log.d(TAG, "Creating new controller : digWrite");
-		// 	ControllerDigitalWriteView controllerSwitchView = new ControllerDigitalWriteView(context, name, arduinoPin);
-		// 	// mainLinearLayout.addView(controllerSwitchView.getView());
-		// 	// customGridLayout.addCard(controllerSwitchView.getView());
-		// 	customGridLayout.addController(controllerSwitchView);
-		// 	return;
-		// }
-		//
-		// // Pin de escritura analógica
-		// if (pinType.equalsIgnoreCase("analog") && dataType.equalsIgnoreCase("write")) {
-		// 	Log.d(TAG, "Creating new controller : anWrite");
-		// 	ControllerAnalogWriteView controllerSliderView = new ControllerAnalogWriteView(context, name, arduinoPin);
-		// 	// mainLinearLayout.addView(controllerSliderView.getView());
-		// 	// customGridLayout.addCard(controllerSliderView.getView());
-		// 	customGridLayout.addController(controllerSliderView);
-		// 	return;
-		// }
-		//
-		// // Pin de lectura
-		// if (dataType.equalsIgnoreCase("read")) {
-		// 	Log.d(TAG, "Creating new controller : read");
-		// 	// TODO IT3 Crear un cardview de lectura de valores
-		// 	return;
-		// }
-		//
-		// Log.d(TAG, "Creating new controller : unknown");
 	}
 
 	/**
@@ -714,6 +659,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	 * @param loading Boolean to indicate whether it's loading or not
 	 */
 	private void setLoading(Boolean loading) {
+		Log.e(TAG, "SET LOADING : " + loading);
 		String loadingText = loading ? "Loading..." : "No devices found";
 		int progressBarVisibility = loading ? View.VISIBLE : View.GONE;
 
@@ -727,11 +673,10 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	 * Disables UI, user can only start communication with arduino
 	 */
 	private void enableUI() {
+		Log.e(TAG, "ENABLE UI");
 		loadingLayout.setVisibility(View.GONE);
 		normalLayout.setVisibility(View.VISIBLE);
-		//buttonStartComm.setEnabled(false);
-		//buttonSendCommand.setEnabled(true);
-		//editText.setEnabled(true);
+		setLoading(false);
 	}
 
 
@@ -739,11 +684,9 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	 * Enables UI so that the user can interact with the application
 	 */
 	private void disableUI() {
+		Log.e(TAG, "DISABLE UI");
 		loadingLayout.setVisibility(View.VISIBLE);
 		normalLayout.setVisibility(View.GONE);
-		//buttonStartComm.setEnabled(true);
-		//buttonSendCommand.setEnabled(false);
-		//editText.setEnabled(false);
 	}
 
 
@@ -752,7 +695,9 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	 */
 	public void startCommunication() {
 		Log.d(TAG, "StartCommunication");
-
+		if (connectionIsActive) {
+			return;
+		}
 		ArduinoResponseCodes responseCode = arduinoCommunication.startCommunication();
 		if (responseCode.getCode() <= 0 && !responseCode.equals(ArduinoResponseCodes.ERROR_NO_DEVICE)) {
 			Util.displayError(context, responseCode.getDescription());
@@ -760,7 +705,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 			Log.e(TAG, "No devices found");
 		} else {
 			Log.d(TAG, "StartCommunication : OK");
-			setLoading(true);
+			if (!connectionIsActive) setLoading(true);
 		}
 	}
 
@@ -769,6 +714,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	 * End communication with Arduino
 	 */
 	private void endCommunication() {
+		Log.e(TAG, "endCommunication()");
 		arduinoCommunication.endCommunication();
 		// if (responseCode.getCode() <= 0) {
 		// 	Util.displayError(context, responseCode.getDescription());
@@ -793,10 +739,10 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	/* ARDUINO SERIAL LISTENER FUNCTIONS */
 
 	@Override
-	public void receivedData(String data) {
+	public void receivedData(int panelId, int controllerId, String data) {
 		Log.d(TAG, "RECEIVEDDATA : Data received - " + data);
 		final String auxData = data;
-
+		controllerViewManager.receivedData(panelId, controllerId, data);
 		// runOnUiThread(new Runnable() {
 		// 	@Override
 		// 	public void run() {
@@ -808,13 +754,17 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	@Override
 	public void connectionOpened() {
 		Log.d(TAG, "connectionOpened : OK");
+
+		// Set connection active flag to false
+		connectionIsActive = true;
+
+		// Change the layout running on UI thread
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
 				// TODO IT2 comprobar si se ha cancelado la comunicación
+				Log.e(TAG, "Connection is OPENED");
 				enableUI();
-				connectionIsActive = true;
-				// TODO DEBUG Util.displayMessage(context, "Connection opened!");
 			}
 		});
 	}
@@ -823,22 +773,30 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	public void connectionClosed(ArduinoResponseCodes responseCode) {
 		// TODO IT2-3 delete all saved state values (like switches or sliders state)
 		Log.d(TAG, "Connection closed");
+
+		// Set connection active flag to false
+		connectionIsActive = false;
+
+		// Change the layout running on UI thread
 		final ArduinoResponseCodes finalCode = responseCode;
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
+
 				if (finalCode.getCode() > 0) {
 					// TODO DEBUG Util.displayMessage(context, "Connection closed");
 				}
 				disableUI();
 				setLoading(false);
-				connectionIsActive = false;
+
 			}
+
 		});
 	}
 
 	@Override
 	public void connectionFailed(final ArduinoResponseCodes arduinoResponseCode) {
+		Log.d(TAG, "Connection failed");
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {

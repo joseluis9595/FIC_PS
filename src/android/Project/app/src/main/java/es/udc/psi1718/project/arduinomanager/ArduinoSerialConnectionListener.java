@@ -3,14 +3,16 @@ package es.udc.psi1718.project.arduinomanager;
 /**
  * Interface that acts as listener for {@link ArduinoCommunicationManager}
  */
-public interface ArduinoSerialListener {
+public interface ArduinoSerialConnectionListener {
 
 	/**
 	 * Called when new data is received from Arduino
 	 *
-	 * @param data string received from arduino
+	 * @param panelId      id of the panel
+	 * @param controllerId id of the controller
+	 * @param data         string received from arduino
 	 */
-	void receivedData(String data);
+	void receivedData(int panelId, int controllerId, String data);
 
 	/**
 	 * Called when the connection is opened
@@ -19,11 +21,15 @@ public interface ArduinoSerialListener {
 
 	/**
 	 * Called when the connection is closed
+	 *
+	 * @param arduinoResponseCode response code
 	 */
 	void connectionClosed(ArduinoResponseCodes arduinoResponseCode);
 
 	/**
 	 * Called when connection can´t start
+	 *
+	 * @param arduinoResponseCode response code
 	 */
 	void connectionFailed(ArduinoResponseCodes arduinoResponseCode);
 }

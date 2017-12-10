@@ -61,7 +61,7 @@ public class ArduinoCommunicationManager {
 	public final static int CONTROLLER_HUMIDITY_SENSOR = 5;
 
 	// Interface
-	private ArduinoSerialListener arduinoSerialListener;
+	private ArduinoSerialConnectionListener arduinoSerialConnectionListener;
 
 	// USB communication
 	private UsbManager usbManager;
@@ -84,29 +84,18 @@ public class ArduinoCommunicationManager {
 	 *
 	 * @param fromContext context
 	 */
-	private ArduinoCommunicationManager(Context fromContext) {
+	public ArduinoCommunicationManager(Context fromContext) {
 		this.fromContext = fromContext;
 		usbManager = (UsbManager) fromContext.getSystemService(USB_SERVICE);
-		arduinoSerialListener = (ArduinoSerialListener) fromContext;
+		arduinoSerialConnectionListener = (ArduinoSerialConnectionListener) fromContext;
 		commandBuffer = new ArrayList<>();
 		// createBroadcastReceiver();
 	}
 
+
 	/**
-	 * Get instance to make the class a singleton object
-	 *
-	 * @param fromContext context
-	 *
-	 * @return instance of the class
+	 * Broadcast Receiver to listen for permission
 	 */
-	public static ArduinoCommunicationManager getInstance(Context fromContext) {
-		if (INSTANCE == null) {
-			INSTANCE = new ArduinoCommunicationManager(fromContext);
-		}
-		return INSTANCE;
-	}
-
-
 	private final BroadcastReceiver mPermissionReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -120,7 +109,7 @@ public class ArduinoCommunicationManager {
 					boolean granted = intent.getExtras().getBoolean(UsbManager.EXTRA_PERMISSION_GRANTED);
 					if (!granted) {
 						Log.e(TAG, "mPermissionReceiver : Permission not granted");
-						arduinoSerialListener.connectionFailed(ArduinoResponseCodes.ERROR_PERMISSION_DENIED);
+						arduinoSerialConnectionListener.connectionFailed(ArduinoResponseCodes.ERROR_PERMISSION_DENIED);
 					} else {
 						Log.d(TAG, "mPermissionReceiver : Permission Granted");
 						UsbDevice dev = (UsbDevice) intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
@@ -130,11 +119,11 @@ public class ArduinoCommunicationManager {
 								Log.d(TAG, "mPermissionReceiver : Open connection is called");
 								return;
 							} else {
-								arduinoSerialListener.connectionFailed(ArduinoResponseCodes.ERROR_NO_ARDUINO_DEVICE);
+								arduinoSerialConnectionListener.connectionFailed(ArduinoResponseCodes.ERROR_NO_ARDUINO_DEVICE);
 							}
 						} else {
 							Log.e(TAG, "mPermissionReceiver : device not present!");
-							arduinoSerialListener.connectionFailed(ArduinoResponseCodes.ERROR_NO_DEVICE);
+							arduinoSerialConnectionListener.connectionFailed(ArduinoResponseCodes.ERROR_NO_DEVICE);
 						}
 
 					}
@@ -300,8 +289,12 @@ public class ArduinoCommunicationManager {
 			String aux = new String(buffer, "UTF-8");    // Creating String with the read buffer
 			String finalData = aux.substring(0, COMMAND_LENGTH);      // We just need the first 9 chars
 
+			// TODO parse this information
+			int panelId = 1;
+			int controllerId = 1;
+
 			// Sending data through interface
-			arduinoSerialListener.receivedData("Received : " + finalData + "\n");
+			arduinoSerialConnectionListener.receivedData(panelId, controllerId, finalData);
 			Log.e(TAG, "checkData : received RAW String : " + finalData);
 
 		} catch (UnsupportedEncodingException e) {
@@ -429,7 +422,7 @@ public class ArduinoCommunicationManager {
 				serialPort.setParity(UsbSerialInterface.PARITY_NONE);
 				serialPort.setFlowControl(UsbSerialInterface.FLOW_CONTROL_OFF);
 				serialPort.read(mCallback);
-				arduinoSerialListener.connectionOpened();
+				arduinoSerialConnectionListener.connectionOpened();
 				connectionIsActive = true;
 				communicationThread = new CommunicationThread();
 				communicationThread.execute();
@@ -443,7 +436,7 @@ public class ArduinoCommunicationManager {
 		} else {
 			Log.e(TAG, "OPENCONNECTION : Port is null");
 		}
-		arduinoSerialListener.connectionFailed(ArduinoResponseCodes.ERROR_NO_COMMUNICATION);
+		arduinoSerialConnectionListener.connectionFailed(ArduinoResponseCodes.ERROR_NO_COMMUNICATION);
 	}
 
 
@@ -454,10 +447,10 @@ public class ArduinoCommunicationManager {
 		if (serialPort != null) {
 			serialPort.close();
 			Log.d(TAG, "CLOSECONN : Serial connection closed");
-			arduinoSerialListener.connectionClosed(ArduinoResponseCodes.RESPONSE_OK);
+			arduinoSerialConnectionListener.connectionClosed(ArduinoResponseCodes.RESPONSE_OK);
 		} else {
 			Log.d(TAG, "CLOSECONN : No connection to close");
-			arduinoSerialListener.connectionClosed(ArduinoResponseCodes.ERROR_NO_COMMUNICATION);
+			arduinoSerialConnectionListener.connectionClosed(ArduinoResponseCodes.ERROR_NO_COMMUNICATION);
 			//return ArduinoResponseCodes.ERROR_NO_COMMUNICATION;
 		}
 		if (communicationThread != null)

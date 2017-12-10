@@ -2,14 +2,19 @@ package es.udc.psi1718.project.view.customviews.controllers;
 
 import android.content.Context;
 
+import java.util.ArrayList;
+
 import es.udc.psi1718.project.arduinomanager.ArduinoCommunicationManager;
 
 
 public class ControllerViewManager {
 	private Context context;
 
+	private ArrayList<ControllerView> controllers;
+
 	public ControllerViewManager(Context context) {
 		this.context = context;
+		controllers = new ArrayList<>();
 	}
 
 
@@ -26,34 +31,61 @@ public class ControllerViewManager {
 	 * @return {@link ControllerView}
 	 */
 	public ControllerView createControllerView(int controllerId, String name, int controllerType, String arduinoPin, String pinType, String dataType) {
+		ControllerView controllerView;
 		switch (controllerType) {
 
 			case ArduinoCommunicationManager.CONTROLLER_GENERIC:
-				if (dataType.equalsIgnoreCase("read"))
-					return new ControllerReadView(context, controllerId, name, controllerType, arduinoPin);
+				if (dataType.equalsIgnoreCase("read")) {
+					controllerView = new ControllerReadView(context, controllerId, name, controllerType, arduinoPin);
+					break;
+				}
 				if (pinType.equalsIgnoreCase("digital")) {
-					return new ControllerDigitalWriteView(context, controllerId, name, controllerType, arduinoPin);
+					controllerView = new ControllerDigitalWriteView(context, controllerId, name, controllerType, arduinoPin);
+					break;
 				} else {
-					return new ControllerAnalogWriteView(context, controllerId, name, controllerType, arduinoPin);
+					controllerView = new ControllerAnalogWriteView(context, controllerId, name, controllerType, arduinoPin);
+					break;
 				}
 
 			case ArduinoCommunicationManager.CONTROLLER_LED_DIGITAL:
-				return new ControllerDigitalWriteView(context, controllerId, name, controllerType, arduinoPin);
+				controllerView = new ControllerDigitalWriteView(context, controllerId, name, controllerType, arduinoPin);
+				break;
 
 			case ArduinoCommunicationManager.CONTROLLER_LED_ANALOG:
-				return new ControllerAnalogWriteView(context, controllerId, name, controllerType, arduinoPin);
+				controllerView = new ControllerAnalogWriteView(context, controllerId, name, controllerType, arduinoPin);
+				break;
 
 			case ArduinoCommunicationManager.CONTROLLER_SERVO:
-				return new ControllerAnalogWriteView(context, controllerId, name, controllerType, arduinoPin);
+				controllerView = new ControllerAnalogWriteView(context, controllerId, name, controllerType, arduinoPin);
+				break;
 
 			case ArduinoCommunicationManager.CONTROLLER_HUMIDITY_SENSOR:
-				return new ControllerReadView(context, controllerId, name, controllerType, arduinoPin);
+				controllerView = new ControllerReadView(context, controllerId, name, controllerType, arduinoPin);
+				break;
 
 			case ArduinoCommunicationManager.CONTROLLER_TEMP_SENSOR:
-				return new ControllerReadView(context, controllerId, name, controllerType, arduinoPin);
+				controllerView = new ControllerReadView(context, controllerId, name, controllerType, arduinoPin);
+				break;
 
 			default:
 				return null;
+		}
+
+		controllers.add(controllerView);
+		return controllerView;
+	}
+
+
+	/**
+	 * Called when data is received
+	 *
+	 * @param panelId      id of the panel
+	 * @param controllerId id of the controller
+	 * @param data         data received
+	 */
+	public void receivedData(int panelId, int controllerId, String data) {
+		for (ControllerView controller : controllers) {
+			controller.receivedData(panelId, controllerId, data);
 		}
 	}
 }

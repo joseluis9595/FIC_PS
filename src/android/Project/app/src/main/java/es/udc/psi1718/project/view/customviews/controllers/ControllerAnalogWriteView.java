@@ -95,6 +95,10 @@ public class ControllerAnalogWriteView extends ControllerView {
 		tvPinNumber.setText("Pin : " + arduinoPin);
 	}
 
+	@Override
+	void receivedData(String data) {
+		// setName(data);
+	}
 
 	@Override
 	public View getView() {

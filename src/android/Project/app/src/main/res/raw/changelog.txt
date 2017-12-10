@@ -76,6 +76,9 @@ v0.1.3.2
 by simply changing the 'sendCommand' function in ArduinoCommunicationManager, and adapting the code
 on the Arduino.
 
+v0.1.3.3
+- Fixed bug where the second time you opened a panel, it will stay loading forever
+
 
 
 

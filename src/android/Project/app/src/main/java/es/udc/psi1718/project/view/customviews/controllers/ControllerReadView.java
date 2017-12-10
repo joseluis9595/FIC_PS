@@ -35,6 +35,11 @@ public class ControllerReadView extends ControllerView {
 	}
 
 	@Override
+	void receivedData(String data) {
+		// setName(data);
+	}
+
+	@Override
 	public View getView() {
 		return view;
 	}

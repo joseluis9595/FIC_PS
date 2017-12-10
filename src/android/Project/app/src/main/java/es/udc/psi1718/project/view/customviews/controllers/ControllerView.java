@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 
+
 public abstract class ControllerView extends LinearLayout {
 
 	private final String TAG = "ControllerView";
@@ -32,6 +33,21 @@ public abstract class ControllerView extends LinearLayout {
 		this.commandType = commandType;
 		listener = (ControllerViewEventListener) context;
 	}
+
+	public void receivedData(int panelId, int controllerId, String data) {
+		if (controllerId == this.controllerId) {
+			Log.e(TAG, "Received data : " + data);
+			receivedData(data);
+		}
+
+	}
+
+	/**
+	 * Called when data is received
+	 *
+	 * @param data data received
+	 */
+	abstract void receivedData(String data);
 
 
 	/**
