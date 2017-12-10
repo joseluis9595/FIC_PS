@@ -8,8 +8,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
-import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -33,6 +31,8 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import java.util.ArrayList;
 
 import es.udc.psi1718.project.MyBroadcastReceiver;
 import es.udc.psi1718.project.R;
@@ -74,7 +74,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	private Float initialFabX, initialFabY;
 	private int finalFabX, finalFabY = 0;
 	private final Float fadeAlpha = 0.8f;
-	private boolean isCustomAlertDialogOpened;
+	private boolean isCustomAlertDialogOpened = false;
 	private Button btnCreate, btnCancel;
 	private LinearLayout fadeLayout;
 	private LinearLayout customAlertLayout;
@@ -232,7 +232,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 
 	@Override
 	public void onBackPressed() {
-		super.onBackPressed();
+		// super.onBackPressed();
 		Log.e(TAG, "onBackPressed");
 		if (isCustomAlertDialogOpened) closeCustomAlertDialog();
 		else supportFinishAfterTransition();
@@ -265,27 +265,45 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 		customGridLayout.reset();
 
 		// Get previous saved controllers
-		Cursor cursor = mySQLiteHelper.getControllersByPanelId(panelId);
-		if (cursor == null || cursor.getCount() <= 0) {
-			Log.e(TAG, "loadSavedControllers : Cursor is empty");
+		// Cursor cursor = mySQLiteHelper.getControllersByPanelId(panelId);
+		// if (cursor == null || cursor.getCount() <= 0) {
+		// 	Log.e(TAG, "loadSavedControllers : Cursor is empty");
+		// 	return;
+		// }
+		//
+		// String cursorString = DatabaseUtils.dumpCursorToString(cursor);
+		// Log.e(TAG, cursorString);
+		// if (cursor.moveToFirst()) {
+		// 	do {
+		// 		Log.e(TAG, "Creating new controller");
+		// 		String name = cursor.getString(cursor.getColumnIndex(MySQLiteHelper.COL_CONTROLLER_NAME));
+		// 		int controllerType = cursor.getInt(cursor.getColumnIndex(MySQLiteHelper.COL_CONTROLLER_CONTROLLERTYPE));
+		// 		String dataType = cursor.getString(cursor.getColumnIndex(MySQLiteHelper.COL_CONTROLLER_DATATYPE));
+		// 		String pinType = cursor.getString(cursor.getColumnIndex(MySQLiteHelper.COL_CONTROLLER_PINTYPE));
+		// 		String pinNumber = cursor.getString(cursor.getColumnIndex(MySQLiteHelper.COL_CONTROLLER_PINNUMBER));
+		// 		// int position = cursor.getInt(cursor.getColumnIndexOrThrow(MySQLiteHelper.COL_CONTROLLER_POSITION));
+		// 		createNewController(name, controllerType, pinNumber, pinType, dataType);
+		// 	} while (cursor.moveToNext());
+		// }
+		// cursor.close();
+
+		// Get the list of controllers
+		ArrayList<Controller> controllers = mySQLiteHelper.getControllersByPanelId(panelId);
+		if (controllers == null || controllers.isEmpty()) {
+			Log.i(TAG, "loadSavedControllers : Controllers list is empty");
 			return;
 		}
 
-		String cursorString = DatabaseUtils.dumpCursorToString(cursor);
-		Log.e(TAG, cursorString);
-		if (cursor.moveToFirst()) {
-			do {
-				Log.e(TAG, "Creating new controller");
-				String name = cursor.getString(cursor.getColumnIndex(MySQLiteHelper.COL_CONTROLLER_NAME));
-				int controllerType = cursor.getInt(cursor.getColumnIndex(MySQLiteHelper.COL_CONTROLLER_CONTROLLERTYPE));
-				String dataType = cursor.getString(cursor.getColumnIndex(MySQLiteHelper.COL_CONTROLLER_DATATYPE));
-				String pinType = cursor.getString(cursor.getColumnIndex(MySQLiteHelper.COL_CONTROLLER_PINTYPE));
-				String pinNumber = cursor.getString(cursor.getColumnIndex(MySQLiteHelper.COL_CONTROLLER_PINNUMBER));
-				// int position = cursor.getInt(cursor.getColumnIndexOrThrow(MySQLiteHelper.COL_CONTROLLER_POSITION));
-				createNewController(name, controllerType, pinNumber, pinType, dataType);
-			} while (cursor.moveToNext());
+		// For every item in the list, create a new controller view
+		for (Controller controller : controllers) {
+			createNewController(
+					controller.getId(),
+					controller.getName(),
+					controller.getControllerType(),
+					controller.getPinNumber(),
+					controller.getPinType(),
+					controller.getDataType());
 		}
-		cursor.close();
 	}
 
 
@@ -298,13 +316,12 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 		setSupportActionBar(myToolbar);
 
 		// Add home button in the toolbar
-		try {
-			ActionBar actionBar = getSupportActionBar();
+		ActionBar actionBar = getSupportActionBar();
+		if (actionBar != null) {
 			actionBar.setDisplayHomeAsUpEnabled(true);
 			actionBar.setTitle(panelName != null ? panelName : "Panel");
-		} catch (NullPointerException e) {
-			e.printStackTrace();
 		}
+
 		// Initialize layout variables
 		fabNewController = (FloatingActionButton) findViewById(R.id.fab_new_controller);
 		// mainLinearLayout = (LinearLayout) findViewById(R.id.controllers_main_layout);
@@ -453,10 +470,12 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 					position,
 					panelId
 			);
-			mySQLiteHelper.insertController(controller);
+			// TODO save this value and use it in createNewController()
+			int controllerId = (mySQLiteHelper.insertController(controller));
 
 			// Refresh view
 			createNewController(
+					controllerId,
 					controllerNameString,
 					controllerType,
 					arduinoPinString,
@@ -498,9 +517,9 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	/**
 	 * Creates a new Controller layout
 	 */
-	private void createNewController(String name, int controllerType, String arduinoPin, String pinType, String dataType) {
+	private void createNewController(int controllerId, String name, int controllerType, String arduinoPin, String pinType, String dataType) {
 
-		ControllerView controllerView = controllerViewManager.createControllerView(name, controllerType, arduinoPin, pinType, dataType);
+		ControllerView controllerView = controllerViewManager.createControllerView(controllerId, name, controllerType, arduinoPin, pinType, dataType);
 		customGridLayout.addController(controllerView);
 
 		// // Pin de escritura digital
@@ -760,8 +779,8 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	/**
 	 * Sends command via Serial Port
 	 */
-	private void sendCommand(int controllerType, String arduinoPin, int pinType, int dataType, int data) {
-		ArduinoResponseCodes responseCode = arduinoCommunication.sendCommand(controllerType, arduinoPin, pinType, dataType, data);
+	private void sendCommand(int controllerId, int controllerType, String arduinoPin, int pinType, int dataType, int data) {
+		ArduinoResponseCodes responseCode = arduinoCommunication.sendCommand(controllerId, controllerType, arduinoPin, pinType, dataType, data);
 		if (responseCode.getCode() <= 0) {
 			Util.displayError(context, responseCode.getDescription());
 		}
@@ -835,9 +854,9 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	/* CONTROLLER VIEW LISTENER FUNCTIONS */
 
 	@Override
-	public void controllerSentCommand(int controllerType, final String arduinoPin, final int pinType, final int dataType, final int data) {
+	public void controllerSentCommand(int controllerId, int controllerType, final String arduinoPin, final int pinType, final int dataType, final int data) {
 		Log.d(TAG, "ControllerChangeState : Sending command to Arduino");
-		sendCommand(controllerType, arduinoPin, pinType, dataType, data);
+		sendCommand(controllerId, controllerType, arduinoPin, pinType, dataType, data);
 	}
 
 	@Override

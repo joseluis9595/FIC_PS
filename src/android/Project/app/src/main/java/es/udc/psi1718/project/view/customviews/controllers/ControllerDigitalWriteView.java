@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
-import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -17,13 +16,13 @@ public class ControllerDigitalWriteView extends ControllerView {
 	private String TAG = "ControllerSwitchView";
 
 	private View view;
-	private TextView nameTextView, tvPinNumber;
-	private Switch mSwitch;
-	private LinearLayout cardViewLayout;
+	private TextView nameTextView;
 
 
-	public ControllerDigitalWriteView(Context context, String name, int controllerType, String arduinoPin) {
-		super(context, name, controllerType, arduinoPin, ArduinoCommunicationManager.PINTYPE_DIGITAL, ArduinoCommunicationManager.COMMANDTYPE_WRITE);
+	public ControllerDigitalWriteView(Context context, int controllerId, String name, int controllerType, String arduinoPin) {
+		super(context, controllerId, name, controllerType, arduinoPin,
+				ArduinoCommunicationManager.PINTYPE_DIGITAL,
+				ArduinoCommunicationManager.COMMANDTYPE_WRITE);
 		initializeLayout(name, arduinoPin);
 	}
 
@@ -33,11 +32,10 @@ public class ControllerDigitalWriteView extends ControllerView {
 		view = inflate(getContext(), R.layout.controller_switch_layout, null);
 
 		// Initialize variables
-		cardViewLayout = (LinearLayout) view.findViewById(R.id.card_view_main_layout);
 		nameTextView = (TextView) view.findViewById(R.id.controller_name_text_view);
-		tvPinNumber = (TextView) view.findViewById(R.id.tv_controller_position);
+		TextView tvPinNumber = (TextView) view.findViewById(R.id.tv_controller_position);
 
-		mSwitch = (Switch) view.findViewById(R.id.controller_switch);
+		Switch mSwitch = (Switch) view.findViewById(R.id.controller_switch);
 
 		// Create listeners
 		CompoundButton.OnCheckedChangeListener onCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
@@ -69,6 +67,7 @@ public class ControllerDigitalWriteView extends ControllerView {
 		mSwitch.setOnCheckedChangeListener(onCheckedChangeListener);
 		nameTextView.setText(name);
 		tvPinNumber.setText("Pin : " + arduinoPin);
+		// tvPinNumber.setText("ID : " + controllerId);
 	}
 
 
@@ -81,5 +80,5 @@ public class ControllerDigitalWriteView extends ControllerView {
 	public void setName(String newName) {
 		nameTextView.setText(newName);
 	}
-	
+
 }

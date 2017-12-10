@@ -13,6 +13,7 @@ public abstract class ControllerView extends LinearLayout {
 	ControllerViewEventListener listener;
 
 	// Command variables
+	private int controllerId;
 	private String arduinoPin;
 	private int pinType;
 	private int commandType;
@@ -21,8 +22,9 @@ public abstract class ControllerView extends LinearLayout {
 	// Layout variables
 	private String name;
 
-	public ControllerView(Context context, String name, int controllerType, String arduinoPin, int pinType, int commandType) {
+	public ControllerView(Context context, int controllerId, String name, int controllerType, String arduinoPin, int pinType, int commandType) {
 		super(context);
+		this.controllerId = controllerId;
 		this.name = name;
 		this.controllerType = controllerType;
 		this.arduinoPin = arduinoPin;
@@ -49,7 +51,7 @@ public abstract class ControllerView extends LinearLayout {
 	 */
 	void sendCommand(int data) {
 		// Send command via interface
-		listener.controllerSentCommand(controllerType, arduinoPin, pinType, commandType, data);
+		listener.controllerSentCommand(controllerId, controllerType, arduinoPin, pinType, commandType, data);
 	}
 
 

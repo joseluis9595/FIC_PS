@@ -152,6 +152,7 @@ public class ArduinoCommunicationManager {
 	/**
 	 * Creates a String command that will be sent via serial port to the arduino
 	 *
+	 * @param controllerId   id of the controller that sent the command
 	 * @param controllerType type of component that the controller represents
 	 * @param arduinoPin     pin where the component is connected
 	 * @param pinType        type of the pin (analog-digital)
@@ -160,7 +161,7 @@ public class ArduinoCommunicationManager {
 	 *
 	 * @return String
 	 */
-	private String createCommand(int controllerType, String arduinoPin, int pinType, int commandType, int data) {
+	private String createCommand(int controllerId, int controllerType, String arduinoPin, int pinType, int commandType, int data) {
 		String command = "";
 		command += COMMAND_FIRST_BYTE;
 
@@ -225,6 +226,7 @@ public class ArduinoCommunicationManager {
 	/**
 	 * Sends command via serial port
 	 *
+	 * @param controllerId   id of the controller that sent the command
 	 * @param controllerType type of the controller
 	 * @param arduinoPin     pin where the component is connected on the arduino
 	 * @param pinType        type of the pin (digital-analog)
@@ -233,9 +235,9 @@ public class ArduinoCommunicationManager {
 	 *
 	 * @return {@link ArduinoResponseCodes}
 	 */
-	public ArduinoResponseCodes sendCommand(int controllerType, String arduinoPin, int pinType, int commandType, int data) {
+	public ArduinoResponseCodes sendCommand(int controllerId, int controllerType, String arduinoPin, int pinType, int commandType, int data) {
 		if (serialPort != null) {
-			String command = createCommand(controllerType, arduinoPin, pinType, commandType, data);
+			String command = createCommand(controllerId, controllerType, arduinoPin, pinType, commandType, data);
 
 			// If malformed command send error via interface
 			if (command.equals("ERROR")) return ArduinoResponseCodes.ERROR_INVALID_COMMAND;

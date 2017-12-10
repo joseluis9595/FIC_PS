@@ -23,14 +23,20 @@ public class ControllerAnalogWriteView extends ControllerView {
 	private long timeInMillis;
 
 
-	public ControllerAnalogWriteView(Context context, String name, int controllerType, String arduinoPin) {
-		super(context, name, controllerType, arduinoPin,
+	/**
+	 * Constructor
+	 */
+	public ControllerAnalogWriteView(Context context, int controllerId, String name, int controllerType, String arduinoPin) {
+		super(context, controllerId, name, controllerType, arduinoPin,
 				ArduinoCommunicationManager.PINTYPE_ANALOG,
 				ArduinoCommunicationManager.COMMANDTYPE_WRITE);
 		initializeLayout(name, arduinoPin);
 	}
 
 
+	/**
+	 * Initialize the layout of the controller
+	 */
 	private void initializeLayout(String name, String arduinoPin) {
 		// Inflate view
 		view = inflate(getContext(), R.layout.controller_slider_layout, null);
@@ -86,7 +92,7 @@ public class ControllerAnalogWriteView extends ControllerView {
 		mSeekbar.setOnSeekBarChangeListener(onSeekBarChangeListener);
 		nameTextView.setText(name);
 		// Change view
-		tvPinNumber.setText("Pin : "+arduinoPin);
+		tvPinNumber.setText("Pin : " + arduinoPin);
 	}
 
 

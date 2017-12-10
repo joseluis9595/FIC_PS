@@ -11,12 +11,13 @@ public class ControllerReadView extends ControllerView {
 	private String TAG = "ControllerSwitchView";
 
 	private View view;
-	private String name;
 	private TextView nameTextView;
 
 
-	public ControllerReadView(Context context, String name, int controllerType, String arduinoPin) {
-		super(context, name, controllerType, arduinoPin, ArduinoCommunicationManager.PINTYPE_DIGITAL, ArduinoCommunicationManager.COMMANDTYPE_WRITE);
+	public ControllerReadView(Context context, int controllerId, String name, int controllerType, String arduinoPin) {
+		super(context, controllerId, name, controllerType, arduinoPin,
+				ArduinoCommunicationManager.PINTYPE_DIGITAL,
+				ArduinoCommunicationManager.COMMANDTYPE_WRITE);
 		initializeLayout(name, arduinoPin);
 	}
 

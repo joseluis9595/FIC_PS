@@ -9,6 +9,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.util.ArrayList;
+
 import es.udc.psi1718.project.storage.database.daos.Controller;
 import es.udc.psi1718.project.storage.database.daos.Panel;
 
@@ -129,7 +131,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 	 *
 	 * @param controller New controller to be added
 	 */
-	public void insertController(Controller controller) {
+	public int insertController(Controller controller) {
 		SQLiteDatabase db = getWritableDatabase();
 		ContentValues values = new ContentValues();
 		values.put(COL_CONTROLLER_NAME, controller.getName());
@@ -141,7 +143,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 		values.put(COL_CONTROLLER_PANELID, controller.getPanelId());
 
 		Log.d(TAG, "Inserting via DB object instance");
-		db.insert(TABLE_CONTROLLERS, null, values);
+		return (int) db.insert(TABLE_CONTROLLERS, null, values);
 	}
 
 
@@ -150,9 +152,9 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 	 *
 	 * @param panelId id of the panel
 	 *
-	 * @return Cursor with all the controllers
+	 * @return List of {@link Controller}
 	 */
-	public Cursor getControllersByPanelId(int panelId) {
+	public ArrayList<Controller> getControllersByPanelId(int panelId) {
 		String selectionText = COL_CONTROLLER_PANELID + " =? ";
 		String[] selectionItems = new String[]{String.valueOf(panelId)};
 
@@ -161,10 +163,44 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 		String orderCriteria = COL_CONTROLLER_POSITION + " COLLATE LOCALIZED ASC";
 
 		// Execute sentence in database
-		Log.d(TAG, "GETGRADES via DB Object instance");
-		return getWritableDatabase().query(TABLE_CONTROLLERS, null,
+		Cursor cursor = getWritableDatabase().query(TABLE_CONTROLLERS, null,
 				selectionText, selectionItems,
 				null, null, orderCriteria);
+
+		// Check if cursor is empty
+		if (cursor == null || cursor.getCount() <= 0) {
+			Log.e(TAG, "getControllersByPanelId : Cursor is empty");
+			return null;
+		}
+
+		// Print the cursor for debugging purposes
+		String cursorString = DatabaseUtils.dumpCursorToString(cursor);
+		Log.e(TAG, cursorString);
+
+		// Create a new Controllers list
+		ArrayList<Controller> controllers = new ArrayList<>();
+
+		// Populate the arrayList
+		if (cursor.moveToFirst()) {
+			do {
+				// Get controller fields
+				int id = cursor.getInt(cursor.getColumnIndex(COL_CONTROLLER_ID));
+				String name = cursor.getString(cursor.getColumnIndex(COL_CONTROLLER_NAME));
+				int controllerType = cursor.getInt(cursor.getColumnIndex(COL_CONTROLLER_CONTROLLERTYPE));
+				String dataType = cursor.getString(cursor.getColumnIndex(COL_CONTROLLER_DATATYPE));
+				String pinType = cursor.getString(cursor.getColumnIndex(COL_CONTROLLER_PINTYPE));
+				String pinNumber = cursor.getString(cursor.getColumnIndex(COL_CONTROLLER_PINNUMBER));
+				int position = cursor.getInt(cursor.getColumnIndexOrThrow(COL_CONTROLLER_POSITION));
+
+				// Add a new Controller object to the list
+				controllers.add(new Controller(id, name, controllerType, dataType, pinType, pinNumber, position, panelId));
+			} while (cursor.moveToNext());
+		}
+		// Close the cursor
+		cursor.close();
+
+		// Return populated list
+		return controllers;
 	}
 
 
@@ -215,8 +251,8 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 				});
 
 		// TODO debug
-		Cursor cursor = getControllersByPanelId(panelId);
-		Log.e(TAG, DatabaseUtils.dumpCursorToString(cursor));
+		// Cursor cursor = getControllersByPanelId(panelId);
+		// Log.e(TAG, DatabaseUtils.dumpCursorToString(cursor));
 	}
 
 
@@ -235,7 +271,6 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 		};
 
 		// Execute sentence in database
-		Log.d(TAG, "GETGRADES via DB Object instance");
 		Cursor cursor = getWritableDatabase().query(TABLE_CONTROLLERS, null,
 				selectionText, selectionItems,
 				null, null, null);
