@@ -38,6 +38,10 @@
     <string name="alertdialog_newpanel_title">Add new panel</string>
     <string name="et_newpanel_name_hint">Name of the panel</string>
 
+    <!-- Panel context menu strings -->
+    <string name="panel_delete">Delete</string>
+    <string name="panel_edit">Edit</string>
+
     <!-- Controllers Strings -->
     <string name="controllers_loading_string">Connect Arduino now…</string>
     <string name="controllers_tv_pinnumber">Pin %1$d</string>

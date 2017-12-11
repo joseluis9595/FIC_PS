@@ -3,12 +3,12 @@
 
     <item
         android:id="@+id/delete"
-        android:title="Borrar"
+        android:title="@string/panel_delete"
         ></item>
 
     <item
         android:id="@+id/update"
-        android:title="Modificar"
+        android:title="@string/panel_edit"
         ></item>
 
 </menu>
