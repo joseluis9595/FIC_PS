@@ -1,7 +1,7 @@
 package es.udc.psi1718.project.view.customviews.controllers;
 
 
-import android.content.Context;
+import android.app.Activity;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -13,6 +13,8 @@ public abstract class ControllerView extends LinearLayout {
 
 	ControllerViewEventListener listener;
 
+	Activity fromContext;
+
 	// Command variables
 	private int controllerId;
 	private String arduinoPin;
@@ -23,8 +25,9 @@ public abstract class ControllerView extends LinearLayout {
 	// Layout variables
 	private String name;
 
-	public ControllerView(Context context, int controllerId, String name, int controllerType, String arduinoPin, int pinType, int commandType) {
+	public ControllerView(Activity context, int controllerId, String name, int controllerType, String arduinoPin, int pinType, int commandType) {
 		super(context);
+		this.fromContext = context;
 		this.controllerId = controllerId;
 		this.name = name;
 		this.controllerType = controllerType;
@@ -43,7 +46,7 @@ public abstract class ControllerView extends LinearLayout {
 	 */
 	public void receivedData(int panelId, int controllerId, String data) {
 		if (controllerId == this.controllerId) {
-			Log.e(TAG, "Received data : " + data);
+			Log.e(TAG, "Received data on controller ID " + controllerId + " : " + data);
 			refreshController(data);
 		}
 
@@ -91,5 +94,9 @@ public abstract class ControllerView extends LinearLayout {
 	 * @param newName the new name you want for the Controller
 	 */
 	public abstract void setName(String newName);
+
+	public abstract void startController();
+
+	public abstract void endController();
 
 }

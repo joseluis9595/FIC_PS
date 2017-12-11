@@ -124,6 +124,7 @@ public class TutorialActivity extends AppCompatActivity {
 	 */
 	private void startMainActivity() {
 		Intent mainActivIntent = new Intent(TutorialActivity.this, MainActivity.class);
+		mainActivIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
 		startActivity(mainActivIntent);
 		finish();
 	}

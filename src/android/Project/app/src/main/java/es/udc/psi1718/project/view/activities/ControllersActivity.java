@@ -130,7 +130,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 
 		// Managers
 		mySQLiteHelper = new MySQLiteHelper(context);
-		controllerViewManager = new ControllerViewManager(context);
+		controllerViewManager = new ControllerViewManager(this);
 
 		// Arduino communication
 		// arduinoCommunication = ArduinoCommunicationManager.getInstance(context);
@@ -740,18 +740,12 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 
 	@Override
 	public void receivedData(final int panelId, final int controllerId, final String data) {
-		Log.d(TAG, "RECEIVEDDATA : Data received - " + data);
+		Log.d(TAG, "RECEIVEDDATA : Data received - " + controllerId + "-" + data);
 		final String auxData = data;
 		// controllerViewManager.receivedData(panelId, controllerId, data);
 
-		runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				for (ControllerView controller : controllerViewManager.getControllers()) {
-					controller.receivedData(panelId, controllerId, data);
-				}
-			}
-		});
+		// TODO move 'runOnUiThread' to the controller view itself, executing this in background
+		controllerViewManager.receivedData(panelId, controllerId, data);
 		// runOnUiThread(new Runnable() {
 		// 	@Override
 		// 	public void run() {
@@ -766,6 +760,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 
 		// Set connection active flag to false
 		connectionIsActive = true;
+		controllerViewManager.startControllers();
 
 		// Change the layout running on UI thread
 		runOnUiThread(new Runnable() {
@@ -785,6 +780,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 
 		// Set connection active flag to false
 		connectionIsActive = false;
+		controllerViewManager.endControllers();
 
 		// Change the layout running on UI thread
 		final ArduinoResponseCodes finalCode = responseCode;

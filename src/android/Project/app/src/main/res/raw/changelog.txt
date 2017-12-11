@@ -79,6 +79,12 @@ on the Arduino.
 v0.1.3.3
 - Fixed bug where the second time you opened a panel, it will stay loading forever
 
+v0.1.3.4
+- Fixed multiple bugs
+- Created read controllers
+- refreshData() was called on UI thead on all controllers list one by one, now only the one with the same id
+    calls the UI thread to change its view
+
 
 
 

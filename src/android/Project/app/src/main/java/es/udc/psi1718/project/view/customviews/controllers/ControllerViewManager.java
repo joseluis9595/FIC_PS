@@ -1,6 +1,6 @@
 package es.udc.psi1718.project.view.customviews.controllers;
 
-import android.content.Context;
+import android.app.Activity;
 
 import java.util.ArrayList;
 
@@ -8,11 +8,11 @@ import es.udc.psi1718.project.arduinomanager.ArduinoCommunicationManager;
 
 
 public class ControllerViewManager {
-	private Context context;
+	private Activity context;
 
 	private ArrayList<ControllerView> controllers;
 
-	public ControllerViewManager(Context context) {
+	public ControllerViewManager(Activity context) {
 		this.context = context;
 		controllers = new ArrayList<>();
 	}
@@ -79,16 +79,34 @@ public class ControllerViewManager {
 		return controllers;
 	}
 
-	// /**
-	//  * Called when data is received
-	//  *
-	//  * @param panelId      id of the panel
-	//  * @param controllerId id of the controller
-	//  * @param data         data received
-	//  */
-	// public void refreshController(int panelId, int controllerId, String data) {
-	// 	for (ControllerView controller : controllers) {
-	// 		controller.refreshController(panelId, controllerId, data);
-	// 	}
-	// }
+	/**
+	 * Called when data is received
+	 *
+	 * @param panelId      id of the panel
+	 * @param controllerId id of the controller
+	 * @param data         data received
+	 */
+	public void receivedData(int panelId, int controllerId, String data) {
+		for (ControllerView controller : controllers) {
+			controller.receivedData(panelId, controllerId, data);
+		}
+	}
+
+	/**
+	 * Tells the controllers they can start sending data
+	 */
+	public void startControllers() {
+		for (ControllerView controller : controllers) {
+			controller.startController();
+		}
+	}
+
+	/**
+	 * Cancels the controllers
+	 */
+	public void endControllers() {
+		for (ControllerView controller : controllers) {
+			controller.endController();
+		}
+	}
 }

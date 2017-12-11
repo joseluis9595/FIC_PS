@@ -5,7 +5,10 @@
  * and act accordingly
  *
  * Example command
- * *1-2-D-W-009-0001
+ * Turn ON LED at pin 9
+ * 			*1-2-D-W-009-0001
+ * Read analogic input at pin 3
+ * 			*1-0-A-R-003-0000
  */
 
 #define CONTROLLER_GENERIC 0
@@ -31,6 +34,19 @@ String getValue(String data, char separator, int index) {
 	return found > index ? data.substring(strIndex[0], strIndex[1]) : "";
 }
 
+String convertToString(int data, int numberOfChars){
+	String command;
+	int dataLength = String(data).length();
+	int dataZeroes = numberOfChars - dataLength;
+	if (dataZeroes <= 0) dataZeroes = 0;
+	while (dataZeroes > 0) {
+		command += "0";
+		dataZeroes -= 1;
+	}
+	command+=String(data);
+	return command;
+}
+
 
 
 void setup() {  
@@ -51,6 +67,7 @@ void loop() {
 
 	// Interpret data
 	if (myString.length() >0) {
+		
 		// Remove fist char (*)
 		myString.remove(0,1);
 
@@ -86,6 +103,19 @@ void loop() {
 				switch (commandTypeChar){
 					case 'R':
 						pinMode(pinNumber, INPUT);
+						if (pinTypeChar == 'D'){
+							Serial.println(
+								"*"
+								+ convertToString(controllerId, 2)
+								+ "-" + convertToString(digitalRead(pinNumber), 4)
+								+ "-xx");
+						} else if (pinTypeChar == 'A'){
+							Serial.println(
+								"*" + 
+								convertToString(controllerId, 2) + 
+								+ "-" + convertToString(analogRead(pinNumber), 4)
+								+ "-xx");
+						}
 						break;
 					case 'W':
 						pinMode(pinNumber, OUTPUT);
@@ -111,12 +141,19 @@ void loop() {
 				pinMode(pinNumber, OUTPUT);
 				// Serial.println("digitalWrite(" + String(pinNumber) + ", " + String(data) + ")");
 				digitalWrite(pinNumber, data);
+				if (data==1){
+					Serial.println("*"+convertToString(controllerId,2)+"- ON -xx");	
+				} else {
+					Serial.println("*"+convertToString(controllerId,2)+"- OFF-xx");
+				}
+				
 				break;
 			case CONTROLLER_SERVO:
 				break;
 			case CONTROLLER_TEMP_SENSOR:
 				break;
 			case CONTROLLER_HUMIDITY_SENSOR:
+				Serial.println("*"+convertToString(controllerId,2)+"-TEST-xx");
 				break;
 			default:
 				break;

@@ -1,6 +1,6 @@
 package es.udc.psi1718.project.view.customviews.controllers;
 
-import android.content.Context;
+import android.app.Activity;
 import android.util.Log;
 import android.view.View;
 import android.widget.SeekBar;
@@ -26,7 +26,7 @@ public class ControllerAnalogWriteView extends ControllerView {
 	/**
 	 * Constructor
 	 */
-	public ControllerAnalogWriteView(Context context, int controllerId, String name, int controllerType, String arduinoPin) {
+	public ControllerAnalogWriteView(Activity context, int controllerId, String name, int controllerType, String arduinoPin) {
 		super(context, controllerId, name, controllerType, arduinoPin,
 				ArduinoCommunicationManager.PINTYPE_ANALOG,
 				ArduinoCommunicationManager.COMMANDTYPE_WRITE);
@@ -97,7 +97,13 @@ public class ControllerAnalogWriteView extends ControllerView {
 
 	@Override
 	void refreshController(String data) {
-		// setName(data);
+		final String finalData = data;
+		fromContext.runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				setName(finalData);
+			}
+		});
 	}
 
 	@Override
@@ -108,6 +114,16 @@ public class ControllerAnalogWriteView extends ControllerView {
 	@Override
 	public void setName(String newName) {
 		nameTextView.setText(newName);
+	}
+
+	@Override
+	public void startController() {
+
+	}
+
+	@Override
+	public void endController() {
+
 	}
 
 }

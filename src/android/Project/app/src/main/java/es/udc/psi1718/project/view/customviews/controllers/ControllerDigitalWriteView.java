@@ -1,5 +1,6 @@
 package es.udc.psi1718.project.view.customviews.controllers;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 import android.view.View;
@@ -19,7 +20,7 @@ public class ControllerDigitalWriteView extends ControllerView {
 	private TextView nameTextView;
 
 
-	public ControllerDigitalWriteView(Context context, int controllerId, String name, int controllerType, String arduinoPin) {
+	public ControllerDigitalWriteView(Activity context, int controllerId, String name, int controllerType, String arduinoPin) {
 		super(context, controllerId, name, controllerType, arduinoPin,
 				ArduinoCommunicationManager.PINTYPE_DIGITAL,
 				ArduinoCommunicationManager.COMMANDTYPE_WRITE);
@@ -43,7 +44,7 @@ public class ControllerDigitalWriteView extends ControllerView {
 			public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
 				int data = (b) ? 1 : 0;
 				Log.d(TAG, "OnCheckedChange()");
-				ControllerDigitalWriteView.super.sendCommand(data);
+				sendCommand(data);
 			}
 		};
 
@@ -72,7 +73,13 @@ public class ControllerDigitalWriteView extends ControllerView {
 
 	@Override
 	void refreshController(String data) {
-		// setName(data);
+		final String finalData = data;
+		fromContext.runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				setName(finalData);
+			}
+		});
 	}
 
 	@Override
@@ -83,6 +90,16 @@ public class ControllerDigitalWriteView extends ControllerView {
 	@Override
 	public void setName(String newName) {
 		nameTextView.setText(newName);
+	}
+
+	@Override
+	public void startController() {
+
+	}
+
+	@Override
+	public void endController() {
+
 	}
 
 }

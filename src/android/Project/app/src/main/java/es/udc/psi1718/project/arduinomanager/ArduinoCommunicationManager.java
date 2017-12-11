@@ -44,7 +44,7 @@ public class ArduinoCommunicationManager {
 	private final char COMMAND_SEPARATOR = '-';
 	// private final int COMMAND_DATA_LENGTH = 4;
 	// private final int COMMAND_ARDUINO_PIN_LENGTH = 2;
-	private final int COMMAND_LENGTH = 8; // ID(3char) SEPARATOR(1char) DATA(4char)
+	private final int COMMAND_LENGTH = 11; // ID(3char) SEPARATOR(1char) DATA(4char) SEPARATOR(1char) UNITS(2char)
 
 	// Pin and command type
 	public final static int PINTYPE_DIGITAL = 1;
@@ -289,21 +289,59 @@ public class ArduinoCommunicationManager {
 
 
 	/**
+	 * Returns a substring of the inputted one
+	 *
+	 * @param data      string to be formatted
+	 * @param index     position of the substring you want to obtain
+	 * @param separator separator
+	 *
+	 * @return substring
+	 */
+	private String getSubString(String data, int index, char separator) {
+		int found = 0;
+		int strIndex[] = {0, -1};
+		int maxIndex = data.length() - 1;
+
+		for (int i = 0; i <= maxIndex && found <= index; i++) {
+			if (data.charAt(i) == separator || i == maxIndex) {
+				found++;
+				strIndex[0] = strIndex[1] + 1;
+				strIndex[1] = (i == maxIndex) ? i + 1 : i;
+			}
+		}
+		return found > index ? data.substring(strIndex[0], strIndex[1]) : "";
+	}
+
+
+	/**
 	 * Crops the RAW data read via Serial port and sends it through the interface
 	 */
 	private void notifyReceivedData() {
 		try {
 
 			String aux = new String(buffer, "UTF-8");    // Creating String with the read buffer
-			// TODO va a devolver un comando de tipo ID-DATA
-			String finalData = aux.substring(0, COMMAND_LENGTH);      // We just need the first 9 chars
+			String finalData = aux.substring(0, COMMAND_LENGTH);     // We just need the first 9 chars
+			finalData = finalData.substring(1, finalData.length());  // Remove the first char (*)
 
-			// TODO parse this information
-			// int panelId = 1;
-			// int controllerId = xamones cocidos;
+			// Obtain the different fields from the original string
+			String controllerIdString = getSubString(finalData, 0, COMMAND_SEPARATOR);
+			String dataString = getSubString(finalData, 1, COMMAND_SEPARATOR);
+			String unitsString = getSubString(finalData, 2, COMMAND_SEPARATOR);
+
+			// Parse ints from the substrings
+			int controllerId = Integer.parseInt(controllerIdString);
+			// int data = Integer.parseInt(dataString);
+
+			// Create string with data and units
+			String dataWithUnits;
+			if (unitsString.charAt(0) == 'x' || unitsString.charAt(0) == 'X') {
+				dataWithUnits = dataString.trim();
+			} else {
+				dataWithUnits = dataString.trim() + unitsString.trim();
+			}
 
 			// Sending data through interface
-			// arduinoSerialConnectionListener.receivedData(panelId, controllerId, finalData);
+			arduinoSerialConnectionListener.receivedData(-1, controllerId, dataWithUnits);
 			Log.e(TAG, "checkData : received RAW String : " + finalData);
 
 		} catch (UnsupportedEncodingException e) {
@@ -319,7 +357,7 @@ public class ArduinoCommunicationManager {
 		//Defining a Callback which triggers whenever data is read.
 		@Override
 		public void onReceivedData(byte[] arg0) {
-			// Log.d(TAG, "Received data");
+			Log.d(TAG, "Received data");
 			if (arg0 != null) {
 				// Log.e(TAG, "Data received is null");
 				if (arg0.length > 0) {
@@ -481,7 +519,6 @@ public class ArduinoCommunicationManager {
 						commandBuffer.remove(commandBuffer.size() - 1);
 						Log.e(TAG, "Sending command : " + command);
 						serialPort.write(command.getBytes());
-
 						Thread.sleep(20);
 					}
 					// Log.e(TAG, "Running");
