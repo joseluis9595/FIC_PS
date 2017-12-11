@@ -506,8 +506,6 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 			initialFabX = fabNewController.getX();
 			initialFabY = fabNewController.getY();
 			finalFabX = (mDisplayMetrics.widthPixels / 2) - fabNewController.getWidth() / 2;
-			Log.e(TAG, "Value is : " + fabNewController.getWidth());
-			Log.e(TAG, "Screen is : " + mDisplayMetrics.widthPixels);
 			finalFabY = (int) (initialFabY - fabNewController.getHeight() * 2);
 		}
 

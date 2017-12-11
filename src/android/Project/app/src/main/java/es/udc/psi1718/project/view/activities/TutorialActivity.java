@@ -170,7 +170,7 @@ public class TutorialActivity extends AppCompatActivity {
 				if (position == screens.length - 1) {
 					AnimatedVectorDrawable d = null;
 					if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-						d = (AnimatedVectorDrawable) context.getResources().getDrawable(R.drawable.avd_next_to_check);
+						d = (AnimatedVectorDrawable) context.getDrawable(R.drawable.avd_next_to_check);
 						btnNext.setImageDrawable(d);
 						d.start();
 						lastPageSelected = true;
@@ -180,7 +180,7 @@ public class TutorialActivity extends AppCompatActivity {
 					if (lastPageSelected) {
 						AnimatedVectorDrawable d = null;
 						if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-							d = (AnimatedVectorDrawable) context.getResources().getDrawable(R.drawable.avd_check_to_next);
+							d = (AnimatedVectorDrawable) context.getDrawable(R.drawable.avd_check_to_next);
 							btnNext.setImageDrawable(d);
 							d.start();
 						}

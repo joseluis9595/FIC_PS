@@ -85,6 +85,12 @@ v0.1.3.4
 - refreshData() was called on UI thead on all controllers list one by one, now only the one with the same id
     calls the UI thread to change its view
 
+v0.1.3.5
+- Bug fixes and code cleanup
+- Context menu created for panels
+- Foreign key in controllers table
+- When panel is deleted, all its controllers are deleted too
+
 
 
 
