@@ -91,6 +91,9 @@ v0.1.3.5
 - Foreign key in controllers table
 - When panel is deleted, all its controllers are deleted too
 
+v0.1.3.6
+- Context menu for editing and removing controllers
+
 
 
 

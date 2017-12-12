@@ -23,6 +23,7 @@
     <dimen name="controller_card_view_margin_top">3dp</dimen>
     <dimen name="controller_card_view_margin_bottom">11dp</dimen>
     <dimen name="controller_card_view_margin_sides">18dp</dimen>
+    <dimen name="controllerview_pinnumber_marginend">6dp</dimen>
 
 
     <!--

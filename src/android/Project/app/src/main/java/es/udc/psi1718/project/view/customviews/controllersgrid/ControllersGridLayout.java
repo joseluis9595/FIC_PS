@@ -279,6 +279,11 @@ public class ControllersGridLayout extends ScrollView {
 	}
 
 
+	public void removeController(ControllerView controllerView) {
+		// TODO remove item from the layout
+	}
+
+
 	/**
 	 * Return number of controllers in the mGrid layout
 	 *

@@ -1,10 +1,10 @@
 package es.udc.psi1718.project.view.customviews.controllers;
 
 import android.app.Activity;
-import android.content.Context;
 import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -18,10 +18,12 @@ public class ControllerDigitalWriteView extends ControllerView {
 
 	private View view;
 	private TextView nameTextView;
+	private ImageButton btnEdit;
 
 
-	public ControllerDigitalWriteView(Activity context, int controllerId, String name, int controllerType, String arduinoPin) {
-		super(context, controllerId, name, controllerType, arduinoPin,
+	public ControllerDigitalWriteView(ControllerViewManager manager, Activity context, int controllerId,
+									  String name, int controllerType, String arduinoPin) {
+		super(manager, context, controllerId, name, controllerType, arduinoPin,
 				ArduinoCommunicationManager.PINTYPE_DIGITAL,
 				ArduinoCommunicationManager.COMMANDTYPE_WRITE);
 		initializeLayout(name, arduinoPin);
@@ -35,8 +37,16 @@ public class ControllerDigitalWriteView extends ControllerView {
 		// Initialize variables
 		nameTextView = (TextView) view.findViewById(R.id.controller_name_text_view);
 		TextView tvPinNumber = (TextView) view.findViewById(R.id.tv_controller_position);
-
 		Switch mSwitch = (Switch) view.findViewById(R.id.controller_switch);
+		btnEdit = (ImageButton) view.findViewById(R.id.btn_controllerview_edit);
+
+		// Add click listener to the 3-dotted button
+		btnEdit.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				editController(btnEdit);
+			}
+		});
 
 		// Create listeners
 		CompoundButton.OnCheckedChangeListener onCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
@@ -48,27 +58,10 @@ public class ControllerDigitalWriteView extends ControllerView {
 			}
 		};
 
-		// OnLongClickListener onLongClickListener = new OnLongClickListener() {
-		// 	@Override
-		// 	public boolean onLongClick(View view) {
-		// 		switch (view.getId()) {
-		// 			case R.id.card_view_main_layout:
-		// 				// TODO IT2 edit cardView
-		// 				ControllerSwitchView.super.editController();
-		// 				return true;
-		// 			default:
-		// 				break;
-		// 		}
-		// 		return false;
-		// 	}
-		// };
-		//
-		// // Modify layout
-		// cardViewLayout.setOnLongClickListener(onLongClickListener);
+		// Modify layout
 		mSwitch.setOnCheckedChangeListener(onCheckedChangeListener);
 		nameTextView.setText(name);
 		tvPinNumber.setText("Pin : " + arduinoPin);
-		// tvPinNumber.setText("ID : " + controllerId);
 	}
 
 	@Override
@@ -77,7 +70,7 @@ public class ControllerDigitalWriteView extends ControllerView {
 		fromContext.runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				setName(finalData);
+				updateNameTextView(finalData);
 			}
 		});
 	}
@@ -88,7 +81,7 @@ public class ControllerDigitalWriteView extends ControllerView {
 	}
 
 	@Override
-	public void setName(String newName) {
+	public void updateNameTextView(String newName) {
 		nameTextView.setText(newName);
 	}
 

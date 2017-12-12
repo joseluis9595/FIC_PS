@@ -248,13 +248,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 
 		// For every item in the list, create a new controller view
 		for (Controller controller : controllers) {
-			createNewController(
-					controller.getId(),
-					controller.getName(),
-					controller.getControllerType(),
-					controller.getPinNumber(),
-					controller.getPinType(),
-					controller.getDataType());
+			addControllerView(controller);
 		}
 	}
 
@@ -437,17 +431,13 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 					position,
 					panelId
 			);
-			// TODO save this value and use it in createNewController()
+
+			// Set the controllerId
 			int controllerId = (mySQLiteHelper.insertController(controller));
+			controller.setId(controllerId);
 
 			// Refresh view
-			createNewController(
-					controllerId,
-					controllerNameString,
-					controllerType,
-					arduinoPinString,
-					pinType,
-					dataType);
+			addControllerView(controller);
 
 			// Dismiss the dialog
 			closeCustomAlertDialog();
@@ -492,7 +482,14 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	/**
 	 * Creates a new Controller layout
 	 */
-	private void createNewController(int controllerId, String name, int controllerType, String arduinoPin, String pinType, String dataType) {
+	private void addControllerView(Controller controller) {
+		int controllerId = controller.getId();
+		String name = controller.getName();
+		int controllerType = controller.getControllerType();
+		String arduinoPin = controller.getPinNumber();
+		String pinType = controller.getPinType();
+		String dataType = controller.getDataType();
+
 		ControllerView controllerView = controllerViewManager.createControllerView(controllerId, name, controllerType, arduinoPin, pinType, dataType);
 		customGridLayout.addController(controllerView);
 	}
@@ -823,5 +820,12 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	@Override
 	public void controllersPositionChanged(int initialPosition, int finalPosition) {
 		mySQLiteHelper.updateIndexes(panelId, initialPosition, finalPosition);
+	}
+
+	@Override
+	public void controllerRemoved(ControllerView controllerView) {
+		Log.e(TAG, "Removing controller");
+		customGridLayout.removeView(controllerView);
+		// mySQLiteHelper.deleteController(controllerView.getControllerId());
 	}
 }

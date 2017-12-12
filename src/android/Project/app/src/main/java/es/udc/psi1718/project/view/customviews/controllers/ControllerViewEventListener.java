@@ -15,4 +15,11 @@ public interface ControllerViewEventListener {
 	 * @param data           data
 	 */
 	void controllerSentCommand(int controllerId, int controllerType, String arduinoPin, int pinType, int dataType, int data);
+
+	/**
+	 * Called when a controllerView is removed
+	 *
+	 * @param controllerView {@link ControllerView} object that was deleted
+	 */
+	void controllerRemoved(ControllerView controllerView);
 }

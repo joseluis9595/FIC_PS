@@ -9,6 +9,8 @@
     <string name="action_about">About</string>
     <string name="action_settings">Settings</string>
     <string name="action_tutorial">Tutorial</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_edit">Edit</string>
 
     <!-- About activity -->
     <string name="text_aboutactivity_title">Developers</string>
@@ -37,10 +39,6 @@
     <!-- New panel AlertDialog strings -->
     <string name="alertdialog_newpanel_title">Add new panel</string>
     <string name="et_newpanel_name_hint">Name of the panel</string>
-
-    <!-- Panel context menu strings -->
-    <string name="panel_delete">Delete</string>
-    <string name="panel_edit">Edit</string>
 
     <!-- Controllers Strings -->
     <string name="controllers_loading_string">Connect Arduino now…</string>
