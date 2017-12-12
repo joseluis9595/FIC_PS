@@ -106,7 +106,6 @@ public class MainActivity extends AppCompatActivity {
         mySQLiteHelper = new MySQLiteHelper(this);
 
 
-
         // Initialize layout
         initializeLayout();
     }
@@ -193,6 +192,34 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v,
+                                    ContextMenu.ContextMenuInfo mInfo) {
+        super.onCreateContextMenu(menu, v, mInfo);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.context_menu, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        int listPosition = info.position;
+        Cursor cursor = (Cursor) lvPannels.getItemAtPosition(listPosition);
+        int id = cursor.getInt(cursor.getColumnIndexOrThrow(MySQLiteHelper.COL_PANEL_ID));
+
+        switch (item.getItemId()) {
+            case R.id.delete:
+                inflateConfirmationDialog();
+                // When you successfully handle a menu item, return true
+                return true;
+            case R.id.update:
+                // TODO inflate update dialog
+                return true;
+            default:
+                return super.onContextItemSelected(item);
         }
     }
 
@@ -304,35 +331,7 @@ public class MainActivity extends AppCompatActivity {
         btnCreate.setOnClickListener(buttonClickListener);
     }
 
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v,
-                                    ContextMenu.ContextMenuInfo mInfo) {
-        super.onCreateContextMenu(menu, v, mInfo);
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.context_menu, menu);
-    }
-
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        int listPosition = info.position;
-        Cursor cursor = (Cursor) lvPannels.getItemAtPosition(listPosition);
-        int id= cursor.getInt(cursor.getColumnIndexOrThrow(MySQLiteHelper.COL_PANEL_ID));
-
-
-        switch (item.getItemId()) {
-            case R.id.delete:
-                inflateConfirmationDialog();
-                return true; // When you successfully handle a menu item, return true
-            case R.id.update:
-
-                return true;
-            default:
-                return super.onContextItemSelected(item);// superclass
-        }
-    }
-
-    public void deletePannel(int id){
+    public void deletePanel(int id) {
         mySQLiteHelper.deletePanel(id);
         refreshListView();
     }
@@ -345,8 +344,8 @@ public class MainActivity extends AppCompatActivity {
         lvPannels.setAdapter(new PanelCursorAdapter(context, cursor));
 
         // TODO debug
-        String cursorString = DatabaseUtils.dumpCursorToString(cursor);
-        Log.e(TAG, cursorString);
+        // String cursorString = DatabaseUtils.dumpCursorToString(cursor);
+        // Log.e(TAG, cursorString);
     }
 
     /**
@@ -359,7 +358,7 @@ public class MainActivity extends AppCompatActivity {
             this.finish();
     }
 
-    private void inflateConfirmationDialog(){
+    private void inflateConfirmationDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
         builder.setTitle("Delete panel?")
@@ -370,7 +369,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        builder.setNegativeButton( "Cancel", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // User cancelled the dialog
             }
@@ -389,8 +388,6 @@ public class MainActivity extends AppCompatActivity {
             initialFabX = fabNewPanel.getX();
             initialFabY = fabNewPanel.getY();
             finalFabX = (mDisplayMetrics.widthPixels / 2) - fabNewPanel.getWidth() / 2;
-            Log.e(TAG, "Value is : " + fabNewPanel.getWidth());
-            Log.e(TAG, "Screen is : " + mDisplayMetrics.widthPixels);
             finalFabY = (int) (initialFabY - fabNewPanel.getHeight() * 2);
         }
 

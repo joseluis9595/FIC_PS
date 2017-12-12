@@ -1,5 +1,6 @@
-<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
-                 android:drawable="@drawable/vd_next">
+<animated-vector
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/vd_next">
     <target
         android:name="nextgroup"
         android:animation="@anim/rotate90_right"/>

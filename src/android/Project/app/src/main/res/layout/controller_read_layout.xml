@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/card_view_main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -35,30 +36,50 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:gravity="end">
 
             <TextView
                 android:id="@+id/tv_controller_position"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/controllerview_pinnumber_marginend"
                 android:text="-1"/>
         </LinearLayout>
 
     </LinearLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/controller_vertical_inside_margin">
 
-        <TextView
-            android:id="@+id/tv_controller_data"
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="6">
+
+            <TextView
+                android:id="@+id/tv_controller_data"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/controller_switch_padding"
+                android:text="-"
+                android:textSize="16sp"
+                android:textStyle="bold"/>
+
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/btn_controllerview_edit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="@dimen/controller_switch_padding"
-            android:text="Prueba"
-            android:textSize="16sp"
-            android:textStyle="bold"/>
+            android:alpha="0.6"
+            android:background="?attr/selectableItemBackground"
+            android:contentDescription="@string/action_edit"
+            android:padding="6dp"
+            app:srcCompat="@drawable/ic_action_more_black"/>
     </LinearLayout>
 
 </LinearLayout>

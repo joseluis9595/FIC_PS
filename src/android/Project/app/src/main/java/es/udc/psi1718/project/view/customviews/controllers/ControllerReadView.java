@@ -3,6 +3,7 @@ package es.udc.psi1718.project.view.customviews.controllers;
 import android.app.Activity;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import es.udc.psi1718.project.R;
@@ -11,15 +12,20 @@ import es.udc.psi1718.project.arduinomanager.ArduinoCommunicationManager;
 public class ControllerReadView extends ControllerView {
 	private String TAG = "ControllerSwitchView";
 
+	// LAyout variables
 	private View view;
 	private TextView nameTextView;
 	private TextView tvData;
+	private ImageButton btnEdit;
+
+	// Thread variables
 	private int REFRESH_RATE = 1000;
 	private SendDataThread thread;
 
 
-	public ControllerReadView(Activity context, int controllerId, String name, int controllerType, String arduinoPin) {
-		super(context, controllerId, name, controllerType, arduinoPin,
+	public ControllerReadView(ControllerViewManager manager, Activity context, int controllerId,
+							  String name, int controllerType, String arduinoPin) {
+		super(manager, context, controllerId, name, controllerType, arduinoPin,
 				arduinoPin.equalsIgnoreCase("digital") ?
 						ArduinoCommunicationManager.PINTYPE_DIGITAL :
 						ArduinoCommunicationManager.PINTYPE_ANALOG,
@@ -35,7 +41,17 @@ public class ControllerReadView extends ControllerView {
 		nameTextView = (TextView) view.findViewById(R.id.controller_name_text_view);
 		TextView tvPinNumber = (TextView) view.findViewById(R.id.tv_controller_position);
 		tvData = (TextView) view.findViewById(R.id.tv_controller_data);
+		btnEdit = (ImageButton) view.findViewById(R.id.btn_controllerview_edit);
 
+		// Add click listener to the 3-dotted button
+		btnEdit.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				editController(btnEdit);
+			}
+		});
+
+		// Modify the view
 		nameTextView.setText(name);
 		tvPinNumber.setText("Pin : " + arduinoPin);
 	}
@@ -57,7 +73,7 @@ public class ControllerReadView extends ControllerView {
 	}
 
 	@Override
-	public void setName(String newName) {
+	public void updateNameTextView(String newName) {
 		nameTextView.setText(newName);
 	}
 

@@ -3,6 +3,7 @@ package es.udc.psi1718.project.view.customviews.controllers;
 import android.app.Activity;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -13,7 +14,7 @@ import es.udc.psi1718.project.util.Constants;
 
 public class ControllerAnalogWriteView extends ControllerView {
 
-	private String TAG = "ControllerSwitchView";
+	private String TAG = "ControllerAnalogWriteView";
 
 	// Layout variables
 	private View view;
@@ -21,13 +22,15 @@ public class ControllerAnalogWriteView extends ControllerView {
 
 	// Temporal fix for sliders
 	private long timeInMillis;
+	private ImageButton btnEdit;
 
 
 	/**
 	 * Constructor
 	 */
-	public ControllerAnalogWriteView(Activity context, int controllerId, String name, int controllerType, String arduinoPin) {
-		super(context, controllerId, name, controllerType, arduinoPin,
+	public ControllerAnalogWriteView(ControllerViewManager manager, Activity context, int controllerId,
+									 String name, int controllerType, String arduinoPin) {
+		super(manager, context, controllerId, name, controllerType, arduinoPin,
 				ArduinoCommunicationManager.PINTYPE_ANALOG,
 				ArduinoCommunicationManager.COMMANDTYPE_WRITE);
 		initializeLayout(name, arduinoPin);
@@ -45,6 +48,8 @@ public class ControllerAnalogWriteView extends ControllerView {
 		nameTextView = (TextView) view.findViewById(R.id.controller_name_text_view);
 		TextView tvPinNumber = (TextView) view.findViewById(R.id.tv_controller_position);
 		SeekBar mSeekbar = (SeekBar) view.findViewById(R.id.controller_seekbar);
+		btnEdit = (ImageButton) view.findViewById(R.id.btn_controllerview_edit);
+
 
 		// Create listeners
 		SeekBar.OnSeekBarChangeListener onSeekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
@@ -70,6 +75,14 @@ public class ControllerAnalogWriteView extends ControllerView {
 				ControllerAnalogWriteView.super.sendCommand(seekBar.getProgress());
 			}
 		};
+
+		// Add click listener to the 3-dotted button
+		btnEdit.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				editController(btnEdit);
+			}
+		});
 
 
 		// OnLongClickListener onLongClickListener = new OnLongClickListener() {
@@ -101,7 +114,7 @@ public class ControllerAnalogWriteView extends ControllerView {
 		fromContext.runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				setName(finalData);
+				updateNameTextView(finalData);
 			}
 		});
 	}
@@ -112,7 +125,7 @@ public class ControllerAnalogWriteView extends ControllerView {
 	}
 
 	@Override
-	public void setName(String newName) {
+	public void updateNameTextView(String newName) {
 		nameTextView.setText(newName);
 	}
 

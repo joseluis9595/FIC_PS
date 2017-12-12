@@ -66,8 +66,8 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 				+ COL_CONTROLLER_PINTYPE + " text not null, "
 				+ COL_CONTROLLER_PINNUMBER + " text not null, "
 				+ COL_CONTROLLER_POSITION + " integer not null, "
-				+ COL_CONTROLLER_PANELID + " integer not null );";
-		// TODO añadir clave foránea en CONTROLLERS_PANELID
+				+ COL_CONTROLLER_PANELID + " integer not null, "
+				+ "FOREIGN KEY (" + COL_CONTROLLER_PANELID + ") REFERENCES " + TABLE_PANELS + "(" + COL_PANEL_ID + ") ON DELETE CASCADE);";
 
 		sqLiteDatabase.execSQL(TABLE_PANELS_CREATE);
 		sqLiteDatabase.execSQL(TABLE_CONTROLLERS_CREATE);
@@ -78,11 +78,19 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 		Log.d(TAG, "Upgrading DB");
 		Log.w(MySQLiteHelper.class.getName(), "Upgrading db from version "
 				+ oldVersion + " to " + newVersion + ", which will destroy old data");
-		sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_PANELS);
 		sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_CONTROLLERS);
+		sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_PANELS);
 		onCreate(sqLiteDatabase);
 	}
 
+	@Override
+	public void onOpen(SQLiteDatabase db) {
+		super.onOpen(db);
+		if (!db.isReadOnly()) {
+			// Enable foreign key constraints
+			db.setForeignKeyConstraintsEnabled(true);
+		}
+	}
 
 	/**
 	 * Insert new panel into database
@@ -107,7 +115,17 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 		String query = "SELECT * FROM " + TABLE_PANELS;
 		SQLiteDatabase db = this.getReadableDatabase();
 		Log.d(TAG, "getAllPanels via DB Object instance");
-		return db.rawQuery(query, null);
+
+		Cursor cursor1 = db.rawQuery(query, null);
+
+		String cursorString = DatabaseUtils.dumpCursorToString(cursor1);
+		Log.e(TAG, cursorString);
+
+		Cursor cursor2 = db.rawQuery("SELECT * FROM " + TABLE_CONTROLLERS, null);
+		String cursorString2 = DatabaseUtils.dumpCursorToString(cursor2);
+		Log.e(TAG, cursorString2);
+
+		return cursor1;
 	}
 
 	/**

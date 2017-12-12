@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -34,7 +33,6 @@ public class TutorialStepItemLayout extends LinearLayout {
 	 * @param context context
 	 */
 	private void initializeLayout(Context context, AttributeSet attrs) {
-		Log.e(TAG, "Called initialize layout");
 		// Inflate the layout of the item
 		LayoutInflater inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -54,9 +52,6 @@ public class TutorialStepItemLayout extends LinearLayout {
 		} finally {
 			a.recycle();
 		}
-
-		Log.e(TAG, "Number is " + numberString);
-		Log.e(TAG, "Content is " + contentString);
 
 		// Modify the view
 		TextView tvNumber = (TextView) view.findViewById(R.id.tv_tutorial_stepitem_number);

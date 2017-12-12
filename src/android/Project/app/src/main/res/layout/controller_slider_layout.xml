@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/card_view_main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -38,7 +39,9 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1">
+            android:layout_marginEnd="@dimen/controllerview_pinnumber_marginend"
+            android:layout_weight="1"
+            android:gravity="end">
 
             <TextView
                 android:id="@+id/tv_controller_position"
@@ -53,14 +56,26 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/controller_vertical_inside_margin">
+        android:layout_marginTop="@dimen/controller_vertical_inside_margin"
+        android:gravity="center_vertical">
 
         <SeekBar
             android:id="@+id/controller_seekbar"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="6"
             android:max="255"
             android:padding="@dimen/controller_switch_padding"/>
+
+        <ImageButton
+            android:id="@+id/btn_controllerview_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha="0.6"
+            android:background="?attr/selectableItemBackground"
+            android:contentDescription="@string/action_edit"
+            android:padding="6dp"
+            app:srcCompat="@drawable/ic_action_more_black"/>
 
     </LinearLayout>
 
