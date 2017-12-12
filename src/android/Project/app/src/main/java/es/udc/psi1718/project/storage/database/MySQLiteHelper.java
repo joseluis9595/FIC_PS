@@ -41,6 +41,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 	public static final String COL_CONTROLLER_PINNUMBER = "pinNumber";
 	public static final String COL_CONTROLLER_POSITION = "position";
 	public static final String COL_CONTROLLER_PANELID = "panelId";
+	public static final String COL_CONTROLLER_DATA = "data";
 	// public static final String[] ALL_COL = {COL_ID, COL_FIRSTNAME, COL_LASTNAME, COL_GRADE};
 
 
@@ -67,6 +68,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 				+ COL_CONTROLLER_PINNUMBER + " text not null, "
 				+ COL_CONTROLLER_POSITION + " integer not null, "
 				+ COL_CONTROLLER_PANELID + " integer not null, "
+				+ COL_CONTROLLER_DATA + " integer not null, "
 				+ "FOREIGN KEY (" + COL_CONTROLLER_PANELID + ") REFERENCES " + TABLE_PANELS + "(" + COL_PANEL_ID + ") ON DELETE CASCADE);";
 
 		sqLiteDatabase.execSQL(TABLE_PANELS_CREATE);
@@ -159,11 +161,26 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 		values.put(COL_CONTROLLER_PINNUMBER, controller.getPinNumber());
 		values.put(COL_CONTROLLER_POSITION, controller.getPosition());
 		values.put(COL_CONTROLLER_PANELID, controller.getPanelId());
+		values.put(COL_CONTROLLER_DATA, controller.getData());
 
 		Log.d(TAG, "Inserting via DB object instance");
 		return (int) db.insert(TABLE_CONTROLLERS, null, values);
 	}
 
+	public void updateController(Controller controller){
+		ContentValues values = new ContentValues();
+		values.put(COL_CONTROLLER_NAME, controller.getName());
+		values.put(COL_CONTROLLER_CONTROLLERTYPE, controller.getControllerType());
+		values.put(COL_CONTROLLER_DATATYPE, controller.getDataType());
+		values.put(COL_CONTROLLER_PINTYPE, controller.getPinType());
+		values.put(COL_CONTROLLER_PINNUMBER, controller.getPinNumber());
+		values.put(COL_CONTROLLER_POSITION, controller.getPosition());
+		values.put(COL_CONTROLLER_PANELID, controller.getPanelId());
+		values.put(COL_CONTROLLER_DATA, controller.getData());
+
+		getWritableDatabase().update(TABLE_CONTROLLERS, values,
+				COL_CONTROLLER_ID + " = " + controller.getId(), null);
+	}
 
 	/**
 	 * Returns all controllers on a panel given its id, sorted by panelId
@@ -209,9 +226,10 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 				String pinType = cursor.getString(cursor.getColumnIndex(COL_CONTROLLER_PINTYPE));
 				String pinNumber = cursor.getString(cursor.getColumnIndex(COL_CONTROLLER_PINNUMBER));
 				int position = cursor.getInt(cursor.getColumnIndexOrThrow(COL_CONTROLLER_POSITION));
+				int data= cursor.getInt(cursor.getColumnIndexOrThrow(COL_CONTROLLER_DATA));
 
 				// Add a new Controller object to the list
-				controllers.add(new Controller(id, name, controllerType, dataType, pinType, pinNumber, position, panelId));
+				controllers.add(new Controller(id, name, controllerType, dataType, pinType, pinNumber, position, panelId, data));
 			} while (cursor.moveToNext());
 		}
 		// Close the cursor

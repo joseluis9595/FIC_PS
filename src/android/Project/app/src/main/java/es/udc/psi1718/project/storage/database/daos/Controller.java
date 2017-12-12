@@ -9,8 +9,10 @@ public class Controller {
 	private String pinNumber;
 	private int position;
 	private int panelId;
+	private int data;
 
-	public Controller(int id, String name, int controllerType, String dataType, String pinType, String pinNumber, int position, int panelId) {
+	public Controller(int id, String name, int controllerType, String dataType, String pinType,
+					  String pinNumber, int position, int panelId, int data) {
 		this.id = id;
 		this.name = name;
 		this.dataType = dataType;
@@ -19,9 +21,11 @@ public class Controller {
 		this.position = position;
 		this.panelId = panelId;
 		this.controllerType = controllerType;
+		this.data=data;
 	}
 
-	public Controller(String name, int controllerType, String dataType, String pinType, String pinNumber, int position, int panelId) {
+	public Controller(String name, int controllerType, String dataType, String pinType, String pinNumber,
+					  int position, int panelId, int data) {
 		this.name = name;
 		this.controllerType = controllerType;
 		this.dataType = dataType;
@@ -29,6 +33,7 @@ public class Controller {
 		this.pinNumber = pinNumber;
 		this.position = position;
 		this.panelId = panelId;
+		this.data=data;
 	}
 
 	public int getId() {
@@ -93,6 +98,14 @@ public class Controller {
 
 	public void setControllerType(int controllerType) {
 		this.controllerType = controllerType;
+	}
+
+	public int getData() {
+		return data;
+	}
+
+	public void setData(int data) {
+		this.data = data;
 	}
 }
 
