@@ -121,7 +121,7 @@ public class ControllerAnalogWriteView extends ControllerView {
 	}
 
 	@Override
-	int getControllerData() {
+	public int getControllerData() {
 		return mSeekbar.getProgress();
 	}
 

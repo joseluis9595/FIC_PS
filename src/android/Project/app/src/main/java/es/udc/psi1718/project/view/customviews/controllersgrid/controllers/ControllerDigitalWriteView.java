@@ -77,7 +77,7 @@ public class ControllerDigitalWriteView extends ControllerView {
 	}
 
 	@Override
-	int getControllerData() {
+	public int getControllerData() {
 		return mSwitch.isChecked()?1:0;
 	}
 
