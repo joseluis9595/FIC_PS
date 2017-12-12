@@ -19,6 +19,7 @@ public class ControllerDigitalWriteView extends ControllerView {
 	private View view;
 	private TextView nameTextView;
 	private ImageButton btnEdit;
+	private Switch mSwitch;
 
 
 	public ControllerDigitalWriteView(ControllerViewManager manager, Activity context, int controllerId,
@@ -37,7 +38,7 @@ public class ControllerDigitalWriteView extends ControllerView {
 		// Initialize variables
 		nameTextView = (TextView) view.findViewById(R.id.controller_name_text_view);
 		TextView tvPinNumber = (TextView) view.findViewById(R.id.tv_controller_position);
-		Switch mSwitch = (Switch) view.findViewById(R.id.controller_switch);
+		 mSwitch = (Switch) view.findViewById(R.id.controller_switch);
 		btnEdit = (ImageButton) view.findViewById(R.id.btn_controllerview_edit);
 
 		// Add click listener to the 3-dotted button
@@ -73,6 +74,11 @@ public class ControllerDigitalWriteView extends ControllerView {
 				updateNameTextView(finalData);
 			}
 		});
+	}
+
+	@Override
+	int getControllerData() {
+		return mSwitch.isChecked()?1:0;
 	}
 
 	@Override

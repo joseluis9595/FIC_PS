@@ -23,6 +23,7 @@ public class ControllerAnalogWriteView extends ControllerView {
 	// Temporal fix for sliders
 	private long timeInMillis;
 	private ImageButton btnEdit;
+	private SeekBar mSeekbar;
 
 
 	/**
@@ -47,7 +48,7 @@ public class ControllerAnalogWriteView extends ControllerView {
 		// Initialize variables
 		nameTextView = (TextView) view.findViewById(R.id.controller_name_text_view);
 		TextView tvPinNumber = (TextView) view.findViewById(R.id.tv_controller_position);
-		SeekBar mSeekbar = (SeekBar) view.findViewById(R.id.controller_seekbar);
+		 mSeekbar = (SeekBar) view.findViewById(R.id.controller_seekbar);
 		btnEdit = (ImageButton) view.findViewById(R.id.btn_controllerview_edit);
 
 
@@ -117,6 +118,11 @@ public class ControllerAnalogWriteView extends ControllerView {
 				updateNameTextView(finalData);
 			}
 		});
+	}
+
+	@Override
+	int getControllerData() {
+		return mSeekbar.getProgress();
 	}
 
 	@Override

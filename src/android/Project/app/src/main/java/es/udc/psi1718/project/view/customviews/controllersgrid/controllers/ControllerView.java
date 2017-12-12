@@ -141,4 +141,6 @@ public abstract class ControllerView extends LinearLayout {
 	 */
 	abstract void refreshController(String data);
 
+	public abstract int getControllerData();
+
 }

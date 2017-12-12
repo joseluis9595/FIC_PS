@@ -190,7 +190,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
     protected void onStop() {
         super.onStop();
         Log.d(TAG, "onStop");
-        // TODO saveControllersState();
+        saveControllersState();
         // Set active flag to false
         active = false;
     }
@@ -321,6 +321,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
     }
 
 
+
     /**
      * Initialize all variables needed for custom alert dialog
      */
@@ -447,6 +448,13 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
         } else {
             // Don't dismiss the dialog
             Util.displayMessage(context, getString(R.string.err_completeallfields));
+        }
+    }
+
+    private void saveControllersState(){
+        ArrayList<ControllerView> controllers = controllerViewManager.getControllers();
+        for (ControllerView controller : controllers){
+            mySQLiteHelper.updateControllerData(controller.getControllerId(), controller.getControllerData());
         }
     }
 

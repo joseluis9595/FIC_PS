@@ -68,6 +68,11 @@ public class ControllerReadView extends ControllerView {
 	}
 
 	@Override
+	int getControllerData() {
+		return 0;
+	}
+
+	@Override
 	public View getView() {
 		return view;
 	}
