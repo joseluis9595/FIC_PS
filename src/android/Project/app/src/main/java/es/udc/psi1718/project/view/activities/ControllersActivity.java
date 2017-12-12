@@ -315,6 +315,9 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 
         // Restore previous Controllers
         loadSavedControllers();
+        if (connectionIsActive){
+            controllerViewManager.startControllers();
+        }
 
         // Initialize custom alert dialog layout
         initializeCustomAlertDialogLayout();
