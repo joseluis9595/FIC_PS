@@ -103,6 +103,7 @@ public class ControllerAnalogWriteView extends ControllerView {
 
         // Modify layout
         mSeekbar.setProgress(data);
+        mSeekbar.setEnabled(false);
         mSeekbar.setOnSeekBarChangeListener(onSeekBarChangeListener);
         nameTextView.setText(name);
         tvPinNumber.setText("Pin : " + arduinoPin);
@@ -136,12 +137,12 @@ public class ControllerAnalogWriteView extends ControllerView {
 
     @Override
     public void startController() {
-
+        mSeekbar.setEnabled(true);
     }
 
     @Override
     public void endController() {
-
+        mSeekbar.setEnabled(false);
     }
 
 }

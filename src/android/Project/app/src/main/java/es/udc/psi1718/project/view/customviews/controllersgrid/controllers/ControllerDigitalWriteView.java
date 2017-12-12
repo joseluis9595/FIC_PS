@@ -61,6 +61,7 @@ public class ControllerDigitalWriteView extends ControllerView {
 
 		// Modify layout
 		mSwitch.setChecked(data==1);
+		mSwitch.setEnabled(false);
 		mSwitch.setOnCheckedChangeListener(onCheckedChangeListener);
 		nameTextView.setText(name);
 		tvPinNumber.setText("Pin : " + arduinoPin);
@@ -94,12 +95,12 @@ public class ControllerDigitalWriteView extends ControllerView {
 
 	@Override
 	public void startController() {
-
+		mSwitch.setEnabled(true);
 	}
 
 	@Override
 	public void endController() {
-
+		mSwitch.setEnabled(false);
 	}
 
 }
