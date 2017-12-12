@@ -30,9 +30,10 @@ public abstract class ControllerView extends LinearLayout {
 	private int commandType;
 	private int controllerType;
 	private String name;
+	private int data;
 
 	public ControllerView(ControllerViewManager manager, Activity context, int controllerId,
-						  String name, int controllerType, String arduinoPin, int pinType, int commandType) {
+						  String name, int controllerType, String arduinoPin, int pinType, int commandType, int data) {
 		super(context);
 		this.fromContext = context;
 		this.controllerId = controllerId;
@@ -41,6 +42,7 @@ public abstract class ControllerView extends LinearLayout {
 		this.arduinoPin = arduinoPin;
 		this.pinType = pinType;
 		this.commandType = commandType;
+		this.data= data;
 		controllerViewManager = manager;
 	}
 

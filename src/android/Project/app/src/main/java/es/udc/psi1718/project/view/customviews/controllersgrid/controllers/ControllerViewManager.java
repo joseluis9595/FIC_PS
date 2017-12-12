@@ -38,41 +38,41 @@ public class ControllerViewManager {
 	 *
 	 * @return {@link ControllerView}
 	 */
-	public ControllerView createControllerView(int controllerId, String name, int controllerType, String arduinoPin, String pinType, String dataType) {
+	public ControllerView createControllerView(int controllerId, String name, int controllerType, String arduinoPin, String pinType, String dataType, int data) {
 		ControllerView controllerView;
 		switch (controllerType) {
 
 			case ArduinoCommunicationManager.CONTROLLER_GENERIC:
 				if (dataType.equalsIgnoreCase("read")) {
-					controllerView = new ControllerReadView(this, context, controllerId, name, controllerType, arduinoPin);
+					controllerView = new ControllerReadView(this, context, controllerId, name, controllerType, arduinoPin, data);
 					break;
 				}
 				if (pinType.equalsIgnoreCase("digital")) {
-					controllerView = new ControllerDigitalWriteView(this, context, controllerId, name, controllerType, arduinoPin);
+					controllerView = new ControllerDigitalWriteView(this, context, controllerId, name, controllerType, arduinoPin, data);
 					break;
 				} else {
-					controllerView = new ControllerAnalogWriteView(this, context, controllerId, name, controllerType, arduinoPin);
+					controllerView = new ControllerAnalogWriteView(this, context, controllerId, name, controllerType, arduinoPin, data);
 					break;
 				}
 
 			case ArduinoCommunicationManager.CONTROLLER_LED_DIGITAL:
-				controllerView = new ControllerDigitalWriteView(this, context, controllerId, name, controllerType, arduinoPin);
+				controllerView = new ControllerDigitalWriteView(this, context, controllerId, name, controllerType, arduinoPin, data);
 				break;
 
 			case ArduinoCommunicationManager.CONTROLLER_LED_ANALOG:
-				controllerView = new ControllerAnalogWriteView(this, context, controllerId, name, controllerType, arduinoPin);
+				controllerView = new ControllerAnalogWriteView(this, context, controllerId, name, controllerType, arduinoPin, data);
 				break;
 
 			case ArduinoCommunicationManager.CONTROLLER_SERVO:
-				controllerView = new ControllerAnalogWriteView(this, context, controllerId, name, controllerType, arduinoPin);
+				controllerView = new ControllerAnalogWriteView(this, context, controllerId, name, controllerType, arduinoPin, data);
 				break;
 
 			case ArduinoCommunicationManager.CONTROLLER_HUMIDITY_SENSOR:
-				controllerView = new ControllerReadView(this, context, controllerId, name, controllerType, arduinoPin);
+				controllerView = new ControllerReadView(this, context, controllerId, name, controllerType, arduinoPin, data);
 				break;
 
 			case ArduinoCommunicationManager.CONTROLLER_TEMP_SENSOR:
-				controllerView = new ControllerReadView(this, context, controllerId, name, controllerType, arduinoPin);
+				controllerView = new ControllerReadView(this, context, controllerId, name, controllerType, arduinoPin, data);
 				break;
 
 			default:

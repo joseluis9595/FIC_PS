@@ -499,9 +499,10 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
         String arduinoPin = controller.getPinNumber();
         String pinType = controller.getPinType();
         String dataType = controller.getDataType();
+        int data= controller.getData();
 
         // TODO remove controllerViewManager
-        ControllerView controllerView = controllerViewManager.createControllerView(controllerId, name, controllerType, arduinoPin, pinType, dataType);
+        ControllerView controllerView = controllerViewManager.createControllerView(controllerId, name, controllerType, arduinoPin, pinType, dataType, data);
         customGridLayout.addController(controllerView);
     }
 

@@ -23,15 +23,15 @@ public class ControllerDigitalWriteView extends ControllerView {
 
 
 	public ControllerDigitalWriteView(ControllerViewManager manager, Activity context, int controllerId,
-									  String name, int controllerType, String arduinoPin) {
+									  String name, int controllerType, String arduinoPin, int data) {
 		super(manager, context, controllerId, name, controllerType, arduinoPin,
 				ArduinoCommunicationManager.PINTYPE_DIGITAL,
-				ArduinoCommunicationManager.COMMANDTYPE_WRITE);
-		initializeLayout(name, arduinoPin);
+				ArduinoCommunicationManager.COMMANDTYPE_WRITE, data);
+		initializeLayout(name, arduinoPin, data);
 	}
 
 
-	private void initializeLayout(String name, String arduinoPin) {
+	private void initializeLayout(String name, String arduinoPin, int data) {
 		// Inflate view
 		view = inflate(getContext(), R.layout.controller_switch_layout, null);
 
@@ -60,6 +60,7 @@ public class ControllerDigitalWriteView extends ControllerView {
 		};
 
 		// Modify layout
+		mSwitch.setChecked(data==1);
 		mSwitch.setOnCheckedChangeListener(onCheckedChangeListener);
 		nameTextView.setText(name);
 		tvPinNumber.setText("Pin : " + arduinoPin);

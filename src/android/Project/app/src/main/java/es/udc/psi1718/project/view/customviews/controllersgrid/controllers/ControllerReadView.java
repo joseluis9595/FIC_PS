@@ -24,12 +24,12 @@ public class ControllerReadView extends ControllerView {
 
 
 	public ControllerReadView(ControllerViewManager manager, Activity context, int controllerId,
-							  String name, int controllerType, String arduinoPin) {
+							  String name, int controllerType, String arduinoPin, int data) {
 		super(manager, context, controllerId, name, controllerType, arduinoPin,
 				arduinoPin.equalsIgnoreCase("digital") ?
 						ArduinoCommunicationManager.PINTYPE_DIGITAL :
 						ArduinoCommunicationManager.PINTYPE_ANALOG,
-				ArduinoCommunicationManager.COMMANDTYPE_READ);
+				ArduinoCommunicationManager.COMMANDTYPE_READ, data);
 		initializeLayout(name, arduinoPin);
 	}
 
