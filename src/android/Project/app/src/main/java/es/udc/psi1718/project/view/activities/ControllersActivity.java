@@ -77,19 +77,21 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	private LinearLayout fadeLayout;
 	private LinearLayout customAlertLayout;
 	private String[] controllersType;
-	private ControllerViewManager controllerViewManager;
 
 	// Layout variables
 	private FloatingActionButton fabNewController;
 	private Button buttonStartComm;
 	private TextView loadingTextView;
 	private ProgressBar progressBar;
-	private ControllersGridLayout customGridLayout;
 	private RelativeLayout loadingLayout;
 	private RelativeLayout normalLayout;
 	private EditText newControllerEditText, pinNumberEditText;
 	private Spinner pinTypeSpinner, dataTypeSpinner;
 	private Spinner controllerTypeSpinner;
+
+	// Custom layout variables
+	private ControllersGridLayout customGridLayout;
+	private ControllerViewManager controllerViewManager;
 
 	// Arduino communication Manager
 	private ArduinoCommunicationManager arduinoCommunication;
@@ -490,6 +492,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 		String pinType = controller.getPinType();
 		String dataType = controller.getDataType();
 
+		// TODO remove controllerViewManager
 		ControllerView controllerView = controllerViewManager.createControllerView(controllerId, name, controllerType, arduinoPin, pinType, dataType);
 		customGridLayout.addController(controllerView);
 	}
@@ -825,7 +828,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	@Override
 	public void controllerRemoved(ControllerView controllerView) {
 		Log.e(TAG, "Removing controller");
-		customGridLayout.removeView(controllerView);
+		customGridLayout.removeController(controllerView);
 		// mySQLiteHelper.deleteController(controllerView.getControllerId());
 	}
 }
