@@ -104,6 +104,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
         super.onConfigurationChanged(newConfig);
         if (connectionIsActive || Constants.DEBUG) {
             setContentView(R.layout.activity_controllers);
+            controllerViewManager.endControllers();
             initializeLayout();
         }
     }
