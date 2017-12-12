@@ -360,15 +360,15 @@ public class MainActivity extends AppCompatActivity {
     private void inflateConfirmationDialog(final int idPanel) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
-        builder.setTitle("Delete panel?")
-                .setMessage("Deleting a panel will delete all of its content");
+        builder.setTitle(R.string.alertdialog_title_deletepanel)
+                .setMessage(R.string.alertdialog_message_deletepanel);
 
-        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(R.string.alertdialog_button_ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 deletePanel(idPanel);
             }
         });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.alertdialog_button_cancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
             }
         });

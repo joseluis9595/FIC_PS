@@ -12,6 +12,13 @@
     <string name="action_delete">Delete</string>
     <string name="action_edit">Edit</string>
 
+    <!--Alert Dialog-->
+    <string name="alertdialog_title_deletepanel">Delete panel?</string>
+    <string name="alertdialog_message_deletepanel">Deleting a panel will delete all of its content</string>
+    <string name="alertdialog_button_ok">Ok</string>
+    <string name="alertdialog_button_cancel">Cancel</string>
+
+
     <!-- About activity -->
     <string name="text_aboutactivity_title">Developers</string>
     <string name="text_aboutactivity_developers">Jose Luis Álvarez Quiroga\nMatías Cubillas Currás</string>
