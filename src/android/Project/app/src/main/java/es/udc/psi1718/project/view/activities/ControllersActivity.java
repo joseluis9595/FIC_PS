@@ -44,9 +44,9 @@ import es.udc.psi1718.project.storage.database.MySQLiteHelper;
 import es.udc.psi1718.project.storage.database.daos.Controller;
 import es.udc.psi1718.project.util.Constants;
 import es.udc.psi1718.project.util.Util;
-import es.udc.psi1718.project.view.customviews.controllers.ControllerView;
-import es.udc.psi1718.project.view.customviews.controllers.ControllerViewEventListener;
-import es.udc.psi1718.project.view.customviews.controllers.ControllerViewManager;
+import es.udc.psi1718.project.view.customviews.controllersgrid.controllers.ControllerView;
+import es.udc.psi1718.project.view.customviews.controllersgrid.controllers.ControllerViewEventListener;
+import es.udc.psi1718.project.view.customviews.controllersgrid.controllers.ControllerViewManager;
 import es.udc.psi1718.project.view.customviews.controllersgrid.ControllersGridLayout;
 import es.udc.psi1718.project.view.customviews.controllersgrid.ControllersGridListener;
 

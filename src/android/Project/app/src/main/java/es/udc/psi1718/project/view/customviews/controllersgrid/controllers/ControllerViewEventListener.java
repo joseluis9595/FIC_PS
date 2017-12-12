@@ -1,4 +1,4 @@
-package es.udc.psi1718.project.view.customviews.controllers;
+package es.udc.psi1718.project.view.customviews.controllersgrid.controllers;
 
 /**
  * Interface that acts as listener for {@link ControllerView} events

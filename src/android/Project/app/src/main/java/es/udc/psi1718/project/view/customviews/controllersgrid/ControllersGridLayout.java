@@ -19,7 +19,7 @@ import android.widget.ScrollView;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import es.udc.psi1718.project.R;
-import es.udc.psi1718.project.view.customviews.controllers.ControllerView;
+import es.udc.psi1718.project.view.customviews.controllersgrid.controllers.ControllerView;
 
 
 /**

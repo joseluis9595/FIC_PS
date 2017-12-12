@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import es.udc.psi1718.project.R;
-import es.udc.psi1718.project.view.customviews.controllers.ControllerView;
+import es.udc.psi1718.project.view.customviews.controllersgrid.controllers.ControllerView;
 
 
 /**
