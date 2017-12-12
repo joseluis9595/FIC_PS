@@ -103,9 +103,10 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         if (connectionIsActive || Constants.DEBUG) {
-            setContentView(R.layout.activity_controllers);
-            controllerViewManager.endControllers();
-            initializeLayout();
+//            setContentView(R.layout.activity_controllers);
+//            controllerViewManager.endControllers();
+//            initializeLayout();
+            this.recreate();
         }
     }
 
@@ -192,6 +193,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
         super.onStop();
         Log.d(TAG, "onStop");
         saveControllersState();
+        controllerViewManager.endControllers();
         // Set active flag to false
         active = false;
     }
