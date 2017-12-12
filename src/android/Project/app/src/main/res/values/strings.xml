@@ -63,6 +63,7 @@
     <string name="userprefs_theme">es.udc.psi1718.easyarduino.userprefs.theme</string>
     <string name="userprefs_startconnauto">es.udc.psi1718.easyarduino.userprefs.startconnauto</string>
     <string name="userprefs_icon">es.udc.psi1718.easyarduino.userprefs.icon</string>
+    <string name="userprefs_savecontrollerstate">es.udc.psi1718.easyarduino.userprefs.savestate</string>
 
     <!-- Settings activity -->
     <string name="settings_customization_title">Customization</string>
@@ -75,6 +76,8 @@
     <string name="settings_connectivity_autoconn_title">Connect automatically</string>
     <string name="settings_connectivity_autoconn_dialogtitle">Connect automatically</string>
     <string name="settings_connectivity_autoconn_summary">Start communication with Arduino as soon as the USB is attached</string>
-
+    <string name="settings_connectivity_savecontrollerstate_title">Save controller state</string>
+    <string name="settings_connectivity_savecontrollerstate_dialogtitle">Save controller state</string>
+    <string name="settings_connectivity_savecontrollerstate_summary">Save the controllers state after closing the panel</string>
 
 </resources>

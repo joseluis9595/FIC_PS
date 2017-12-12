@@ -86,4 +86,8 @@ public class UserPreferencesManager {
 	public Boolean getUseDarkIcon() {
 		return sharedPrefs.getBoolean(context.getString(R.string.userprefs_icon), true);
 	}
+
+	public Boolean getSaveControllerState(){
+		return sharedPrefs.getBoolean(context.getString(R.string.userprefs_savecontrollerstate), true);
+	}
 }

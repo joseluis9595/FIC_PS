@@ -460,7 +460,9 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
     private void saveControllersState(){
         ArrayList<ControllerView> controllers = controllerViewManager.getControllers();
         for (ControllerView controller : controllers){
-            mySQLiteHelper.updateControllerData(controller.getControllerId(), controller.getControllerData());
+            int data= UserPreferencesManager.getInstance(context).getSaveControllerState()?controller.getControllerData():0;
+            mySQLiteHelper.updateControllerData(controller.getControllerId(), data);
+
         }
     }
 
