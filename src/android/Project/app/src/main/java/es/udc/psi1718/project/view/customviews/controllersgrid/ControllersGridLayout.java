@@ -144,8 +144,8 @@ public class ControllersGridLayout extends ScrollView {
 					if (initialIndex == -1) break;
 
 					// Update index of every modified view
-					int firstModifiedIndex = (initialIndex < index) ? initialIndex : index;
-					updateIndexes(firstModifiedIndex);
+					// int firstModifiedIndex = (initialIndex < index) ? initialIndex : index;
+					// updateIndexes(firstModifiedIndex);
 
 					// Notify listener
 					controllersGridListener.controllersPositionChanged(initialIndex, index);
@@ -275,12 +275,22 @@ public class ControllersGridLayout extends ScrollView {
 		mGrid.addView(itemView);
 
 		// Finally, update the index of this view
-		updateIndexes(mGrid.getChildCount() - 1);
+		// updateIndexes(mGrid.getChildCount() - 1);
 	}
 
 
 	public void removeController(ControllerView controllerView) {
-		// TODO remove item from the layout
+		for (int i = 0; i < mGrid.getChildCount(); i++) {
+			View view = mGrid.getChildAt(i);
+			LinearLayout linearLayout = (LinearLayout) view;
+			ControllersGridItem childView = (ControllersGridItem) linearLayout.getChildAt(0);
+			if (childView.getControllerView().getControllerId() == controllerView.getControllerId()) {
+				Log.e(TAG, "Removing item at " + i);
+				mGrid.removeViewAt(i);
+				return;
+			}
+			// childView.setPosition(i);
+		}
 	}
 
 

@@ -24,6 +24,10 @@ public class ControllersGridItem extends LinearLayout {
 		initializeLayout(context);
 	}
 
+	public ControllerView getControllerView() {
+		return controllerView;
+	}
+
 
 	/**
 	 * Initialize the layout
