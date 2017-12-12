@@ -212,8 +212,7 @@ public class MainActivity extends AppCompatActivity {
 
         switch (item.getItemId()) {
             case R.id.delete:
-                inflateConfirmationDialog();
-                // When you successfully handle a menu item, return true
+                inflateConfirmationDialog(id);
                 return true;
             case R.id.update:
                 // TODO inflate update dialog
@@ -358,7 +357,7 @@ public class MainActivity extends AppCompatActivity {
             this.finish();
     }
 
-    private void inflateConfirmationDialog() {
+    private void inflateConfirmationDialog(final int idPanel) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
         builder.setTitle("Delete panel?")
@@ -366,12 +365,11 @@ public class MainActivity extends AppCompatActivity {
 
         builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-
+                deletePanel(idPanel);
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                // User cancelled the dialog
             }
         });
         AlertDialog dialog = builder.create();
