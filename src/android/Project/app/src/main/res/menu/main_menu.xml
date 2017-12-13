@@ -4,6 +4,12 @@
       tools:context="es.udc.psi1718.lab05alvarez.NetActiv">
 
     <item
+        android:id="@+id/action_test"
+        android:orderInCategory="100"
+        android:title="Test"
+        app:showAsAction="never"/>
+
+    <item
         android:id="@+id/action_settings"
         android:orderInCategory="200"
         android:title="@string/action_settings"

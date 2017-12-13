@@ -15,21 +15,9 @@
         <!-- TODO IT3 create widgets -->
         <activity
             android:name=".view.activities.MainActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            >
+            android:configChanges="keyboardHidden|orientation|screenSize">
         </activity>
 
-        <!-- Activity alias to be able to change icon of the application -->
-        <activity-alias
-            android:name=".DarkIcon"
-            android:icon="@mipmap/ic_launcher"
-            android:label="@string/app_name"
-            android:targetActivity=".view.activities.MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
-        </activity-alias>
         <activity-alias
             android:name=".LightIcon"
             android:enabled="false"
@@ -38,6 +26,18 @@
             android:targetActivity=".view.activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity-alias> <!-- Activity alias to be able to change icon of the application -->
+        <activity-alias
+            android:name=".DarkIcon"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/app_name"
+            android:targetActivity=".view.activities.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity-alias>
@@ -78,7 +78,9 @@
             </intent-filter>
         </receiver>
 
-
+        <activity
+            android:name=".view.activities.TestActivity">
+        </activity>
     </application>
 
 </manifest>
