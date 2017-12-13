@@ -17,7 +17,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
 
 import java.util.ArrayList;
@@ -56,25 +55,8 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	// Database access
 	private MySQLiteHelper mySQLiteHelper;
 
-	// Custom Alert Dialog
-	// private DisplayMetrics mDisplayMetrics;
-	// private Float initialFabX, initialFabY;
-	// private int finalFabX, finalFabY = 0;
-	// private final Float fadeAlpha = 0.8f;
-	// private boolean isCustomAlertDialogOpened = false;
-	// private Button btnCreate, btnCancel;
-	// private LinearLayout fadeLayout;
-	// private LinearLayout customAlertLayout;
-	// private String[] controllersType;
-
 	// Layout variables
-	// private FloatingActionButton fabNewController;
-	// private Button buttonStartComm;
-	// private TextView loadingTextView;
-	// private ProgressBar progressBar;
-	// private RelativeLayout loadingLayout;
 	private MyCustomAlertDialog myCustomAlertDialog;
-	private RelativeLayout normalLayout;
 	private EditText newControllerEditText, pinNumberEditText;
 	private Spinner pinTypeSpinner, dataTypeSpinner;
 	private Spinner controllerTypeSpinner;
@@ -93,9 +75,6 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 		if (connectionIsActive || Constants.DEBUG) {
-//            setContentView(R.layout.activity_controllers);
-//            controllerViewManager.endControllers();
-//            initializeLayout();
 			this.recreate();
 		}
 	}
@@ -120,7 +99,6 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 			Log.e(TAG, "Invalid pannel id");
 			this.finish();
 		}
-
 
 		// Managers
 		mySQLiteHelper = new MySQLiteHelper(context);
@@ -154,10 +132,6 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 
 		// Start communication
 		if (!connectionIsActive) startCommunication();
-
-		// Add animation to the fabNewController
-		// Animation animation = AnimationUtils.loadAnimation(context, R.anim.fab_grow_anim);
-		// fabNewController.startAnimation(animation);
 	}
 
 	@Override
@@ -203,9 +177,6 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 
 		// End communication with Arduino
 		endCommunication();
-
-		// setResult(RESULT_OK, null);
-		// finish();
 	}
 
 	@Override
@@ -266,32 +237,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 		}
 
 		// Initialize layout variables
-		// fabNewController = (FloatingActionButton) findViewById(R.id.fab_new_controller);
-		// mainLinearLayout = (LinearLayout) findViewById(R.id.controllers_main_layout);
 		customGridLayout = (ControllersGridLayout) findViewById(R.id.customgrid);
-		// loadingLayout = (RelativeLayout) findViewById(R.id.controllers_loading_layout);
-		normalLayout = (RelativeLayout) findViewById(R.id.controllers_parent_layout);
-		// loadingTextView = (TextView) findViewById(R.id.controllers_loading_text_view);
-		// buttonStartComm = (Button) findViewById(R.id.controllers_retry_button);
-		// progressBar = (ProgressBar) findViewById(R.id.progressBar);
-
-		// Create one common listener
-		// View.OnClickListener onClickListener = new View.OnClickListener() {
-		// 	@Override
-		// 	public void onClick(View view) {
-		// 		switch (view.getId()) {
-		// 			case R.id.fab_new_controller:
-		// 				openMyCustomAlertDialog();
-		// 				break;
-		// 			default:
-		// 				break;
-		// 		}
-		// 	}
-		// };
-
-		// Add listener to different layout items
-		// fabNewController.setOnClickListener(onClickListener);
-		// buttonStartComm.setOnClickListener(onClickListener);
 
 		// Restore previous Controllers
 		loadSavedControllers();
@@ -305,6 +251,12 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 		initializeCustomDialog();
 	}
 
+
+	/**
+	 * Initialize the custom dialog inner view
+	 *
+	 * @return View
+	 */
 	private View initializeCustomAlertDialogView() {
 		// Inflate the new view
 		LayoutInflater inflater = this.getLayoutInflater();
@@ -363,6 +315,9 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	}
 
 
+	/**
+	 * Initialize the custom dialog
+	 */
 	private void initializeCustomDialog() {
 		myCustomAlertDialog = (MyCustomAlertDialog) findViewById(R.id.mycustomalertdialog);
 
@@ -389,88 +344,6 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 			}
 		});
 	}
-
-
-	// /**
-	//  * Initialize all variables needed for custom alert dialog
-	//  */
-	// private void initializeCustomAlertDialogLayout() {
-	// 	controllersType = new String[]{
-	// 			getString(R.string.controllertype_led),
-	// 			getString(R.string.controllertype_servo),
-	// 			getString(R.string.controllertype_tempsensor),
-	// 			getString(R.string.controllertype_humidsensor),
-	// 			getString(R.string.controllertype_generalcontroller)};
-	//
-	// 	mDisplayMetrics = getResources().getDisplayMetrics();
-	// 	fadeLayout = (LinearLayout) findViewById(R.id.customalertdialog_layout_fade);
-	// 	customAlertLayout = (LinearLayout) findViewById(R.id.customalertdialog_layout_newpanel);
-	// 	btnCancel = (Button) findViewById(R.id.btn_customalertdialog_cancel);
-	// 	btnCreate = (Button) findViewById(R.id.btn_customalertdialog_create);
-	// 	newControllerEditText = (EditText) findViewById(R.id.et_newcontroller_name);
-	// 	pinNumberEditText = (EditText) findViewById(R.id.et_newcontroller_pinnumber);
-	// 	controllerTypeSpinner = (Spinner) findViewById(R.id.spinner_newcontroller_type);
-	// 	pinTypeSpinner = (Spinner) findViewById(R.id.spinner_newcontroller_pintype);
-	// 	dataTypeSpinner = (Spinner) findViewById(R.id.spinner_newcontroller_datatype);
-	// 	final LinearLayout layoutPinType = (LinearLayout) findViewById(R.id.layout_newcontroller_pintype);
-	// 	final LinearLayout layoutDataType = (LinearLayout) findViewById(R.id.layout_newcontroller_datatype);
-	//
-	// 	// Create one common listener for the buttons
-	// 	View.OnClickListener buttonClickListener = new View.OnClickListener() {
-	// 		@Override
-	// 		public void onClick(View view) {
-	// 			switch (view.getId()) {
-	// 				case R.id.btn_customalertdialog_cancel:
-	// 					closeCustomAlertDialog();
-	// 					break;
-	// 				case R.id.btn_customalertdialog_create:
-	// 					handleCreateNewControllerButton();
-	// 					break;
-	// 				default:
-	// 					break;
-	// 			}
-	// 		}
-	// 	};
-	//
-	// 	// Add listener to the buttons
-	// 	btnCancel.setOnClickListener(buttonClickListener);
-	// 	btnCreate.setOnClickListener(buttonClickListener);
-	//
-	// 	// Set spinner entries
-	// 	ArrayAdapter<String> controllersTypeAdapter = new ArrayAdapter<String>(this,
-	// 			android.R.layout.simple_spinner_item, controllersType);
-	// 	controllersTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-	// 	controllerTypeSpinner.setAdapter(controllersTypeAdapter);
-	//
-	// 	// Create listener for the controllerType spinner
-	// 	final AdapterView.OnItemSelectedListener spinnerListener = new AdapterView.OnItemSelectedListener() {
-	// 		@Override
-	// 		public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-	// 			String itemSelected = controllersType[position];
-	// 			if (itemSelected.equals(getString(R.string.controllertype_led))) {
-	// 				// Toast.makeText(context, "LED selected", Toast.LENGTH_SHORT).show();
-	// 				layoutDataType.setVisibility(View.GONE);
-	// 				layoutPinType.setVisibility(View.VISIBLE);
-	// 			} else if (itemSelected.equals(getString(R.string.controllertype_generalcontroller))) {
-	// 				// Toast.makeText(context, "General purpose one", Toast.LENGTH_SHORT).show();
-	// 				layoutDataType.setVisibility(View.VISIBLE);
-	// 				layoutPinType.setVisibility(View.VISIBLE);
-	// 			} else {
-	// 				// Toast.makeText(context, "normal ones selected", Toast.LENGTH_SHORT).show();
-	// 				layoutDataType.setVisibility(View.GONE);
-	// 				layoutPinType.setVisibility(View.GONE);
-	// 			}
-	// 		}
-	//
-	// 		@Override
-	// 		public void onNothingSelected(AdapterView<?> adapterView) {
-	// 		}
-	// 	};
-	//
-	// 	// Add listener to the spinner
-	// 	controllerTypeSpinner.setOnItemSelectedListener(spinnerListener);
-// }
-
 
 	/**
 	 * Handle the event of the button create new controller (onClick)
@@ -521,8 +394,10 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 		}
 	}
 
-
-	private void resetCustomAlertDialogView(){
+	/**
+	 * Resets custom Alert Dialog view to its default values
+	 */
+	private void resetCustomAlertDialogView() {
 		newControllerEditText.setText("");
 		pinNumberEditText.setText("");
 		pinTypeSpinner.setSelection(0);
@@ -589,196 +464,6 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 		ControllerView controllerView = controllerViewManager.createControllerView(controllerId, name, controllerType, arduinoPin, pinType, dataType, data);
 		customGridLayout.addController(controllerView);
 	}
-
-	// /**
-	//  * Shows a custom alert dialog for creating a new controller
-	//  */
-	// private void openMyCustomAlertDialog() {
-	// 	// Initialize measurement variables
-	// 	if (finalFabY == 0) {
-	// 		initialFabX = fabNewController.getX();
-	// 		initialFabY = fabNewController.getY();
-	// 		finalFabX = (mDisplayMetrics.widthPixels / 2) - fabNewController.getWidth() / 2;
-	// 		finalFabY = (int) (initialFabY - fabNewController.getHeight() * 2);
-	// 	}
-	//
-	// 	if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-	// 		// Move fabNewController to the new position
-	// 		new Handler().postDelayed(new Runnable() {
-	// 			@Override
-	// 			public void run() {
-	// 				// Move fabNewController to the new position
-	// 				fabNewController.animate()
-	// 						.x(finalFabX)
-	// 						.y(finalFabY)
-	// 						.setDuration(300)
-	// 						.start();
-	// 			}
-	// 		}, 50);
-	//
-	// 		// Inflate the new layout and add fade to the screen
-	// 		new Handler().postDelayed(new Runnable() {
-	// 			@SuppressLint("newApi")
-	// 			@Override
-	// 			public void run() {
-	// 				if (!isCustomAlertDialogOpened) return;
-	// 				// Add fade to the background
-	// 				fadeLayout.setOnClickListener(new View.OnClickListener() {
-	// 					@Override
-	// 					public void onClick(View view) {
-	// 						closeCustomAlertDialog();
-	// 					}
-	// 				});
-	// 				fadeLayout.setClickable(true);
-	// 				fadeLayout.setFocusable(true);
-	// 				fadeLayout.setAlpha(0f);
-	// 				fadeLayout.setVisibility(View.VISIBLE);
-	// 				fadeLayout.animate()
-	// 						.alpha(fadeAlpha)
-	// 						.setDuration(300)
-	// 						.start();
-	//
-	// 				// Set visibility of the whole panel to VISIBLE
-	// 				customAlertLayout.setVisibility(View.VISIBLE);
-	//
-	// 				// If API > 21 animate with a circular material transition
-	// 				Animator a = ViewAnimationUtils.createCircularReveal(
-	// 						customAlertLayout,
-	// 						mDisplayMetrics.widthPixels / 2,
-	// 						(int) (finalFabY - customAlertLayout.getY()) + fabNewController.getSize() / 2,
-	// 						fabNewController.getSize() / 2,
-	// 						customAlertLayout.getHeight() * 2f);
-	//
-	// 				a.start();
-	// 			}
-	// 		}, 350);
-	// 	} else {
-	// 		// Add fade to the background
-	// 		fadeLayout.setOnClickListener(new View.OnClickListener() {
-	// 			@Override
-	// 			public void onClick(View view) {
-	// 				closeCustomAlertDialog();
-	// 			}
-	// 		});
-	// 		fadeLayout.setClickable(true);
-	// 		fadeLayout.setFocusable(true);
-	// 		fadeLayout.setAlpha(0f);
-	// 		fadeLayout.setVisibility(View.VISIBLE);
-	// 		fadeLayout.animate()
-	// 				.alpha(fadeAlpha)
-	// 				.setDuration(300)
-	// 				.start();
-	// 		// Show the main layout
-	// 		customAlertLayout.setVisibility(View.VISIBLE);
-	// 	}
-	//
-	// 	isCustomAlertDialogOpened = true;
-	// }
-	//
-	//
-	// /**
-	//  * Closes the custom alertDialog
-	//  */
-	// private void closeCustomAlertDialog() {
-	// 	// Hide the keyboard
-	// 	Util.hideKeyboard(activity);
-	//
-	// 	// Hide layout and fade
-	// 	new Handler().postDelayed(new Runnable() {
-	// 		@Override
-	// 		public void run() {
-	// 			// Remove fade from the background
-	// 			fadeLayout.setClickable(false);
-	// 			fadeLayout.setFocusable(false);
-	// 			fadeLayout.animate()
-	// 					.alpha(0f)
-	// 					.setDuration(300)
-	// 					.start();
-	//
-	// 			// Set visibility of the whole panel to INVISIBLE
-	// 			// customAlertLayout.setVisibility(View.VISIBLE);
-	//
-	// 			// If API > 21 animate with a circular material transition
-	// 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-	// 				Animator a = ViewAnimationUtils.createCircularReveal(
-	// 						customAlertLayout,
-	// 						mDisplayMetrics.widthPixels / 2,
-	// 						(int) (finalFabY - customAlertLayout.getY()) + fabNewController.getSize() / 2,
-	// 						customAlertLayout.getHeight() * 2f,
-	// 						fabNewController.getSize() / 2);
-	// 				a.addListener(new AnimatorListenerAdapter() {
-	// 					@Override
-	// 					public void onAnimationEnd(Animator animation) {
-	// 						super.onAnimationEnd(animation);
-	// 						customAlertLayout.setVisibility(View.INVISIBLE);
-	// 					}
-	// 				});
-	//
-	// 				a.start();
-	// 			} else {
-	// 				customAlertLayout.setVisibility(View.INVISIBLE);
-	// 			}
-	// 		}
-	// 	}, 50);
-	//
-	// 	// Move fab back to its position
-	// 	new Handler().postDelayed(new Runnable() {
-	// 		@Override
-	// 		public void run() {
-	// 			// Move fab to the new position
-	// 			fabNewController.animate()
-	// 					.x(initialFabX)
-	// 					.y(initialFabY)
-	// 					.setDuration(300)
-	// 					.start();
-	// 		}
-	// 	}, 350);
-	//
-	// 	// Clear the layout
-	// 	newControllerEditText.setText("");
-	// 	pinNumberEditText.setText("");
-	// 	pinTypeSpinner.setSelection(0);
-	// 	dataTypeSpinner.setSelection(0);
-	// 	isCustomAlertDialogOpened = false;
-	// }
-
-
-	// /**
-	//  * Display loading layout
-	//  *
-	//  * @param loading Boolean to indicate whether it's loading or not
-	//  */
-	// private void setLoading(Boolean loading) {
-	// 	Log.e(TAG, "SET LOADING : " + loading);
-	// 	String loadingText = loading ? "Loading..." : "No devices found";
-	// 	int progressBarVisibility = loading ? View.VISIBLE : View.GONE;
-	//
-	// 	buttonStartComm.setEnabled(!loading);
-	// 	loadingTextView.setText(loadingText);
-	// 	progressBar.setVisibility(progressBarVisibility);
-	// }
-	//
-	//
-	// /**
-	//  * Disables UI, user can only start communication with arduino
-	//  */
-	// private void enableUI() {
-	// 	Log.e(TAG, "ENABLE UI");
-	// 	loadingLayout.setVisibility(View.GONE);
-	// 	normalLayout.setVisibility(View.VISIBLE);
-	// 	setLoading(false);
-	// }
-	//
-	//
-	// /**
-	//  * Enables UI so that the user can interact with the application
-	//  */
-	// private void disableUI() {
-	// 	Log.e(TAG, "DISABLE UI");
-	// 	loadingLayout.setVisibility(View.VISIBLE);
-	// 	normalLayout.setVisibility(View.GONE);
-	// }
-
 
 	/**
 	 * Start communication with Arduino

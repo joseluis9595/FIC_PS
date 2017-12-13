@@ -94,10 +94,6 @@ public class MainActivity extends AppCompatActivity {
 		super.onStart();
 		Log.d(TAG, "onStart");
 		active = true;
-
-		// TODO Add animation to the fab
-		// Animation animation = AnimationUtils.loadAnimation(context, R.anim.fab_grow_anim);
-		// fabNewPanel.startAnimation(animation);
 	}
 
 	@Override
@@ -165,10 +161,6 @@ public class MainActivity extends AppCompatActivity {
 				Intent settingsIntent = new Intent(this, SettingsActivity.class);
 				startActivityForResult(settingsIntent, SETTINGSACTIV_REQUESTCODE);
 				return true;
-			case R.id.action_test:
-				Intent testIntent = new Intent(this, TestActivity.class);
-				startActivity(testIntent);
-				return true;
 			case R.id.action_tutorial:
 				startTutorial(false);
 				return true;
@@ -209,16 +201,6 @@ public class MainActivity extends AppCompatActivity {
 	 */
 	private void initializeLayout() {
 		lvPannels = (ListView) findViewById(R.id.lv_mainactiv);
-		// fabNewPanel = (FloatingActionButton) findViewById(R.id.fab_mainactiv_newpanel);
-
-		// // Add listener to the fab
-		// fabNewPanel.setOnClickListener(new View.OnClickListener() {
-		// 	@Override
-		// 	public void onClick(View view) {
-		// 		Log.d(TAG, "fab pressed");
-		// 		openCustomAlertDialog();
-		// 	}
-		// });
 
 		// Add listener to the listView
 		lvPannels.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -265,6 +247,7 @@ public class MainActivity extends AppCompatActivity {
 		// Initialize listView with panels information
 		refreshListView();
 
+		// Context menu for the listview
 		registerForContextMenu(lvPannels);
 
 		// Initialize custom alertDialog layout
@@ -272,6 +255,9 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 
+	/**
+	 * Initializes the custom dialog
+	 */
 	private void initializeCustomDialog() {
 		myCustomAlertDialog = (MyCustomAlertDialog) findViewById(R.id.mycustomalertdialog);
 
@@ -314,52 +300,41 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 
-	//
-	// /**
-	//  * Initializes variables and layout from the custom alertDialog
-	//  */
-	// private void initializeCustomAlertDialogLayout() {
-	// 	mDisplayMetrics = getResources().getDisplayMetrics();
-	// 	fadeLayout = (LinearLayout) findViewById(R.id.mainactiv_layout_fade);
-	// 	newPanelLayout = (LinearLayout) findViewById(R.id.mainactiv_layout_newpanel);
-	// 	etNewPanelName = (EditText) findViewById(R.id.et_newpanel_name);
-	// 	btnCancel = (Button) findViewById(R.id.btn_newpanel_cancel);
-	// 	btnCreate = (Button) findViewById(R.id.btn_newpanel_create);
-	//
-	// 	// Create one common listener for the buttons
-	// 	View.OnClickListener buttonClickListener = new View.OnClickListener() {
-	// 		@Override
-	// 		public void onClick(View view) {
-	// 			switch (view.getId()) {
-	// 				case R.id.btn_newpanel_cancel:
-	// 					closeCustomAlertDialog();
-	// 					break;
-	// 				case R.id.btn_newpanel_create:
-	// 					if (Util.isEmptyEditText(etNewPanelName)) {
-	// 						// Don't dismiss the dialog
-	// 						Util.displayMessage(context, getString(R.string.err_completeallfields));
-	// 					} else {
-	// 						// Create a new controller
-	// 						mySQLiteHelper.insertPanel(new Panel(etNewPanelName.getText().toString()));
-	// 						refreshListView();
-	// 						closeCustomAlertDialog();
-	// 					}
-	// 					break;
-	// 				default:
-	// 					break;
-	// 			}
-	// 		}
-	// 	};
-	//
-	// 	// Add listener to the views
-	// 	btnCancel.setOnClickListener(buttonClickListener);
-	// 	btnCreate.setOnClickListener(buttonClickListener);
-	// }
+	/**
+	 * Inflate a confirmation dialog before deleting a panel
+	 *
+	 * @param idPanel id of the panel that is going to be deleted
+	 */
+	private void inflateConfirmationDialog(final int idPanel) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
+		builder.setTitle(R.string.alertdialog_title_deletepanel)
+				.setMessage(R.string.alertdialog_message_deletepanel);
+
+		builder.setPositiveButton(R.string.alertdialog_button_ok, new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+				deletePanel(idPanel);
+			}
+		});
+		builder.setNegativeButton(R.string.alertdialog_button_cancel, new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+			}
+		});
+		AlertDialog dialog = builder.create();
+		dialog.show();
+	}
+
+
+	/**
+	 * Delete a panel given its id
+	 *
+	 * @param id id of the panel
+	 */
 	public void deletePanel(int id) {
 		mySQLiteHelper.deletePanel(id);
 		refreshListView();
 	}
+
 
 	/**
 	 * Refresh the panel's listView
@@ -382,176 +357,6 @@ public class MainActivity extends AppCompatActivity {
 		if (finishActivity)
 			this.finish();
 	}
-
-	private void inflateConfirmationDialog(final int idPanel) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(context);
-
-		builder.setTitle(R.string.alertdialog_title_deletepanel)
-				.setMessage(R.string.alertdialog_message_deletepanel);
-
-		builder.setPositiveButton(R.string.alertdialog_button_ok, new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-				deletePanel(idPanel);
-			}
-		});
-		builder.setNegativeButton(R.string.alertdialog_button_cancel, new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-			}
-		});
-		AlertDialog dialog = builder.create();
-		dialog.show();
-	}
-
-
-	// /**
-	//  * Shows a custom alert dialog for creating a new panel
-	//  */
-	// private void openCustomAlertDialog() {
-	// 	// Initialize measurement variables
-	// 	if (finalFabY == 0) {
-	// 		initialFabX = fabNewPanel.getX();
-	// 		initialFabY = fabNewPanel.getY();
-	// 		finalFabX = (mDisplayMetrics.widthPixels / 2) - fabNewPanel.getWidth() / 2;
-	// 		finalFabY = (int) (initialFabY - fabNewPanel.getHeight() * 2);
-	// 	}
-	//
-	// 	if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-	// 		// Move fab to the new position
-	// 		new Handler().postDelayed(new Runnable() {
-	// 			@Override
-	// 			public void run() {
-	// 				// Move fab to the new position
-	// 				fabNewPanel.animate()
-	// 						.x(finalFabX)
-	// 						.y(finalFabY)
-	// 						.setDuration(300)
-	// 						.start();
-	// 			}
-	// 		}, 50);
-	//
-	// 		// Inflate the new layout and add fade to the screen
-	// 		new Handler().postDelayed(new Runnable() {
-	// 			@SuppressLint("NewApi")
-	// 			@Override
-	// 			public void run() {
-	// 				if (!isCustomAlertDialogOpened) return;
-	// 				// Add fade to the background
-	// 				fadeLayout.setOnClickListener(new View.OnClickListener() {
-	// 					@Override
-	// 					public void onClick(View view) {
-	// 						closeCustomAlertDialog();
-	// 					}
-	// 				});
-	// 				fadeLayout.setClickable(true);
-	// 				fadeLayout.setFocusable(true);
-	// 				fadeLayout.setAlpha(0f);
-	// 				fadeLayout.setVisibility(View.VISIBLE);
-	// 				fadeLayout.animate()
-	// 						.alpha(fadeAlpha)
-	// 						.setDuration(300)
-	// 						.start();
-	//
-	// 				// Set visibility of the whole panel to VISIBLE
-	// 				newPanelLayout.setVisibility(View.VISIBLE);
-	//
-	// 				// Animate with a circular material transition
-	// 				Animator a = ViewAnimationUtils.createCircularReveal(
-	// 						newPanelLayout,
-	// 						mDisplayMetrics.widthPixels / 2,
-	// 						(int) (finalFabY - newPanelLayout.getY()) + fabNewPanel.getSize() / 2,
-	// 						fabNewPanel.getSize() / 2,
-	// 						newPanelLayout.getHeight() * 2f);
-	//
-	// 				a.start();
-	//
-	// 			}
-	// 		}, 350);
-	// 	} else {
-	// 		// Add fade to the background
-	// 		fadeLayout.setOnClickListener(new View.OnClickListener() {
-	// 			@Override
-	// 			public void onClick(View view) {
-	// 				closeCustomAlertDialog();
-	// 			}
-	// 		});
-	// 		fadeLayout.setClickable(true);
-	// 		fadeLayout.setFocusable(true);
-	// 		fadeLayout.setAlpha(0f);
-	// 		fadeLayout.setVisibility(View.VISIBLE);
-	// 		fadeLayout.animate()
-	// 				.alpha(fadeAlpha)
-	// 				.setDuration(300)
-	// 				.start();
-	// 		// Show the main layout
-	// 		newPanelLayout.setVisibility(View.VISIBLE);
-	// 	}
-	//
-	// 	isCustomAlertDialogOpened = true;
-	// }
-	//
-	//
-	// /**
-	//  * Closes the custom alertDialog
-	//  */
-	// private void closeCustomAlertDialog() {
-	// 	// Hide the keyboard
-	// 	Util.hideKeyboard(activity);
-	//
-	// 	// Hide layout and fade
-	// 	new Handler().postDelayed(new Runnable() {
-	// 		@Override
-	// 		public void run() {
-	// 			// Remove fade from the background
-	// 			fadeLayout.setClickable(false);
-	// 			fadeLayout.setFocusable(false);
-	// 			fadeLayout.animate()
-	// 					.alpha(0f)
-	// 					.setDuration(300)
-	// 					.start();
-	//
-	// 			// Set visibility of the whole panel to INVISIBLE
-	// 			// newPanelLayout.setVisibility(View.VISIBLE);
-	//
-	// 			// If API > 21 animate with a circular material transition
-	// 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-	// 				Animator a = ViewAnimationUtils.createCircularReveal(
-	// 						newPanelLayout,
-	// 						mDisplayMetrics.widthPixels / 2,
-	// 						(int) (finalFabY - newPanelLayout.getY()) + fabNewPanel.getSize() / 2,
-	// 						newPanelLayout.getHeight() * 2f,
-	// 						fabNewPanel.getSize() / 2);
-	// 				a.addListener(new AnimatorListenerAdapter() {
-	// 					@Override
-	// 					public void onAnimationEnd(Animator animation) {
-	// 						super.onAnimationEnd(animation);
-	// 						newPanelLayout.setVisibility(View.INVISIBLE);
-	// 					}
-	// 				});
-	//
-	// 				a.start();
-	// 			} else {
-	// 				newPanelLayout.setVisibility(View.INVISIBLE);
-	// 			}
-	// 		}
-	// 	}, 50);
-	//
-	// 	// Move fab back to its position
-	// 	new Handler().postDelayed(new Runnable() {
-	// 		@Override
-	// 		public void run() {
-	// 			// Move fab to the new position
-	// 			fabNewPanel.animate()
-	// 					.x(initialFabX)
-	// 					.y(initialFabY)
-	// 					.setDuration(300)
-	// 					.start();
-	// 		}
-	// 	}, 350);
-	//
-	// 	// Clear the edit text
-	// 	etNewPanelName.setText("");
-	// 	isCustomAlertDialogOpened = false;
-	// }
 }
 
 
