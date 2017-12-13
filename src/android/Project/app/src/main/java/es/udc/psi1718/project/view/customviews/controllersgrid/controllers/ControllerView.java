@@ -31,6 +31,7 @@ public abstract class ControllerView extends LinearLayout {
 	private int controllerType;
 	private String name;
 	private int data;
+	private int position;
 
 	public ControllerView(ControllerViewManager manager, Activity context, int controllerId,
 						  String name, int controllerType, String arduinoPin, int pinType, int commandType, int data) {
@@ -42,7 +43,7 @@ public abstract class ControllerView extends LinearLayout {
 		this.arduinoPin = arduinoPin;
 		this.pinType = pinType;
 		this.commandType = commandType;
-		this.data= data;
+		this.data = data;
 		controllerViewManager = manager;
 	}
 
@@ -117,6 +118,24 @@ public abstract class ControllerView extends LinearLayout {
 	 * @return View
 	 */
 	public abstract View getView();
+
+	/**
+	 * Getter for position
+	 *
+	 * @return position of the controller in the layout
+	 */
+	public int getPosition() {
+		return position;
+	}
+
+	/**
+	 * Set position of the controller
+	 *
+	 * @param position int new position
+	 */
+	public void setPosition(int position) {
+		this.position = position;
+	}
 
 	/**
 	 * Changes the main Text view in the Controller View

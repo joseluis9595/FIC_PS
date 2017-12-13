@@ -30,10 +30,10 @@ public class ControllerReadView extends ControllerView {
 						ArduinoCommunicationManager.PINTYPE_DIGITAL :
 						ArduinoCommunicationManager.PINTYPE_ANALOG,
 				ArduinoCommunicationManager.COMMANDTYPE_READ, data);
-		initializeLayout(name, arduinoPin);
+		initializeLayout(name, arduinoPin, data);
 	}
 
-	private void initializeLayout(String name, String arduinoPin) {
+	private void initializeLayout(String name, String arduinoPin, int data) {
 		// Inflate view
 		view = inflate(getContext(), R.layout.controller_read_layout, null);
 
@@ -54,6 +54,7 @@ public class ControllerReadView extends ControllerView {
 		// Modify the view
 		nameTextView.setText(name);
 		tvPinNumber.setText("Pin : " + arduinoPin);
+		tvData.setText(data);
 	}
 
 	@Override
@@ -85,6 +86,7 @@ public class ControllerReadView extends ControllerView {
 	@Override
 	public void startController() {
 		// Start thread
+		tvData.setAlpha(1f);
 		thread = new SendDataThread(REFRESH_RATE);
 		thread.start();
 	}
@@ -92,7 +94,10 @@ public class ControllerReadView extends ControllerView {
 	@Override
 	public void endController() {
 		// Cancel thread
-		if (thread != null) thread.cancel();
+		if (thread != null) {
+			thread.cancel();
+			tvData.setAlpha(0.3f);
+		}
 	}
 
 

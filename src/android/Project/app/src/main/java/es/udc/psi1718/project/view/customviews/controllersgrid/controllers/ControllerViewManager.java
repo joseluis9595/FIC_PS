@@ -90,6 +90,7 @@ public class ControllerViewManager {
 	 */
 	void removeControllerView(ControllerView controllerView) {
 		Log.e(TAG, "Removing controller");
+		controllerView.endController();
 		controllers.remove(controllerView);
 		// Inform via listener interface that the view was removed
 		listener.controllerRemoved(controllerView);

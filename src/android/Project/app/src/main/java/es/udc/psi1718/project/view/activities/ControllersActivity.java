@@ -462,7 +462,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 
 		// TODO remove controllerViewManager
 		ControllerView controllerView = controllerViewManager.createControllerView(controllerId, name, controllerType, arduinoPin, pinType, dataType, data);
-		customGridLayout.addController(controllerView);
+		customGridLayout.addController(controllerView, connectionIsActive);
 	}
 
 	/**
@@ -574,9 +574,34 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 
 	@Override
 	public void controllerRemoved(ControllerView controllerView) {
-		Log.e(TAG, "Removing controller");
+		Log.d(TAG, "Removing controller");
+
+		// Update indexes in database
+		mySQLiteHelper.updateIndexes(panelId, controllerView.getPosition(), Integer.MAX_VALUE);
+
+		Log.e(TAG, "Removing controller position : " + controllerView.getPosition());
+
+		// Remove controllerview from the layout
 		customGridLayout.removeController(controllerView);
-		// TODO update indexes
-		// mySQLiteHelper.deleteController(controllerView.getControllerId());
+
+		// Remove controller from database
+		mySQLiteHelper.deleteController(controllerView.getControllerId());
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

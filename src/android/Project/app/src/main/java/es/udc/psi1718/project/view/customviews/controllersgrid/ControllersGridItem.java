@@ -30,6 +30,25 @@ public class ControllersGridItem extends LinearLayout {
 
 
 	/**
+	 * Set the position of the controller view
+	 *
+	 * @param newPosition new position
+	 */
+	public void setPosition(int newPosition) {
+		controllerView.setPosition(newPosition);
+	}
+
+	/**
+	 * Get position of the controller view
+	 *
+	 * @return int position
+	 */
+	public int getPosition() {
+		return controllerView.getPosition();
+	}
+
+
+	/**
 	 * Initialize the layout
 	 *
 	 * @param context context

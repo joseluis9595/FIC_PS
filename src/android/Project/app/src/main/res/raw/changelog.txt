@@ -100,6 +100,11 @@ v0.1.3.7
 - Moved CustomAlertDialog to a new class
 - A lot of code cleanup and bug fixes
 
+v0.1.3.8
+- Option to remove controllers implemented
+- Cancel a controller when it's removed
+- Start a controller when it's created, only if connection is already opened
+
 
 
 

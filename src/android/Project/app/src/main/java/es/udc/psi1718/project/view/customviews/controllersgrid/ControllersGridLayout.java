@@ -144,8 +144,8 @@ public class ControllersGridLayout extends ScrollView {
 					if (initialIndex == -1) break;
 
 					// Update index of every modified view
-					// int firstModifiedIndex = (initialIndex < index) ? initialIndex : index;
-					// updateIndexes(firstModifiedIndex);
+					int firstModifiedIndex = (initialIndex < index) ? initialIndex : index;
+					updateIndexes(firstModifiedIndex);
 
 					// Notify listener
 					controllersGridListener.controllersPositionChanged(initialIndex, index);
@@ -246,9 +246,31 @@ public class ControllersGridLayout extends ScrollView {
 			View view = mGrid.getChildAt(i);
 			LinearLayout linearLayout = (LinearLayout) view;
 			ControllersGridItem childView = (ControllersGridItem) linearLayout.getChildAt(0);
-			// childView.setPosition(i);
+			childView.setPosition(i);
 		}
 	}
+
+
+	// /**
+	//  * Returns the position of a controllerView in the grid
+	//  *
+	//  * @param controllerView view
+	//  *
+	//  * @return int position
+	//  */
+	// public int getControllerPosition(ControllerView controllerView) {
+	// 	int position = -1;
+	// 	for (int i = 0; i < mGrid.getChildCount(); i++) {
+	// 		View view = mGrid.getChildAt(i);
+	// 		LinearLayout linearLayout = (LinearLayout) view;
+	// 		position = linearLayout.indexOfChild(controllerView);
+	// 		if (position != -1) break;
+	// 		// ControllersGridItem childView = (ControllersGridItem) linearLayout.getChildAt(0);
+	// 		// childView.setPosition(i);
+	// 	}
+	// 	Log.e(TAG, "Position of element is : " + position);
+	// 	return position;
+	// }
 
 
 	/**
@@ -256,7 +278,7 @@ public class ControllersGridLayout extends ScrollView {
 	 *
 	 * @param controllerView any implementation of the abstract class {@link ControllerView}
 	 */
-	public void addController(ControllerView controllerView) {
+	public void addController(ControllerView controllerView, Boolean connectionIsActive) {
 		// We are using a container for every item to be able to inflate the layout with mGrid as parent
 		// Doing so, allows us to have the property 'columnWeight' in our xml
 		final LayoutInflater inflater = LayoutInflater.from(context);
@@ -275,7 +297,10 @@ public class ControllersGridLayout extends ScrollView {
 		mGrid.addView(itemView);
 
 		// Finally, update the index of this view
-		// updateIndexes(mGrid.getChildCount() - 1);
+		updateIndexes(mGrid.getChildCount() - 1);
+
+		// If the connection is active, start the controllers
+		if (connectionIsActive) controllerView.startController();
 	}
 
 
