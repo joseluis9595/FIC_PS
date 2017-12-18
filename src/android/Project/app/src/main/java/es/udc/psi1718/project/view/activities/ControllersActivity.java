@@ -267,7 +267,8 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 				getString(R.string.controllertype_servo),
 				getString(R.string.controllertype_tempsensor),
 				getString(R.string.controllertype_humidsensor),
-				getString(R.string.controllertype_generalcontroller)};
+				getString(R.string.controllertype_generalcontroller),
+				getString(R.string.controllertype_lightsensor)};
 
 		newControllerEditText = (EditText) dialogView.findViewById(R.id.et_newcontroller_name);
 		pinNumberEditText = (EditText) dialogView.findViewById(R.id.et_newcontroller_pinnumber);
@@ -442,6 +443,9 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 			return ArduinoCommunicationManager.CONTROLLER_TEMP_SENSOR;
 
 		if (controllerTypeString.equals(getString(R.string.controllertype_generalcontroller)))
+			return ArduinoCommunicationManager.CONTROLLER_GENERIC;
+
+		if (controllerTypeString.equals(getString(R.string.controllertype_lightsensor)))
 			return ArduinoCommunicationManager.CONTROLLER_GENERIC;
 
 		return -1;

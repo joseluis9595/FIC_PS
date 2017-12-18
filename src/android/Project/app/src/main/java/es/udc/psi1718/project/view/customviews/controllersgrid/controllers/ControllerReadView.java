@@ -52,9 +52,9 @@ public class ControllerReadView extends ControllerView {
 		});
 
 		// Modify the view
-		nameTextView.setText(name);
+		nameTextView.setText(String.valueOf(name));
 		tvPinNumber.setText("Pin : " + arduinoPin);
-		tvData.setText(data);
+		tvData.setText(String.valueOf(data));
 	}
 
 	@Override

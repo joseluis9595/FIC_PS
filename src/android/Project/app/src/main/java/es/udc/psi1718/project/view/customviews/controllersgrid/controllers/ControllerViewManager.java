@@ -75,6 +75,10 @@ public class ControllerViewManager {
 				controllerView = new ControllerReadView(this, context, controllerId, name, controllerType, arduinoPin, data);
 				break;
 
+			case ArduinoCommunicationManager.CONTROLLER_LIGHT_SENSOR:
+				controllerView = new ControllerReadView(this, context, controllerId, name, controllerType, arduinoPin, data);
+				break;
+
 			default:
 				return null;
 		}

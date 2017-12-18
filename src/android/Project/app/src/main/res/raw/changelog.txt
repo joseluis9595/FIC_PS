@@ -105,6 +105,11 @@ v0.1.3.8
 - Cancel a controller when it's removed
 - Start a controller when it's created, only if connection is already opened
 
+v0.1.3.9
+- Created photoresistor controllers
+- Modified Arduino code to allow photoresistors
+- Fixed minor bug where a read controller wouldn't have 0.3 alpha when disabled
+
 
 
 

@@ -59,6 +59,7 @@ public class ArduinoCommunicationManager {
 	public final static int CONTROLLER_SERVO = 3;
 	public final static int CONTROLLER_TEMP_SENSOR = 4;
 	public final static int CONTROLLER_HUMIDITY_SENSOR = 5;
+	public final static int CONTROLLER_LIGHT_SENSOR = 6;
 
 	// Interface
 	private ArduinoSerialConnectionListener arduinoSerialConnectionListener;
@@ -357,7 +358,7 @@ public class ArduinoCommunicationManager {
 		//Defining a Callback which triggers whenever data is read.
 		@Override
 		public void onReceivedData(byte[] arg0) {
-			Log.d(TAG, "Received data");
+			// Log.d(TAG, "Received data");
 			if (arg0 != null) {
 				// Log.e(TAG, "Data received is null");
 				if (arg0.length > 0) {

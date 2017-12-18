@@ -64,6 +64,7 @@
                 android:id="@+id/tv_controller_data"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:alpha="0.3"
                 android:padding="@dimen/controller_switch_padding"
                 android:text="-"
                 android:textSize="16sp"

@@ -17,6 +17,7 @@
 #define CONTROLLER_SERVO 3
 #define CONTROLLER_TEMP_SENSOR 4
 #define CONTROLLER_HUMIDITY_SENSOR 5
+#define CONTROLLER_LIGHT_SENSOR 6
 
 
 String getValue(String data, char separator, int index) {
@@ -154,6 +155,14 @@ void loop() {
 				break;
 			case CONTROLLER_HUMIDITY_SENSOR:
 				Serial.println("*"+convertToString(controllerId,2)+"-TEST-xx");
+				break;
+			case CONTROLLER_LIGHT_SENSOR:
+				// int dataRaw = analogRead(pinNumber);
+				// int dataProcessed = (dataRaw / 1024) * 100;
+				Serial.println("*"
+								+ convertToString(controllerId, 2) + 
+								+ "-" + convertToString(analogRead(pinNumber), 4)
+								+ "-xx");
 				break;
 			default:
 				break;

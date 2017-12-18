@@ -57,6 +57,7 @@
     <string name="controllertype_tempsensor">Temperature sensor</string>
     <string name="controllertype_humidsensor">Humidity sensor</string>
     <string name="controllertype_generalcontroller">General purpose controller</string>
+    <string name="controllertype_lightsensor">Photoresistor</string>
 
     <!-- Shared Preferences -->
     <string name="userprefs_filename">es.udc.psi1718.easyarduino.userprefs</string>
