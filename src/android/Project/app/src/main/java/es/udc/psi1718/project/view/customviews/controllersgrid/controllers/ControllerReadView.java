@@ -58,14 +58,28 @@ public class ControllerReadView extends ControllerView {
 	}
 
 	@Override
-	void refreshController(String data) {
+	void refreshController(String data, String units) {
 		final String finalData = data;
-		fromContext.runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				tvData.setText(finalData);
-			}
-		});
+		if (units == null) {
+			fromContext.runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					tvData.setText(finalData);
+				}
+			});
+		} else {
+			int dataProcessed = Integer.valueOf(data);
+			final String dataWithUnits = dataProcessed + units;
+
+			fromContext.runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					tvData.setText(dataWithUnits);
+				}
+			});
+		}
+
+
 	}
 
 	@Override

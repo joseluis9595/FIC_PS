@@ -333,16 +333,15 @@ public class ArduinoCommunicationManager {
 			int controllerId = Integer.parseInt(controllerIdString);
 			// int data = Integer.parseInt(dataString);
 
-			// Create string with data and units
-			String dataWithUnits;
+			// Check if it has units or not
 			if (unitsString.charAt(0) == 'x' || unitsString.charAt(0) == 'X') {
-				dataWithUnits = dataString.trim();
+				unitsString = null;
 			} else {
-				dataWithUnits = dataString.trim() + unitsString.trim();
+				unitsString = unitsString.trim();
 			}
 
 			// Sending data through interface
-			arduinoSerialConnectionListener.receivedData(-1, controllerId, dataWithUnits);
+			arduinoSerialConnectionListener.receivedData(-1, controllerId, dataString, unitsString);
 			Log.e(TAG, "checkData : received RAW String : " + finalData);
 
 		} catch (UnsupportedEncodingException e) {

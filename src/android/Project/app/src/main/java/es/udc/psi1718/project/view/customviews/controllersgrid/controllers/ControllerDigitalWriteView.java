@@ -38,7 +38,7 @@ public class ControllerDigitalWriteView extends ControllerView {
 		// Initialize variables
 		nameTextView = (TextView) view.findViewById(R.id.controller_name_text_view);
 		TextView tvPinNumber = (TextView) view.findViewById(R.id.tv_controller_position);
-		 mSwitch = (Switch) view.findViewById(R.id.controller_switch);
+		mSwitch = (Switch) view.findViewById(R.id.controller_switch);
 		btnEdit = (ImageButton) view.findViewById(R.id.btn_controllerview_edit);
 
 		// Add click listener to the 3-dotted button
@@ -60,7 +60,7 @@ public class ControllerDigitalWriteView extends ControllerView {
 		};
 
 		// Modify layout
-		mSwitch.setChecked(data==1);
+		mSwitch.setChecked(data == 1);
 		mSwitch.setEnabled(false);
 		mSwitch.setOnCheckedChangeListener(onCheckedChangeListener);
 		nameTextView.setText(name);
@@ -68,7 +68,7 @@ public class ControllerDigitalWriteView extends ControllerView {
 	}
 
 	@Override
-	void refreshController(String data) {
+	void refreshController(String data, String units) {
 		final String finalData = data;
 		fromContext.runOnUiThread(new Runnable() {
 			@Override
@@ -80,7 +80,7 @@ public class ControllerDigitalWriteView extends ControllerView {
 
 	@Override
 	public int getControllerData() {
-		return mSwitch.isChecked()?1:0;
+		return mSwitch.isChecked() ? 1 : 0;
 	}
 
 	@Override
@@ -90,7 +90,7 @@ public class ControllerDigitalWriteView extends ControllerView {
 
 	@Override
 	public void updateNameTextView(String newName) {
-		nameTextView.setText(newName);
+		// nameTextView.setText(newName);
 	}
 
 	@Override

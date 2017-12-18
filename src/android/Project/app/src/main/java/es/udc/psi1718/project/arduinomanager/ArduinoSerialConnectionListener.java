@@ -11,8 +11,9 @@ public interface ArduinoSerialConnectionListener {
 	 * @param panelId      id of the panel
 	 * @param controllerId id of the controller
 	 * @param data         string received from arduino
+	 * @param units        units from the measure taken (null if it has not)
 	 */
-	void receivedData(int panelId, int controllerId, String data);
+	void receivedData(int panelId, int controllerId, String data, String units);
 
 	/**
 	 * Called when the connection is opened

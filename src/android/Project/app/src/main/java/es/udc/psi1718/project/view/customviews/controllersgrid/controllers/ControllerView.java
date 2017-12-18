@@ -54,10 +54,10 @@ public abstract class ControllerView extends LinearLayout {
 	 * @param controllerId id of the controller
 	 * @param data         data received
 	 */
-	public void receivedData(int panelId, int controllerId, String data) {
+	public void receivedData(int panelId, int controllerId, String data, String units) {
 		if (controllerId == this.controllerId) {
 			Log.e(TAG, "Received data on controller ID " + controllerId + " : " + data);
-			refreshController(data);
+			refreshController(data, units);
 		}
 
 	}
@@ -160,7 +160,7 @@ public abstract class ControllerView extends LinearLayout {
 	 *
 	 * @param data data received
 	 */
-	abstract void refreshController(String data);
+	abstract void refreshController(String data, String units);
 
 	public abstract int getControllerData();
 

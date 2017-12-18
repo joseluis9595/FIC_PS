@@ -133,9 +133,9 @@ public class ControllerViewManager {
 	 * @param controllerId id of the controller
 	 * @param data         data received
 	 */
-	public void receivedData(int panelId, int controllerId, String data) {
+	public void receivedData(int panelId, int controllerId, String data, String units) {
 		for (ControllerView controller : controllers) {
-			controller.receivedData(panelId, controllerId, data);
+			controller.receivedData(panelId, controllerId, data, units);
 		}
 	}
 

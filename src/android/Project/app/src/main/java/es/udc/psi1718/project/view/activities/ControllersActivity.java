@@ -446,7 +446,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 			return ArduinoCommunicationManager.CONTROLLER_GENERIC;
 
 		if (controllerTypeString.equals(getString(R.string.controllertype_lightsensor)))
-			return ArduinoCommunicationManager.CONTROLLER_GENERIC;
+			return ArduinoCommunicationManager.CONTROLLER_LIGHT_SENSOR;
 
 		return -1;
 	}
@@ -518,12 +518,12 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	/* ARDUINO SERIAL LISTENER FUNCTIONS */
 
 	@Override
-	public void receivedData(final int panelId, final int controllerId, final String data) {
+	public void receivedData(final int panelId, final int controllerId, final String data, String units) {
 		Log.d(TAG, "RECEIVEDDATA : Data received - " + controllerId + "-" + data);
 
 		// Inform the the controller layout that data was received
 		final String auxData = data;
-		controllerViewManager.receivedData(panelId, controllerId, data);
+		controllerViewManager.receivedData(panelId, controllerId, data, units);
 	}
 
 	@Override
