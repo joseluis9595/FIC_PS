@@ -49,7 +49,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="40dp"
-            android:src="@drawable/img_not_available"/>
+            />
+        <!--android:src="@drawable/img_not_available"-->
 
     </LinearLayout>
 
