@@ -114,6 +114,13 @@ v0.1.3.10
 - Added support for units in read view
 - Fixed bug, 'photoresistor' controllers where created with 'general purpose' id
 
+v0.1.4.0
+- It-3
+
+v0.1.4.1
+- Moved broadcast receiver to ArduinoUSBcommunicationManager
+- Created abstract class for the communication manager to allow easy implementations
+
 
 
 

@@ -1,7 +1,7 @@
 package es.udc.psi1718.project.arduinomanager;
 
 /**
- * Interface that acts as listener for {@link ArduinoCommunicationManager}
+ * Interface that acts as listener for {@link ArduinoUSBCommunicationManager}
  */
 public interface ArduinoSerialConnectionListener {
 

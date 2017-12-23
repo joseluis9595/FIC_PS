@@ -8,7 +8,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import es.udc.psi1718.project.R;
-import es.udc.psi1718.project.arduinomanager.ArduinoCommunicationManager;
+import es.udc.psi1718.project.arduinomanager.ArduinoUSBCommunicationManager;
 import es.udc.psi1718.project.util.Constants;
 
 
@@ -32,8 +32,8 @@ public class ControllerAnalogWriteView extends ControllerView {
 	public ControllerAnalogWriteView(ControllerViewManager manager, Activity context, int controllerId,
 									 String name, int controllerType, String arduinoPin, int data) {
 		super(manager, context, controllerId, name, controllerType, arduinoPin,
-				ArduinoCommunicationManager.PINTYPE_ANALOG,
-				ArduinoCommunicationManager.COMMANDTYPE_WRITE, data);
+				ArduinoUSBCommunicationManager.PINTYPE_ANALOG,
+				ArduinoUSBCommunicationManager.COMMANDTYPE_WRITE, data);
 		initializeLayout(name, arduinoPin, data);
 	}
 

@@ -20,18 +20,25 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import es.udc.psi1718.project.storage.UserPreferencesManager;
+import es.udc.psi1718.project.util.Constants;
+import es.udc.psi1718.project.view.activities.ControllersActivity;
+import es.udc.psi1718.project.view.activities.MainActivity;
+
 import static android.content.Context.USB_SERVICE;
+import static android.hardware.usb.UsbManager.ACTION_USB_DEVICE_ATTACHED;
+import static android.hardware.usb.UsbManager.ACTION_USB_DEVICE_DETACHED;
 import static es.udc.psi1718.project.util.Constants.ACTION_USB_PERMISSION;
 
 /**
  * In this class we implement all the USB connection and communication with Arduino
  */
-public class ArduinoCommunicationManager {
+public class ArduinoUSBCommunicationManager extends AbstractArduinoCommunicationManager {
 
 	private final String TAG = "ArduinoCommunication";
 	private Context fromContext;
 
-	private static ArduinoCommunicationManager INSTANCE = null;
+	private static ArduinoUSBCommunicationManager INSTANCE = null;
 
 	// Constants
 	private final int ARDUINO_VENDORID = 0x2341;
@@ -45,21 +52,6 @@ public class ArduinoCommunicationManager {
 	// private final int COMMAND_DATA_LENGTH = 4;
 	// private final int COMMAND_ARDUINO_PIN_LENGTH = 2;
 	private final int COMMAND_LENGTH = 11; // ID(3char) SEPARATOR(1char) DATA(4char) SEPARATOR(1char) UNITS(2char)
-
-	// Pin and command type
-	public final static int PINTYPE_DIGITAL = 1;
-	public final static int PINTYPE_ANALOG = 2;
-	public final static int COMMANDTYPE_READ = 3;
-	public final static int COMMANDTYPE_WRITE = 4;
-
-	// Controller types
-	public final static int CONTROLLER_GENERIC = 0;
-	public final static int CONTROLLER_LED_ANALOG = 1;
-	public final static int CONTROLLER_LED_DIGITAL = 2;
-	public final static int CONTROLLER_SERVO = 3;
-	public final static int CONTROLLER_TEMP_SENSOR = 4;
-	public final static int CONTROLLER_HUMIDITY_SENSOR = 5;
-	public final static int CONTROLLER_LIGHT_SENSOR = 6;
 
 	// Interface
 	private ArduinoSerialConnectionListener arduinoSerialConnectionListener;
@@ -85,11 +77,15 @@ public class ArduinoCommunicationManager {
 	 *
 	 * @param fromContext context
 	 */
-	public ArduinoCommunicationManager(Context fromContext) {
+	public ArduinoUSBCommunicationManager(Context fromContext) {
 		this.fromContext = fromContext;
 		usbManager = (UsbManager) fromContext.getSystemService(USB_SERVICE);
 		arduinoSerialConnectionListener = (ArduinoSerialConnectionListener) fromContext;
 		commandBuffer = new ArrayList<>();
+		IntentFilter intentFilter = new IntentFilter();
+		intentFilter.addAction(ACTION_USB_DEVICE_ATTACHED);
+		intentFilter.addAction(ACTION_USB_DEVICE_DETACHED);
+		fromContext.registerReceiver(usbConnectionReceiver, intentFilter);
 		// createBroadcastReceiver();
 	}
 
@@ -134,7 +130,58 @@ public class ArduinoCommunicationManager {
 				default:
 					break;
 			}
+		}
+	};
 
+	/**
+	 * Broadcast Receiver to listen for permission
+	 */
+	private final BroadcastReceiver usbConnectionReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			String action = intent.getAction();
+			if (action == null) return;
+			UsbDevice device = null;
+			Log.d(TAG, "usbConnectionReceiver : is called : " + action);
+
+			switch (action) {
+				case UsbManager.ACTION_USB_DEVICE_DETACHED:
+					device = intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
+					if (device != null) {
+						int deviceID = device.getVendorId();
+						if (deviceID == 0x2341) {
+							Log.d(TAG, "BROADCAST : USB device detached");
+							endCommunication();
+						}
+					}
+					break;
+
+				case UsbManager.ACTION_USB_DEVICE_ATTACHED:
+					// Check if user wants to start connection automatically
+					if (UserPreferencesManager.getInstance(context).getStartConnectionAutomatically()) {
+						Log.d(TAG, "StartCommunicationAuto : True");
+						device = intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
+						if (device != null) {
+							int deviceID = device.getVendorId();
+							if (deviceID == 0x2341) {
+								Log.d(TAG, "BROADCAST : USB device attached");
+
+								// If activity is active, call startComm method, else, start activity with extras
+								if (ControllersActivity.active) {
+									startCommunication();
+								} else if (!MainActivity.active) {
+									Intent mainActivityIntent = new Intent(context, MainActivity.class);
+									mainActivityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+									// mainActivityIntent.putExtra(Constants.INTENTCOMM_CONTACTIV_LAUNCHEDFROMBR, true);
+									context.startActivity(mainActivityIntent);
+								}
+							}
+						}
+					}
+					break;
+				default:
+					break;
+			}
 		}
 	};
 
@@ -221,18 +268,7 @@ public class ArduinoCommunicationManager {
 	}
 
 
-	/**
-	 * Sends command via serial port
-	 *
-	 * @param controllerId   id of the controller that sent the command
-	 * @param controllerType type of the controller
-	 * @param arduinoPin     pin where the component is connected on the arduino
-	 * @param pinType        type of the pin (digital-analog)
-	 * @param commandType    command type (read-write)
-	 * @param data           data sent
-	 *
-	 * @return {@link ArduinoResponseCodes}
-	 */
+	@Override
 	public ArduinoResponseCodes sendCommand(int controllerId, int controllerType, String arduinoPin, int pinType, int commandType, int data) {
 		if (serialPort != null) {
 			String command = createCommand(controllerId, controllerType, arduinoPin, pinType, commandType, data);
@@ -391,13 +427,11 @@ public class ArduinoCommunicationManager {
 	};
 
 
-	/**
-	 * Asks for permission to access usb device
-	 */
+	@Override
 	public ArduinoResponseCodes startCommunication() {
 		Log.d(TAG, "startCommunication called");
 		HashMap<String, UsbDevice> usbDevices = usbManager.getDeviceList();
-		PendingIntent pi = PendingIntent.getBroadcast(fromContext, 0, new Intent(ACTION_USB_PERMISSION), 0);
+		PendingIntent pi = PendingIntent.getBroadcast(fromContext, 0, new Intent(Constants.ACTION_USB_PERMISSION), 0);
 
 		// TODO allow only one call to this function at a time
 
@@ -408,7 +442,7 @@ public class ArduinoCommunicationManager {
 
 					Log.e(TAG, "startCommunication : REGISTER RECEIVER PERMISSION");
 					fromContext.registerReceiver(mPermissionReceiver, new IntentFilter(
-							ACTION_USB_PERMISSION));
+							Constants.ACTION_USB_PERMISSION));
 
 					if (usbManager.hasPermission(device)) {
 						Log.d(TAG, "startCommunication : Already has permission");

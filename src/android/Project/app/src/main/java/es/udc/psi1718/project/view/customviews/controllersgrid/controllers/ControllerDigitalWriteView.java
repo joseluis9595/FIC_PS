@@ -9,7 +9,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import es.udc.psi1718.project.R;
-import es.udc.psi1718.project.arduinomanager.ArduinoCommunicationManager;
+import es.udc.psi1718.project.arduinomanager.ArduinoUSBCommunicationManager;
 
 
 public class ControllerDigitalWriteView extends ControllerView {
@@ -25,8 +25,8 @@ public class ControllerDigitalWriteView extends ControllerView {
 	public ControllerDigitalWriteView(ControllerViewManager manager, Activity context, int controllerId,
 									  String name, int controllerType, String arduinoPin, int data) {
 		super(manager, context, controllerId, name, controllerType, arduinoPin,
-				ArduinoCommunicationManager.PINTYPE_DIGITAL,
-				ArduinoCommunicationManager.COMMANDTYPE_WRITE, data);
+				ArduinoUSBCommunicationManager.PINTYPE_DIGITAL,
+				ArduinoUSBCommunicationManager.COMMANDTYPE_WRITE, data);
 		initializeLayout(name, arduinoPin, data);
 	}
 

@@ -7,7 +7,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import es.udc.psi1718.project.R;
-import es.udc.psi1718.project.arduinomanager.ArduinoCommunicationManager;
+import es.udc.psi1718.project.arduinomanager.ArduinoUSBCommunicationManager;
 
 public class ControllerReadView extends ControllerView {
 	private String TAG = "ControllerSwitchView";
@@ -27,9 +27,9 @@ public class ControllerReadView extends ControllerView {
 							  String name, int controllerType, String arduinoPin, int data) {
 		super(manager, context, controllerId, name, controllerType, arduinoPin,
 				arduinoPin.equalsIgnoreCase("digital") ?
-						ArduinoCommunicationManager.PINTYPE_DIGITAL :
-						ArduinoCommunicationManager.PINTYPE_ANALOG,
-				ArduinoCommunicationManager.COMMANDTYPE_READ, data);
+						ArduinoUSBCommunicationManager.PINTYPE_DIGITAL :
+						ArduinoUSBCommunicationManager.PINTYPE_ANALOG,
+				ArduinoUSBCommunicationManager.COMMANDTYPE_READ, data);
 		initializeLayout(name, arduinoPin, data);
 	}
 

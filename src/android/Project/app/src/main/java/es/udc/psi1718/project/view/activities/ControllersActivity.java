@@ -1,7 +1,6 @@
 package es.udc.psi1718.project.view.activities;
 
 import android.app.Activity;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
@@ -21,11 +20,11 @@ import android.widget.Spinner;
 
 import java.util.ArrayList;
 
-import es.udc.psi1718.project.MyBroadcastReceiver;
 import es.udc.psi1718.project.R;
-import es.udc.psi1718.project.arduinomanager.ArduinoCommunicationManager;
+import es.udc.psi1718.project.arduinomanager.AbstractArduinoCommunicationManager;
 import es.udc.psi1718.project.arduinomanager.ArduinoResponseCodes;
 import es.udc.psi1718.project.arduinomanager.ArduinoSerialConnectionListener;
+import es.udc.psi1718.project.arduinomanager.ArduinoUSBCommunicationManager;
 import es.udc.psi1718.project.storage.UserPreferencesManager;
 import es.udc.psi1718.project.storage.database.MySQLiteHelper;
 import es.udc.psi1718.project.storage.database.daos.Controller;
@@ -66,9 +65,9 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	private ControllerViewManager controllerViewManager;
 
 	// Arduino communication Manager
-	private ArduinoCommunicationManager arduinoCommunication;
-	private BroadcastReceiver broadcastReceiver;
-	private IntentFilter intentFilter;
+	private AbstractArduinoCommunicationManager arduinoCommunication;
+	// private BroadcastReceiver broadcastReceiver;
+	// private IntentFilter intentFilter;
 	private Boolean connectionIsActive = false;
 
 	@Override
@@ -106,13 +105,13 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 
 		// Arduino communication
 		// arduinoCommunication = ArduinoCommunicationManager.getInstance(context);
-		arduinoCommunication = new ArduinoCommunicationManager(context);
+		arduinoCommunication = new ArduinoUSBCommunicationManager(context);
 
 		// USB attached/detached broadacast Receiver
-		broadcastReceiver = new MyBroadcastReceiver(this, arduinoCommunication);
-		intentFilter = new IntentFilter();
-		intentFilter.addAction(ACTION_USB_DEVICE_ATTACHED);
-		intentFilter.addAction(ACTION_USB_DEVICE_DETACHED);
+		// broadcastReceiver = new MyBroadcastReceiver(this, arduinoCommunication);
+		// intentFilter = new IntentFilter();
+		// intentFilter.addAction(ACTION_USB_DEVICE_ATTACHED);
+		// intentFilter.addAction(ACTION_USB_DEVICE_DETACHED);
 
 		// Initialize layout
 		initializeLayout();
@@ -128,7 +127,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 
 		// Register USB receiver
 		Log.e(TAG, "onStart : REGISTER RECEIVER USB");
-		registerReceiver(broadcastReceiver, intentFilter);
+		// registerReceiver(broadcastReceiver, intentFilter);
 
 		// Start communication
 		if (!connectionIsActive) startCommunication();
@@ -169,11 +168,11 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 		Log.e(TAG, "onDestroy : UNREGISTER RECEIVER USB");
 
 		// Unregister broadcast receiver
-		try {
-			unregisterReceiver(broadcastReceiver);
-		} catch (Exception e) {
-			Log.e(TAG, e.toString());
-		}
+		// try {
+		// 	unregisterReceiver(broadcastReceiver);
+		// } catch (Exception e) {
+		// 	Log.e(TAG, e.toString());
+		// }
 
 		// End communication with Arduino
 		endCommunication();
@@ -428,25 +427,25 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	private int matchControllerType(String controllerTypeString, String pinTypeString) {
 		if (controllerTypeString.equals(getString(R.string.controllertype_led))) {
 			if (pinTypeString.equalsIgnoreCase("digital"))
-				return ArduinoCommunicationManager.CONTROLLER_LED_DIGITAL;
+				return ArduinoUSBCommunicationManager.CONTROLLER_LED_DIGITAL;
 			else
-				return ArduinoCommunicationManager.CONTROLLER_LED_ANALOG;
+				return ArduinoUSBCommunicationManager.CONTROLLER_LED_ANALOG;
 		}
 
 		if (controllerTypeString.equals(getString(R.string.controllertype_servo)))
-			return ArduinoCommunicationManager.CONTROLLER_SERVO;
+			return ArduinoUSBCommunicationManager.CONTROLLER_SERVO;
 
 		if (controllerTypeString.equals(getString(R.string.controllertype_humidsensor)))
-			return ArduinoCommunicationManager.CONTROLLER_HUMIDITY_SENSOR;
+			return ArduinoUSBCommunicationManager.CONTROLLER_HUMIDITY_SENSOR;
 
 		if (controllerTypeString.equals(getString(R.string.controllertype_tempsensor)))
-			return ArduinoCommunicationManager.CONTROLLER_TEMP_SENSOR;
+			return ArduinoUSBCommunicationManager.CONTROLLER_TEMP_SENSOR;
 
 		if (controllerTypeString.equals(getString(R.string.controllertype_generalcontroller)))
-			return ArduinoCommunicationManager.CONTROLLER_GENERIC;
+			return ArduinoUSBCommunicationManager.CONTROLLER_GENERIC;
 
 		if (controllerTypeString.equals(getString(R.string.controllertype_lightsensor)))
-			return ArduinoCommunicationManager.CONTROLLER_LIGHT_SENSOR;
+			return ArduinoUSBCommunicationManager.CONTROLLER_LIGHT_SENSOR;
 
 		return -1;
 	}

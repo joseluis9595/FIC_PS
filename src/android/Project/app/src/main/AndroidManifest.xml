@@ -3,6 +3,7 @@
           package="es.udc.psi1718.project">
 
     <uses-feature android:name="android.hardware.usb.host"/>
+    <uses-permission android:name="android.permission.USB_PERMISSION"/>
 
     <application
         android:allowBackup="true"
@@ -69,18 +70,27 @@
             android:theme="@style/TutorialActiv">
         </activity>
 
-        <receiver
-            android:name=".MyBroadcastReceiver"
-            android:label="MyBroadcastReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.ACTION_USB_DEVICE_ATTACHED"/>
-                <action android:name="android.intent.action.ACTION_USB_DEVICE_DETTACHED"/>
-            </intent-filter>
-        </receiver>
+        <!--<receiver-->
+        <!--android:name=".arduinomanager.ArduinoUSBCommunicationManager$USBConnectionReceiver"-->
+        <!--android:label="USBConnectionReceiver">-->
+        <!--<intent-filter>-->
+        <!--<action android:name="android.intent.action.ACTION_USB_DEVICE_ATTACHED"/>-->
+        <!--<action android:name="android.intent.action.ACTION_USB_DEVICE_DETTACHED"/>-->
+        <!--</intent-filter>-->
+        <!--</receiver>-->
 
-        <activity
-            android:name=".view.activities.TestActivity">
-        </activity>
+        <!--<receiver-->
+        <!--android:name=".MyBroadcastReceiver"-->
+        <!--android:label="MyBroadcastReceiver">-->
+        <!--<intent-filter>-->
+        <!--<action android:name="android.intent.action.ACTION_USB_DEVICE_ATTACHED"/>-->
+        <!--<action android:name="android.intent.action.ACTION_USB_DEVICE_DETTACHED"/>-->
+        <!--</intent-filter>-->
+        <!--</receiver>-->
+
+        <!--<activity-->
+        <!--android:name=".view.activities.TestActivity">-->
+        <!--</activity>-->
     </application>
 
 </manifest>

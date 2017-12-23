@@ -5,7 +5,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
-import es.udc.psi1718.project.arduinomanager.ArduinoCommunicationManager;
+import es.udc.psi1718.project.arduinomanager.ArduinoUSBCommunicationManager;
 
 
 public class ControllerViewManager {
@@ -42,7 +42,7 @@ public class ControllerViewManager {
 		ControllerView controllerView;
 		switch (controllerType) {
 
-			case ArduinoCommunicationManager.CONTROLLER_GENERIC:
+			case ArduinoUSBCommunicationManager.CONTROLLER_GENERIC:
 				if (dataType.equalsIgnoreCase("read")) {
 					controllerView = new ControllerReadView(this, context, controllerId, name, controllerType, arduinoPin, data);
 					break;
@@ -55,27 +55,27 @@ public class ControllerViewManager {
 					break;
 				}
 
-			case ArduinoCommunicationManager.CONTROLLER_LED_DIGITAL:
+			case ArduinoUSBCommunicationManager.CONTROLLER_LED_DIGITAL:
 				controllerView = new ControllerDigitalWriteView(this, context, controllerId, name, controllerType, arduinoPin, data);
 				break;
 
-			case ArduinoCommunicationManager.CONTROLLER_LED_ANALOG:
+			case ArduinoUSBCommunicationManager.CONTROLLER_LED_ANALOG:
 				controllerView = new ControllerAnalogWriteView(this, context, controllerId, name, controllerType, arduinoPin, data);
 				break;
 
-			case ArduinoCommunicationManager.CONTROLLER_SERVO:
+			case ArduinoUSBCommunicationManager.CONTROLLER_SERVO:
 				controllerView = new ControllerAnalogWriteView(this, context, controllerId, name, controllerType, arduinoPin, data);
 				break;
 
-			case ArduinoCommunicationManager.CONTROLLER_HUMIDITY_SENSOR:
+			case ArduinoUSBCommunicationManager.CONTROLLER_HUMIDITY_SENSOR:
 				controllerView = new ControllerReadView(this, context, controllerId, name, controllerType, arduinoPin, data);
 				break;
 
-			case ArduinoCommunicationManager.CONTROLLER_TEMP_SENSOR:
+			case ArduinoUSBCommunicationManager.CONTROLLER_TEMP_SENSOR:
 				controllerView = new ControllerReadView(this, context, controllerId, name, controllerType, arduinoPin, data);
 				break;
 
-			case ArduinoCommunicationManager.CONTROLLER_LIGHT_SENSOR:
+			case ArduinoUSBCommunicationManager.CONTROLLER_LIGHT_SENSOR:
 				controllerView = new ControllerReadView(this, context, controllerId, name, controllerType, arduinoPin, data);
 				break;
 
