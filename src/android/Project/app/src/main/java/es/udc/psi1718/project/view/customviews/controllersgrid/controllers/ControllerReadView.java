@@ -21,6 +21,7 @@ public class ControllerReadView extends ControllerView {
 	// Thread variables
 	private int REFRESH_RATE = 1000;
 	private SendDataThread thread;
+	private TextView tvPinNumber;
 
 
 	public ControllerReadView(ControllerViewManager manager, Activity context, int controllerId,
@@ -39,7 +40,7 @@ public class ControllerReadView extends ControllerView {
 
 		// Initialize variables
 		nameTextView = (TextView) view.findViewById(R.id.controller_name_text_view);
-		TextView tvPinNumber = (TextView) view.findViewById(R.id.tv_controller_position);
+		tvPinNumber = (TextView) view.findViewById(R.id.tv_controller_position);
 		tvData = (TextView) view.findViewById(R.id.tv_controller_data);
 		btnEdit = (ImageButton) view.findViewById(R.id.btn_controllerview_edit);
 
@@ -95,6 +96,11 @@ public class ControllerReadView extends ControllerView {
 	@Override
 	public void updateNameTextView() {
 		nameTextView.setText(getName());
+	}
+
+	@Override
+	public void updatePinTextView() {
+		tvPinNumber.setText(getArduinoPin());
 	}
 
 	@Override

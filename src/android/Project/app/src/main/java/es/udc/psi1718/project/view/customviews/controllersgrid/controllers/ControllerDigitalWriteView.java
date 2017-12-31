@@ -20,6 +20,7 @@ public class ControllerDigitalWriteView extends ControllerView {
 	private TextView nameTextView;
 	private ImageButton btnEdit;
 	private Switch mSwitch;
+	private TextView tvPinNumber;
 
 
 	public ControllerDigitalWriteView(ControllerViewManager manager, Activity context, int controllerId,
@@ -37,7 +38,7 @@ public class ControllerDigitalWriteView extends ControllerView {
 
 		// Initialize variables
 		nameTextView = (TextView) view.findViewById(R.id.controller_name_text_view);
-		TextView tvPinNumber = (TextView) view.findViewById(R.id.tv_controller_position);
+		tvPinNumber = (TextView) view.findViewById(R.id.tv_controller_position);
 		mSwitch = (Switch) view.findViewById(R.id.controller_switch);
 		btnEdit = (ImageButton) view.findViewById(R.id.btn_controllerview_edit);
 
@@ -92,6 +93,12 @@ public class ControllerDigitalWriteView extends ControllerView {
 	public void updateNameTextView() {
 		nameTextView.setText(getName());
 	}
+
+	@Override
+	public void updatePinTextView() {
+		tvPinNumber.setText(getArduinoPin());
+	}
+
 
 	@Override
 	public void startController() {

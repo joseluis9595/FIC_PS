@@ -633,13 +633,12 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 			@Override
 			public void onClick(View view) {
 				String newName = etName.getText().toString();
+				String newPinNumber = etPin.getText().toString();
 
 				// If empty fields display error
-				if (Util.isEmptyString(newName) || Util.isEmptyString(etPin.getText().toString())) {
+				if (Util.isEmptyString(newName) || Util.isEmptyString(newPinNumber)) {
 					Toast.makeText(context, R.string.err_completeallfields, Toast.LENGTH_SHORT).show();
 				} else {
-					int newPinNumber = Integer.valueOf(etPin.getText().toString());
-
 					// Update controller in database
 					mySQLiteHelper.updateController(
 							new Controller(
@@ -648,7 +647,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 									finalControllerView.getControllerType(),
 									String.valueOf(finalControllerView.getControllerData()),
 									String.valueOf(finalControllerView.getPinType()),
-									finalControllerView.getArduinoPin(),
+									newPinNumber,
 									finalControllerView.getPosition(),
 									panelId,
 									finalControllerView.getData()
@@ -657,6 +656,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 
 					// Change the controller view
 					finalControllerView.setName(newName);
+					finalControllerView.setArduinoPin(newPinNumber);
 					// controllerView.setArduinoPin(String.valueOf(newPinNumber));
 					// controllerView.updatePinNumberTextView();
 

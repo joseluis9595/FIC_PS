@@ -24,6 +24,7 @@ public class ControllerAnalogWriteView extends ControllerView {
 	private long timeInMillis;
 	private ImageButton btnEdit;
 	private SeekBar mSeekbar;
+	private TextView tvPinNumber;
 
 
 	/**
@@ -47,7 +48,7 @@ public class ControllerAnalogWriteView extends ControllerView {
 
 		// Initialize variables
 		nameTextView = (TextView) view.findViewById(R.id.controller_name_text_view);
-		TextView tvPinNumber = (TextView) view.findViewById(R.id.tv_controller_position);
+		tvPinNumber = (TextView) view.findViewById(R.id.tv_controller_position);
 		mSeekbar = (SeekBar) view.findViewById(R.id.controller_seekbar);
 		btnEdit = (ImageButton) view.findViewById(R.id.btn_controllerview_edit);
 
@@ -133,6 +134,11 @@ public class ControllerAnalogWriteView extends ControllerView {
 	@Override
 	public void updateNameTextView() {
 		nameTextView.setText(getName());
+	}
+
+	@Override
+	public void updatePinTextView() {
+		tvPinNumber.setText(getArduinoPin());
 	}
 
 	@Override

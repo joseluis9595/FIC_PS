@@ -125,6 +125,9 @@ v0.1.4.2
 - Edit controllers
 - Code cleanup
 
+v0.1.4.3
+- Fixed bug while editing controller's pin number
+
 
 
 

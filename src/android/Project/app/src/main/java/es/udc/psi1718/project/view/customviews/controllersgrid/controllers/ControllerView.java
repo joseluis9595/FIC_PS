@@ -123,6 +123,7 @@ public abstract class ControllerView extends LinearLayout {
 
 	public void setArduinoPin(String arduinoPin) {
 		this.arduinoPin = arduinoPin;
+		updatePinTextView();
 	}
 
 	public int getPinType() {
@@ -192,9 +193,14 @@ public abstract class ControllerView extends LinearLayout {
 	}
 
 	/**
-	 * Refreshes the main Text view in the Controller View
+	 * Refreshes the name Text view in the Controller View
 	 */
 	public abstract void updateNameTextView();
+
+	/**
+	 * Refreshes the pin Text view in the Controller View
+	 */
+	public abstract void updatePinTextView();
 
 	// /**
 	//  * Changes the main Text view in the Controller View
