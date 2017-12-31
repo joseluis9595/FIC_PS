@@ -1,8 +1,9 @@
 package es.udc.psi1718.project.view.activities;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
-import android.content.IntentFilter;
+import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -17,6 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -36,9 +38,6 @@ import es.udc.psi1718.project.view.customviews.controllersgrid.ControllersGridLi
 import es.udc.psi1718.project.view.customviews.controllersgrid.controllers.ControllerView;
 import es.udc.psi1718.project.view.customviews.controllersgrid.controllers.ControllerViewEventListener;
 import es.udc.psi1718.project.view.customviews.controllersgrid.controllers.ControllerViewManager;
-
-import static android.hardware.usb.UsbManager.ACTION_USB_DEVICE_ATTACHED;
-import static android.hardware.usb.UsbManager.ACTION_USB_DEVICE_DETACHED;
 
 public class ControllersActivity extends AppCompatActivity implements ArduinoSerialConnectionListener, ControllerViewEventListener, ControllersGridListener {
 
@@ -189,7 +188,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		//Overriding the home button behaviour so that the animation feels more natural
+		// Overriding the home button behaviour so that the animation feels more natural
 		int id = item.getItemId();
 		if (id == android.R.id.home) {
 			supportFinishAfterTransition();
@@ -261,6 +260,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 		LayoutInflater inflater = this.getLayoutInflater();
 		View dialogView = inflater.inflate(R.layout.alertdialog_newcontroller_layout, null);
 
+		// TODO move to array variable
 		final String[] controllersType = new String[]{
 				getString(R.string.controllertype_led),
 				getString(R.string.controllertype_servo),
@@ -331,7 +331,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 		myCustomAlertDialog.setPositiveClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				handleCreateNewControllerButton();
+				onPositiveButtonClickedCustomDialog();
 			}
 		});
 
@@ -348,7 +348,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 	/**
 	 * Handle the event of the button create new controller (onClick)
 	 */
-	private void handleCreateNewControllerButton() {
+	private void onPositiveButtonClickedCustomDialog() {
 		String controllerNameString = newControllerEditText.getText().toString();
 		String arduinoPinString = pinNumberEditText.getText().toString();
 
@@ -577,18 +577,99 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 
 	@Override
 	public void controllerRemoved(ControllerView controllerView) {
-		Log.d(TAG, "Removing controller");
+		Log.d(TAG, "Removing controller position : " + controllerView.getPosition());
 
 		// Update indexes in database
 		mySQLiteHelper.updateIndexes(panelId, controllerView.getPosition(), Integer.MAX_VALUE);
-
-		Log.e(TAG, "Removing controller position : " + controllerView.getPosition());
 
 		// Remove controllerview from the layout
 		customGridLayout.removeController(controllerView);
 
 		// Remove controller from database
 		mySQLiteHelper.deleteController(controllerView.getControllerId());
+	}
+
+	@Override
+	public void controllerEditButtonPressed(ControllerView controllerView) {
+		Log.d(TAG, "Updating controller in position : " + controllerView.getPosition());
+
+		final ControllerView finalControllerView = controllerView;
+
+		if (connectionIsActive) {
+			finalControllerView.endController();
+		}
+
+		// Initialize variables
+		View customView = getLayoutInflater().inflate(R.layout.alertdialog_editcontroller, null);
+		final EditText etName = (EditText) customView.findViewById(R.id.et_editcontroller_name);
+		final EditText etPin = (EditText) customView.findViewById(R.id.et_editcontroller_pin);
+
+		// Fill editTexts with the actual values of the controller
+		etName.setText(controllerView.getName());
+		etPin.setText(controllerView.getArduinoPin());
+
+		// Create alert dialog builder
+		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+
+		// Customize the builder
+		alertDialogBuilder.setTitle("Edit controller")
+				.setView(customView)
+				.setPositiveButton("Aceptar", null)
+				.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialogInterface, int i) {
+						if (connectionIsActive) {
+							finalControllerView.startController();
+						}
+					}
+				});
+
+		// Create and show the dialog
+		final AlertDialog alertDialog = alertDialogBuilder.create();
+		alertDialog.show();
+
+		// Override
+		alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				String newName = etName.getText().toString();
+
+				// If empty fields display error
+				if (Util.isEmptyString(newName) || Util.isEmptyString(etPin.getText().toString())) {
+					Toast.makeText(context, R.string.err_completeallfields, Toast.LENGTH_SHORT).show();
+				} else {
+					int newPinNumber = Integer.valueOf(etPin.getText().toString());
+
+					// Update controller in database
+					mySQLiteHelper.updateController(
+							new Controller(
+									finalControllerView.getControllerId(),
+									newName,
+									finalControllerView.getControllerType(),
+									String.valueOf(finalControllerView.getControllerData()),
+									String.valueOf(finalControllerView.getPinType()),
+									finalControllerView.getArduinoPin(),
+									finalControllerView.getPosition(),
+									panelId,
+									finalControllerView.getData()
+							)
+					);
+
+					// Change the controller view
+					finalControllerView.setName(newName);
+					// controllerView.setArduinoPin(String.valueOf(newPinNumber));
+					// controllerView.updatePinNumberTextView();
+
+					alertDialog.dismiss();
+
+					if (connectionIsActive) {
+						finalControllerView.startController();
+					}
+				}
+			}
+		});
+
+
 	}
 }
 

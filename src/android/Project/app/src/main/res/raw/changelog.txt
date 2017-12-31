@@ -121,7 +121,9 @@ v0.1.4.1
 - Moved broadcast receiver to ArduinoUSBcommunicationManager
 - Created abstract class for the communication manager to allow easy implementations
 
-
+v0.1.4.2
+- Edit controllers
+- Code cleanup
 
 
 

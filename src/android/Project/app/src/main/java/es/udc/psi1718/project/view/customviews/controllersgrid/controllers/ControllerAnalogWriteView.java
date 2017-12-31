@@ -81,7 +81,7 @@ public class ControllerAnalogWriteView extends ControllerView {
 		btnEdit.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				editController(btnEdit);
+				optionsButtonClicked(btnEdit);
 			}
 		});
 
@@ -92,7 +92,7 @@ public class ControllerAnalogWriteView extends ControllerView {
 		// 		switch (view.getId()) {
 		// 			case R.id.card_view_main_layout:
 		// 				// TODO IT2 edit cardView
-		// 				ControllerSliderView.super.editController();
+		// 				ControllerSliderView.super.optionsButtonClicked();
 		// 				return true;
 		// 			default:
 		// 				break;
@@ -111,13 +111,13 @@ public class ControllerAnalogWriteView extends ControllerView {
 
 	@Override
 	void refreshController(String data, String units) {
-		final String finalData = data;
-		fromContext.runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				updateNameTextView(finalData);
-			}
-		});
+		// final String finalData = data;
+		// fromContext.runOnUiThread(new Runnable() {
+		// 	@Override
+		// 	public void run() {
+		// 		updateNameTextView(finalData);
+		// 	}
+		// });
 	}
 
 	@Override
@@ -131,8 +131,8 @@ public class ControllerAnalogWriteView extends ControllerView {
 	}
 
 	@Override
-	public void updateNameTextView(String newName) {
-		nameTextView.setText(newName);
+	public void updateNameTextView() {
+		nameTextView.setText(getName());
 	}
 
 	@Override

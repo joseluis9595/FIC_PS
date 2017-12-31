@@ -65,7 +65,7 @@ public abstract class ControllerView extends LinearLayout {
 	/**
 	 * Allows the user to modify controller's data
 	 */
-	public void editController(View button) {
+	public void optionsButtonClicked(View button) {
 		// Inflate the popup menu
 		PopupMenu popup = new PopupMenu(fromContext, button);
 		MenuInflater inflater = popup.getMenuInflater();
@@ -84,6 +84,7 @@ public abstract class ControllerView extends LinearLayout {
 						return true;
 					case R.id.update:
 						Log.d(TAG, "Edit button clicked");
+						controllerViewManager.updateControllerView(thisController);
 						return true;
 					default:
 						return false;
@@ -112,6 +113,59 @@ public abstract class ControllerView extends LinearLayout {
 	}
 
 
+	public void setControllerId(int controllerId) {
+		this.controllerId = controllerId;
+	}
+
+	public String getArduinoPin() {
+		return arduinoPin;
+	}
+
+	public void setArduinoPin(String arduinoPin) {
+		this.arduinoPin = arduinoPin;
+	}
+
+	public int getPinType() {
+		return pinType;
+	}
+
+	public void setPinType(int pinType) {
+		this.pinType = pinType;
+	}
+
+	public int getCommandType() {
+		return commandType;
+	}
+
+	public void setCommandType(int commandType) {
+		this.commandType = commandType;
+	}
+
+	public int getControllerType() {
+		return controllerType;
+	}
+
+	public void setControllerType(int controllerType) {
+		this.controllerType = controllerType;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+		updateNameTextView();
+	}
+
+	public int getData() {
+		return data;
+	}
+
+	public void setData(int data) {
+		this.data = data;
+	}
+
 	/**
 	 * Gets the view of the Controller
 	 *
@@ -138,11 +192,9 @@ public abstract class ControllerView extends LinearLayout {
 	}
 
 	/**
-	 * Changes the main Text view in the Controller View
-	 *
-	 * @param newName the new name you want for the Controller
+	 * Refreshes the main Text view in the Controller View
 	 */
-	public abstract void updateNameTextView(String newName);
+	public abstract void updateNameTextView();
 
 	// /**
 	//  * Changes the main Text view in the Controller View

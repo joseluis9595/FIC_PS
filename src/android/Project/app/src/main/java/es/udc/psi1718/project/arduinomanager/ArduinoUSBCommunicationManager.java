@@ -96,7 +96,6 @@ public class ArduinoUSBCommunicationManager extends AbstractArduinoCommunication
 	private final BroadcastReceiver mPermissionReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			// TODO IT1 comprobar por que no se activa el Broadcast Receiver cuando se quiere iniciar una conexión (tarda mucho)
 			String action = intent.getAction();
 			if (action == null) return;
 			Log.d(TAG, "mPermissionReceiver : is called : " + action);

@@ -100,6 +100,18 @@ public class ControllerViewManager {
 		listener.controllerRemoved(controllerView);
 	}
 
+	/**
+	 * Update controllerView
+	 *
+	 * @param controllerView object to be removed
+	 */
+	void updateControllerView(ControllerView controllerView) {
+		Log.e(TAG, "Updating controller");
+		controllerView.endController();
+		// Inform via listener interface that the view was removed
+		listener.controllerEditButtonPressed(controllerView);
+	}
+
 
 	/**
 	 * Sends a command via listener

@@ -22,4 +22,13 @@ public interface ControllerViewEventListener {
 	 * @param controllerView {@link ControllerView} object that was deleted
 	 */
 	void controllerRemoved(ControllerView controllerView);
+
+	/**
+	 * Called when edit button is pressed
+	 *
+	 * @param controllerView {@link ControllerView} object that is going to be updated
+	 */
+	void controllerEditButtonPressed(ControllerView controllerView);
+
+
 }

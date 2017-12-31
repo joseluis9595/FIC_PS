@@ -2,9 +2,10 @@
 Active
 
 - Tutorial incomplete
-- User cannot delete nor modify panels
+- User cannot modify panels
+- User cannot modify controllers
 - Status bar flickers when passing through activities (very subtle)
-- Read controllers don't start when newly created (simply call controllerViewManager.startController())
+
 
 
 
@@ -15,3 +16,5 @@ Completed
 - Home button animation (ripple effect) in the toolbar only works eventually
 - ControllerActivity second time opening doesn't react to listener
 - When finishing the tutorial, a new MainActivity instance is created on top of the previous one
+- User cannot delete panels
+- Read controllers don't start when newly created (simply call controllerViewManager.startController())

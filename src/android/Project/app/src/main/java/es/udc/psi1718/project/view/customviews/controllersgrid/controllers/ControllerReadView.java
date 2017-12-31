@@ -47,7 +47,7 @@ public class ControllerReadView extends ControllerView {
 		btnEdit.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				editController(btnEdit);
+				optionsButtonClicked(btnEdit);
 			}
 		});
 
@@ -93,8 +93,8 @@ public class ControllerReadView extends ControllerView {
 	}
 
 	@Override
-	public void updateNameTextView(String newName) {
-		nameTextView.setText(newName);
+	public void updateNameTextView() {
+		nameTextView.setText(getName());
 	}
 
 	@Override

@@ -125,6 +125,7 @@ public class MyCustomAlertDialog extends RelativeLayout {
 		tvTitle.setText(title);
 	}
 
+
 	/**
 	 * Changes the view of the dialog
 	 *
