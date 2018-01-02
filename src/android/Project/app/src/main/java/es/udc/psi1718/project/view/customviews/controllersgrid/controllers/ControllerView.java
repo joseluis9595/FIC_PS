@@ -104,10 +104,46 @@ public abstract class ControllerView extends LinearLayout {
 	}
 
 	/**
-	 * Getter
+	 * Gets the view of the Controller
 	 *
-	 * @return controllerId
+	 * @return View
 	 */
+	public abstract View getView();
+
+	/**
+	 * Start the controller
+	 */
+	public abstract void startController();
+
+	/**
+	 * End the controller
+	 */
+	public abstract void endController();
+
+	/**
+	 * Refreshes the name Text view in the Controller View
+	 */
+	public abstract void updateNameTextView();
+
+	/**
+	 * Refreshes the pin Text view in the Controller View
+	 */
+	public abstract void updatePinTextView();
+
+	/**
+	 * Called when data is received
+	 *
+	 * @param data data received
+	 */
+	abstract void refreshController(String data, String units);
+
+	public abstract int getControllerData();
+
+
+
+	/*   GETTERS AND SETTTERS   */
+
+
 	public int getControllerId() {
 		return this.controllerId;
 	}
@@ -167,59 +203,13 @@ public abstract class ControllerView extends LinearLayout {
 		this.data = data;
 	}
 
-	/**
-	 * Gets the view of the Controller
-	 *
-	 * @return View
-	 */
-	public abstract View getView();
-
-	/**
-	 * Getter for position
-	 *
-	 * @return position of the controller in the layout
-	 */
 	public int getPosition() {
 		return position;
 	}
 
-	/**
-	 * Set position of the controller
-	 *
-	 * @param position int new position
-	 */
 	public void setPosition(int position) {
 		this.position = position;
 	}
 
-	/**
-	 * Refreshes the name Text view in the Controller View
-	 */
-	public abstract void updateNameTextView();
-
-	/**
-	 * Refreshes the pin Text view in the Controller View
-	 */
-	public abstract void updatePinTextView();
-
-	// /**
-	//  * Changes the main Text view in the Controller View
-	//  *
-	//  * @param newPin the new name you want for the Controller
-	//  */
-	// public abstract void updatePinNumberTextView(String newPin);
-
-	public abstract void startController();
-
-	public abstract void endController();
-
-	/**
-	 * Called when data is received
-	 *
-	 * @param data data received
-	 */
-	abstract void refreshController(String data, String units);
-
-	public abstract int getControllerData();
 
 }
