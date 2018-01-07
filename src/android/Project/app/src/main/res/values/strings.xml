@@ -14,8 +14,10 @@
 
     <!--Alert Dialog-->
     <string name="alertdialog_title_deletepanel">Delete panel?</string>
+    <string name="alertdialog_title_editpanel">Edit panel</string>
+    <string name="alertdialog_title_editcontroller">Edit controller</string>
     <string name="alertdialog_message_deletepanel">Deleting a panel will delete all of its content</string>
-    <string name="alertdialog_button_ok" translatable="false">Ok</string>
+    <string name="alertdialog_button_ok" translatable="false">OK</string>
     <string name="alertdialog_button_cancel">Cancel</string>
 
 

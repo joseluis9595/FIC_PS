@@ -337,21 +337,23 @@ public class MainActivity extends AppCompatActivity {
 		final EditText etPin = (EditText) customView.findViewById(R.id.et_editcontroller_pin);
 
 		// Fill editTexts with the actual values of the controller
-		etName.setText(panelName);
 		etPin.setVisibility(View.GONE);
 
 		// Create alert dialog builder
 		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
 
 		// Customize the builder
-		alertDialogBuilder.setTitle("Edit controller")
+		alertDialogBuilder.setTitle(R.string.alertdialog_title_editpanel)
 				.setView(customView)
-				.setPositiveButton("Aceptar", null)
-				.setNegativeButton("Cancelar", null);
+				.setPositiveButton(R.string.alertdialog_button_ok, null)
+				.setNegativeButton(R.string.alertdialog_button_cancel, null);
 
 		// Create and show the dialog
 		final AlertDialog alertDialog = alertDialogBuilder.create();
 		alertDialog.show();
+
+		// Fill editTexts with the actual values of the controller
+		etName.setText(panelName);
 
 		// Override
 		alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {

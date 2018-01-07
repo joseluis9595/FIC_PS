@@ -9,25 +9,25 @@
     <!--</string-array>-->
 
     <!-- Pin type array -->
-    <string-array name="pin_type_array">
+    <string-array name="pin_type_array" translatable="false">
         <item>Digital</item>
         <item>Analog</item>
     </string-array>
 
     <!-- Data type array -->
-    <string-array name="data_type_array">
+    <string-array name="data_type_array" translatable="false">
         <item>Read</item>
         <item>Write</item>
     </string-array>
 
     <!-- Settings activity -->
-    <string-array name="userprefs_theme_entryvalues">
+    <string-array name="userprefs_theme_entryvalues" translatable="false">
         <item>0</item>
         <item>1</item>
         <item>2</item>
         <item>3</item>
     </string-array>
-    <string-array name="userprefs_theme_entries">
+    <string-array name="userprefs_theme_entries" translatable="false">
         <item>Default Theme</item>
         <item>Light Theme</item>
         <item>Dark Theme</item>

@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 def versionMajor = 0
 def versionMinor = 1
 def versionPatch = 4
-def versionBuild = 6
+def versionBuild = 7
 
 android {
     compileSdkVersion 25
@@ -17,7 +17,7 @@ android {
         versionName "${versionMajor}.${versionMinor}.${versionPatch}"
 
         // Don't compile unnecessary resources
-        resConfig "en"
+        resConfigs "en", "es"
 
         // Change name of the generated apks
         project.ext.set("archivesBaseName", "EasyArduino-v" + defaultConfig.versionName)

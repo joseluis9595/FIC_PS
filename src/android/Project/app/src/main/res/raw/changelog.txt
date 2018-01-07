@@ -138,6 +138,9 @@ v0.1.4.5
 v0.1.4.6
 - Added spanish locale
 
+v0.1.4.7
+- Completed translation and minor bug fixes
+
 
 
 

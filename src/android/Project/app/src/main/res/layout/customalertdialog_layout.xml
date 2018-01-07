@@ -71,7 +71,7 @@
                 android:layout_height="wrap_content"
                 android:alpha="0.6"
                 android:background="?attr/selectableItemBackground"
-                android:text="cancel"
+                android:text="@string/alertdialog_button_cancel"
                 android:textColor="?attr/editTextColor"/>
 
             <Button
@@ -80,7 +80,7 @@
                 android:layout_height="wrap_content"
                 android:alpha="0.7"
                 android:background="?attr/selectableItemBackground"
-                android:text="Create"
+                android:text="@string/alertdialog_button_ok"
                 android:textColor="?attr/editTextColor"/>
         </LinearLayout>
 

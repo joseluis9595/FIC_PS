@@ -61,7 +61,9 @@
     <string name="tutorial_screen3_step3">Hecho! Ahora haz click en el item creado</string>
     <string name="tutorial_screen4_title">Crear controladores</string>
     <string name="tutorial_screen4_step1">Dentro de un panel, haz click en el botón + en la esquina inferior derecha</string>
-    <string name="tutorial_screen4_step2">Introduce la siguiente configuración y ya estará todo preparado</string>
+    <string name="tutorial_screen4_step2">Introduce la siguiente configuración y ya estará todo preparado para usar la aplicación!</string>
     <string name="tutorial_screen5_title">Listo!</string>
     <string name="tutorial_screen5_step1">Ahora sencillamente activa o desactiva el interruptor para encender el LED</string>
+    <string name="alertdialog_title_editpanel">Editar panel</string>
+    <string name="alertdialog_title_editcontroller">Editar controlador</string>
 </resources>

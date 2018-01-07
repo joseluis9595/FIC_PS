@@ -613,10 +613,10 @@ public class PanelActivity extends AppCompatActivity implements ArduinoSerialCon
 		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
 
 		// Customize the builder
-		alertDialogBuilder.setTitle("Edit controller")
+		alertDialogBuilder.setTitle(R.string.alertdialog_title_editcontroller)
 				.setView(customView)
-				.setPositiveButton("Aceptar", null)
-				.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+				.setPositiveButton(R.string.alertdialog_button_ok, null)
+				.setNegativeButton(R.string.alertdialog_button_cancel, new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialogInterface, int i) {
 						// If connection was active, start the controller again
