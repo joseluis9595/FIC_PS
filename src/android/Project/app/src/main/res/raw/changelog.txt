@@ -135,6 +135,9 @@ v0.1.4.5
 - Added ability to edit panels
 - Code cleanup and code reformatted, getting ready for the final iteration
 
+v0.1.4.6
+- Added spanish locale
+
 
 
 

@@ -19,7 +19,7 @@
     <string name="text_aboutactivity_title">Desarrolladores</string>
     <string name="err_main_text">Ha habido un error : %1$s</string>
     <string name="err_not_implemented_yet">Todavía no implementado</string>
-    <string name="err_nodevicefound">Dispositivos no encontrados...</string>
+    <string name="err_nodevicefound">Dispositivos no encontrados…</string>
     <string name="err_completeallfields">Completa todos los campos</string>
     <string name="err_invalidcontroller">Tipo de controlador no válido</string>
     <string name="btn_startcomm_string">Iniciar comunicación</string>
@@ -32,7 +32,7 @@
     <string name="newcontroller_pinnumber_hint">Número de pin</string>
     <string name="alertdialog_newpanel_title">Añadir un panel</string>
     <string name="et_newpanel_name_hint">Nombre del panel</string>
-    <string name="controllers_loading_string">Conecta ahora el Arduino...</string>
+    <string name="controllers_loading_string">Conecta ahora el Arduino…</string>
     <string name="controllertype_servo">Servo motor</string>
     <string name="controllertype_tempsensor">Sensor temperatura</string>
     <string name="controllertype_humidsensor">Sensor humedad</string>
