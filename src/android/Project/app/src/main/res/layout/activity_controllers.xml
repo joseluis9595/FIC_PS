@@ -7,7 +7,7 @@
     android:background="?attr/colorPrimary"
     android:orientation="vertical"
     android:transitionName="panelitem_background"
-    tools:context="es.udc.psi1718.project.view.activities.ControllersActivity">
+    tools:context="es.udc.psi1718.project.view.activities.PanelActivity">
 
     <include layout="@layout/my_toolbar"/>
 

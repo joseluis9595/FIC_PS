@@ -23,6 +23,7 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -189,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
 				inflateConfirmationDialog(id);
 				return true;
 			case R.id.update:
-				// TODO inflate update dialog
+				inflateEditPanelDialog(listPosition);
 				return true;
 			default:
 				return super.onContextItemSelected(item);
@@ -208,7 +209,7 @@ public class MainActivity extends AppCompatActivity {
 			public void onItemClick(AdapterView<?> adapterView, View view, int i, long cursorID) {
 				Log.d(TAG, "Pressed item " + i + " on the listview, cursorID : " + cursorID);
 				// Intents
-				controllersIntent = new Intent(context, ControllersActivity.class);
+				controllersIntent = new Intent(context, PanelActivity.class);
 				controllersIntent.putExtra(Constants.INTENTCOMM_PANELID, (int) cursorID);
 
 				// TODO mejorar esto, poca independencia con base de datos
@@ -322,6 +323,57 @@ public class MainActivity extends AppCompatActivity {
 		});
 		AlertDialog dialog = builder.create();
 		dialog.show();
+	}
+
+
+	private void inflateEditPanelDialog(final int listPosition) {
+		// Initialize variables
+		Cursor cursor = (Cursor) lvPannels.getItemAtPosition(listPosition);
+		final int panelId = cursor.getInt(cursor.getColumnIndexOrThrow(MySQLiteHelper.COL_PANEL_ID));
+		String panelName = cursor.getString(cursor.getColumnIndexOrThrow(MySQLiteHelper.COL_PANEL_NAME));
+
+		View customView = getLayoutInflater().inflate(R.layout.alertdialog_editcontroller, null);
+		final EditText etName = (EditText) customView.findViewById(R.id.et_editcontroller_name);
+		final EditText etPin = (EditText) customView.findViewById(R.id.et_editcontroller_pin);
+
+		// Fill editTexts with the actual values of the controller
+		etName.setText(panelName);
+		etPin.setVisibility(View.GONE);
+
+		// Create alert dialog builder
+		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+
+		// Customize the builder
+		alertDialogBuilder.setTitle("Edit controller")
+				.setView(customView)
+				.setPositiveButton("Aceptar", null)
+				.setNegativeButton("Cancelar", null);
+
+		// Create and show the dialog
+		final AlertDialog alertDialog = alertDialogBuilder.create();
+		alertDialog.show();
+
+		// Override
+		alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				String newName = etName.getText().toString();
+
+				// If empty fields display error
+				if (Util.isEmptyString(newName)) {
+					Toast.makeText(context, R.string.err_completeallfields, Toast.LENGTH_SHORT).show();
+				} else {
+					// Update controller in database
+					mySQLiteHelper.updatePanelName(panelId, newName);
+
+					// Close the dialog
+					alertDialog.dismiss();
+
+					// Refresh the listview
+					refreshListView();
+				}
+			}
+		});
 	}
 
 

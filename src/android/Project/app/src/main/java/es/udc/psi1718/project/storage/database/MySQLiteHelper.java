@@ -18,8 +18,6 @@ import es.udc.psi1718.project.storage.database.daos.Panel;
 public class MySQLiteHelper extends SQLiteOpenHelper {
 	private final static String TAG = "MySQLiteHelper";
 
-	private final Boolean USE_CONTENT_RESOLVER = true;
-
 	// DB constants
 	// private static final String DB_NAME = "grades.db";
 	private static final String DB_NAME = "easyarduino.db";
@@ -123,11 +121,22 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 		String cursorString = DatabaseUtils.dumpCursorToString(cursor1);
 		Log.e(TAG, cursorString);
 
-		Cursor cursor2 = db.rawQuery("SELECT * FROM " + TABLE_CONTROLLERS, null);
-		String cursorString2 = DatabaseUtils.dumpCursorToString(cursor2);
-		Log.e(TAG, cursorString2);
+		// Cursor cursor2 = db.rawQuery("SELECT * FROM " + TABLE_CONTROLLERS, null);
+		// String cursorString2 = DatabaseUtils.dumpCursorToString(cursor2);
+		// Log.e(TAG, cursorString2);
 
 		return cursor1;
+	}
+
+	/**
+	 * Update one panel's name
+	 */
+	public void updatePanelName(int panelId, String newName) {
+		ContentValues values = new ContentValues();
+		values.put(COL_PANEL_NAME, newName);
+
+		getWritableDatabase().update(TABLE_PANELS, values,
+				COL_PANEL_ID + " = " + panelId, null);
 	}
 
 	/**
@@ -167,6 +176,12 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 		return (int) db.insert(TABLE_CONTROLLERS, null, values);
 	}
 
+
+	/**
+	 * Update one controller in the database
+	 *
+	 * @param controller controller with new parameters
+	 */
 	public void updateController(Controller controller) {
 		ContentValues values = new ContentValues();
 		values.put(COL_CONTROLLER_NAME, controller.getName());
@@ -182,6 +197,12 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 				COL_CONTROLLER_ID + " = " + controller.getId(), null);
 	}
 
+	/**
+	 * Updates just the data field of a controller
+	 *
+	 * @param controllerId id of the controller to edit
+	 * @param data         new data
+	 */
 	public void updateControllerData(int controllerId, int data) {
 		ContentValues values = new ContentValues();
 		values.put(COL_CONTROLLER_DATA, data);
@@ -336,133 +357,6 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 		Log.d(TAG, "Deleting via DB object instance");
 		return getWritableDatabase().delete(TABLE_CONTROLLERS, COL_CONTROLLER_ID + " =? ", new String[]{String.valueOf(id)});
 	}
-
-
-	//
-	//
-	// /**
-	//  * Deletes one grade from database
-	//  *
-	//  * @param id id of the grade
-	//  *
-	//  * @return integer
-	//  */
-	// public int deleteGrade(int id) {
-	// 	Log.d(TAG, "Deleting via DB object instance");
-	// 	return getWritableDatabase().delete(TABLE_GRADES, COL_ID + " =? ", new String[]{String.valueOf(id)});
-	// }
-	//
-	//
-	// /**
-	//  * Updates one grade in the database
-	//  *
-	//  * @param grade grade to be updated
-	//  */
-	// public void updateGrade(Grade grade) {
-	// 	ContentValues values = new ContentValues();
-	// 	values.put(COL_FIRSTNAME, grade.getFirstName());
-	// 	values.put(COL_LASTNAME, grade.getLastName());
-	// 	values.put(COL_GRADE, grade.getGrade());
-	//
-	// 	Log.d(TAG, "Updating via DB object instance");
-	// 	getWritableDatabase().update(TABLE_GRADES, values, COL_ID + " = " + grade.getId(), null);
-	//
-	// }
-	//
-	//
-	// /**
-	//  * Returns all grades in database
-	//  *
-	//  * @return Cursor
-	//  */
-	// public Cursor getAllGrades() {
-	// 	String query = "SELECT * FROM " + TABLE_GRADES;
-	// 	SQLiteDatabase db = this.getReadableDatabase();
-	// 	Log.d(TAG, "GETALLGRADES via DB Object instance");
-	// 	return db.rawQuery(query, null);
-	// }
-	//
-	// /**
-	//  * Return grades from database
-	//  *
-	//  * @param order          order
-	//  * @param columnToOrder  which column is used to order data
-	//  * @param searchCriteria filter by text
-	//  * @param columnToSearch which column to search the 'searchCriteria' text
-	//  *
-	//  * @return Cursor
-	//  */
-	// public Cursor getGrades(String order, String columnToOrder,
-	// 						String searchCriteria, String columnToSearch) {
-	//
-	// 	String selectionText;
-	// 	String[] selectionItems;
-	// 	String orderCriteria;
-	//
-	// 	// Initialize 'Search' variables
-	// 	if (searchCriteria == null || columnToSearch == null || Util.isEmptyString(searchCriteria)) {
-	// 		selectionText = null;
-	// 		selectionItems = null;
-	// 	} else {
-	// 		// If we are searching ID or grade, search the exact value
-	// 		if (columnToSearch.equals(COL_GRADE) || columnToSearch.equals(COL_ID)) {
-	// 			selectionText = columnToSearch + " =? ";
-	// 			selectionItems = new String[]{searchCriteria};
-	// 		} else {
-	// 			selectionText = columnToSearch + " LIKE ? ";
-	// 			selectionItems = new String[]{"%" + searchCriteria + "%"};
-	// 		}
-	// 	}
-	//
-	// 	// Initialize 'Sort' variables
-	// 	if (order == null || columnToOrder == null) {
-	// 		orderCriteria = null;
-	// 	} else {
-	// 		// Using COLLATE LOCALIZED to allow db to sort items using special characters
-	// 		orderCriteria = columnToOrder + " COLLATE LOCALIZED " + order;
-	// 	}
-	//
-	// 	// Execute sentence in database
-	// 	Log.d(TAG, "GETGRADES via DB Object instance");
-	// 	return getWritableDatabase().query(TABLE_GRADES, null,
-	// 			selectionText, selectionItems,
-	// 			null, null,
-	// 			orderCriteria);
-	// }
-	//
-	// /**
-	//  * Returns one grade given its id
-	//  *
-	//  * @param id id of the grade
-	//  *
-	//  * @return Grade
-	//  */
-	// public Grade getGradeById(Integer id) {
-	// 	Cursor cursor;
-	// 	Log.d(TAG, "GETGRADEBYID via DB Object instance");
-	// 	cursor = getWritableDatabase().query(TABLE_GRADES, null, COL_ID + " =? ", new String[]
-	// 			{String.valueOf(id)}, null, null, null);
-	//
-	// 	// If the cursor has any data
-	// 	if ((cursor != null) && (cursor.getCount() > 0)) {
-	// 		// Move cursor to first position
-	// 		cursor.moveToFirst();
-	//
-	// 		// Get data from cursor
-	// 		int gradeId = cursor.getInt(cursor.getColumnIndexOrThrow(MySQLiteHelper.COL_ID));
-	// 		String name = cursor.getString(cursor.getColumnIndexOrThrow(MySQLiteHelper.COL_FIRSTNAME));
-	// 		String lastName = cursor.getString(cursor.getColumnIndexOrThrow(MySQLiteHelper.COL_LASTNAME));
-	// 		int gradeValue = cursor.getInt(cursor.getColumnIndexOrThrow(MySQLiteHelper.COL_GRADE));
-	//
-	// 		// Close the cursor
-	// 		cursor.close();
-	//
-	// 		// Create a new Grade object and return it
-	// 		return new Grade(gradeId, name, lastName, gradeValue);
-	// 	}
-	// 	return null;
-	//
-	// }
 
 }
 

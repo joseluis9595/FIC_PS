@@ -22,7 +22,7 @@ import java.util.Map;
 
 import es.udc.psi1718.project.storage.UserPreferencesManager;
 import es.udc.psi1718.project.util.Constants;
-import es.udc.psi1718.project.view.activities.ControllersActivity;
+import es.udc.psi1718.project.view.activities.PanelActivity;
 import es.udc.psi1718.project.view.activities.MainActivity;
 
 import static android.content.Context.USB_SERVICE;
@@ -166,7 +166,7 @@ public class ArduinoUSBCommunicationManager extends AbstractArduinoCommunication
 								Log.d(TAG, "BROADCAST : USB device attached");
 
 								// If activity is active, call startComm method, else, start activity with extras
-								if (ControllersActivity.active) {
+								if (PanelActivity.active) {
 									startCommunication();
 								} else if (!MainActivity.active) {
 									Intent mainActivityIntent = new Intent(context, MainActivity.class);

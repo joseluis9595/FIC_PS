@@ -39,7 +39,7 @@ import es.udc.psi1718.project.view.customviews.controllersgrid.controllers.Contr
 import es.udc.psi1718.project.view.customviews.controllersgrid.controllers.ControllerViewEventListener;
 import es.udc.psi1718.project.view.customviews.controllersgrid.controllers.ControllerViewManager;
 
-public class ControllersActivity extends AppCompatActivity implements ArduinoSerialConnectionListener, ControllerViewEventListener, ControllersGridListener {
+public class PanelActivity extends AppCompatActivity implements ArduinoSerialConnectionListener, ControllerViewEventListener, ControllersGridListener {
 
 	private Context context = this;
 	private Activity activity = this;
@@ -595,6 +595,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 
 		final ControllerView finalControllerView = controllerView;
 
+		// Make sure the controller is not running
 		if (connectionIsActive) {
 			finalControllerView.endController();
 		}
@@ -618,6 +619,7 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 				.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialogInterface, int i) {
+						// If connection was active, start the controller again
 						if (connectionIsActive) {
 							finalControllerView.startController();
 						}
@@ -657,11 +659,11 @@ public class ControllersActivity extends AppCompatActivity implements ArduinoSer
 					// Change the controller view
 					finalControllerView.setName(newName);
 					finalControllerView.setArduinoPin(newPinNumber);
-					// controllerView.setArduinoPin(String.valueOf(newPinNumber));
-					// controllerView.updatePinNumberTextView();
 
+					// Close the dialog
 					alertDialog.dismiss();
 
+					// If connection was active, start the controller again
 					if (connectionIsActive) {
 						finalControllerView.startController();
 					}

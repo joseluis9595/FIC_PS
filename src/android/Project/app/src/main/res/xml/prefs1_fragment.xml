@@ -25,12 +25,12 @@
     <PreferenceCategory
         android:title="@string/settings_connectivity_title">
 
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:dialogTitle="@string/settings_connectivity_autoconn_dialogtitle"
-            android:key="@string/userprefs_startconnauto"
-            android:summary="@string/settings_connectivity_autoconn_summary"
-            android:title="@string/settings_connectivity_autoconn_title"/>
+        <!--<CheckBoxPreference-->
+        <!--android:defaultValue="true"-->
+        <!--android:dialogTitle="@string/settings_connectivity_autoconn_dialogtitle"-->
+        <!--android:key="@string/userprefs_startconnauto"-->
+        <!--android:summary="@string/settings_connectivity_autoconn_summary"-->
+        <!--android:title="@string/settings_connectivity_autoconn_title"/>-->
 
         <CheckBoxPreference
             android:defaultValue="true"

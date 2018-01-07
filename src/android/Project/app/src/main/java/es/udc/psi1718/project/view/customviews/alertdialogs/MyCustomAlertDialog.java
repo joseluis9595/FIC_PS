@@ -26,7 +26,6 @@ import android.widget.TextView;
 import es.udc.psi1718.project.R;
 import es.udc.psi1718.project.util.Util;
 
-// TODO finish implementation
 public class MyCustomAlertDialog extends RelativeLayout {
 	private MyCustomAlertDialog thisDialog = this;
 	private static final String TAG = "MyCustomalertDialog";

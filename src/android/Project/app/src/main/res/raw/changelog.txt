@@ -131,6 +131,10 @@ v0.1.4.3
 v0.1.4.4
 - Code cleanup
 
+v0.1.4.5
+- Added ability to edit panels
+- Code cleanup and code reformatted, getting ready for the final iteration
+
 
 
 

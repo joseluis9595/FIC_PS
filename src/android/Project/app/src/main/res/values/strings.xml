@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Easy Arduino</string>
-    <string name="title_activity_controllers">Controllers Activity</string>
+    <string name="title_activity_controllers" translatable="false">Controllers Activity</string>
     <string name="title_activity_main">Main Activity</string>
     <string name="title_activity_about">About</string>
     <string name="title_activity_settings">Settings</string>
@@ -15,14 +15,14 @@
     <!--Alert Dialog-->
     <string name="alertdialog_title_deletepanel">Delete panel?</string>
     <string name="alertdialog_message_deletepanel">Deleting a panel will delete all of its content</string>
-    <string name="alertdialog_button_ok">Ok</string>
+    <string name="alertdialog_button_ok" translatable="false">Ok</string>
     <string name="alertdialog_button_cancel">Cancel</string>
 
 
     <!-- About activity -->
     <string name="text_aboutactivity_title">Developers</string>
-    <string name="text_aboutactivity_developers">Jose Luis Álvarez Quiroga\nMatías Cubillas Currás</string>
-    <string name="text_aboutactivity_versiontitle">Version</string>
+    <string name="text_aboutactivity_developers" translatable="false">Jose Luis Álvarez Quiroga\nMatías Cubillas Currás</string>
+    <string name="text_aboutactivity_versiontitle" translatable="false">Version</string>
 
     <!-- Error and debugging Strings -->
     <string name="err_main_text">There was an error : %1$s</string>
@@ -49,10 +49,10 @@
 
     <!-- Controllers Strings -->
     <string name="controllers_loading_string">Connect Arduino now…</string>
-    <string name="controllers_tv_pinnumber">Pin %1$d</string>
+    <string name="controllers_tv_pinnumber" translatable="false">Pin %1$d</string>
 
     <!-- Controllers type Strings -->
-    <string name="controllertype_led">LED</string>
+    <string name="controllertype_led" translatable="false">LED</string>
     <string name="controllertype_servo">Servo motor</string>
     <string name="controllertype_tempsensor">Temperature sensor</string>
     <string name="controllertype_humidsensor">Humidity sensor</string>
@@ -60,11 +60,11 @@
     <string name="controllertype_lightsensor">Photoresistor</string>
 
     <!-- Shared Preferences -->
-    <string name="userprefs_filename">es.udc.psi1718.easyarduino.userprefs</string>
-    <string name="userprefs_theme">es.udc.psi1718.easyarduino.userprefs.theme</string>
-    <string name="userprefs_startconnauto">es.udc.psi1718.easyarduino.userprefs.startconnauto</string>
-    <string name="userprefs_icon">es.udc.psi1718.easyarduino.userprefs.icon</string>
-    <string name="userprefs_savecontrollerstate">es.udc.psi1718.easyarduino.userprefs.savestate</string>
+    <string name="userprefs_filename" translatable="false">es.udc.psi1718.easyarduino.userprefs</string>
+    <string name="userprefs_theme" translatable="false">es.udc.psi1718.easyarduino.userprefs.theme</string>
+    <string name="userprefs_startconnauto" translatable="false">es.udc.psi1718.easyarduino.userprefs.startconnauto</string>
+    <string name="userprefs_icon" translatable="false">es.udc.psi1718.easyarduino.userprefs.icon</string>
+    <string name="userprefs_savecontrollerstate" translatable="false">es.udc.psi1718.easyarduino.userprefs.savestate</string>
 
     <!-- Settings activity -->
     <string name="settings_customization_title">Customization</string>
@@ -79,6 +79,6 @@
     <string name="settings_connectivity_autoconn_summary">Start communication with Arduino as soon as the USB is attached</string>
     <string name="settings_connectivity_savecontrollerstate_title">Save controller state</string>
     <string name="settings_connectivity_savecontrollerstate_dialogtitle">Save controller state</string>
-    <string name="settings_connectivity_savecontrollerstate_summary">Save the controllers state after closing the panel</string>
+    <string name="settings_connectivity_savecontrollerstate_summary">Save the controller\'s state after closing the panel</string>
 
 </resources>

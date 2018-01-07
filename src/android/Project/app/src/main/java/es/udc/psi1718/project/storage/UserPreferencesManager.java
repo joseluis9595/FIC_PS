@@ -73,9 +73,15 @@ public class UserPreferencesManager {
 	}
 
 
+	/**
+	 * Get the value of the checkbox that indicates whether the app should start automatically when
+	 * an Arduino is recognized via USB or not.
+	 *
+	 * @return Boolean
+	 */
 	public Boolean getStartConnectionAutomatically() {
-		return sharedPrefs.getBoolean(context.getString(R.string.userprefs_startconnauto), true);
-
+		// return sharedPrefs.getBoolean(context.getString(R.string.userprefs_startconnauto), true);
+		return true;
 	}
 
 	/**
@@ -87,7 +93,13 @@ public class UserPreferencesManager {
 		return sharedPrefs.getBoolean(context.getString(R.string.userprefs_icon), true);
 	}
 
-	public Boolean getSaveControllerState(){
+	/**
+	 * Get the value of the checkbox that indicates whether the app should save the controller's
+	 * state or not.
+	 *
+	 * @return Boolean
+	 */
+	public Boolean getSaveControllerState() {
 		return sharedPrefs.getBoolean(context.getString(R.string.userprefs_savecontrollerstate), true);
 	}
 }

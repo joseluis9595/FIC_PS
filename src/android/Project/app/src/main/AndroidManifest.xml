@@ -44,7 +44,7 @@
         </activity-alias>
 
         <activity
-            android:name=".view.activities.ControllersActivity"
+            android:name=".view.activities.PanelActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/title_activity_controllers"
             android:parentActivityName=".view.activities.MainActivity">
