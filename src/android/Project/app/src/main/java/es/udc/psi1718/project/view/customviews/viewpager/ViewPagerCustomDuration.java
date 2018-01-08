@@ -28,7 +28,7 @@ public class ViewPagerCustomDuration extends ViewPager {
 	}
 
 	/**
-	 * Override the Scroller instance with our own class so we can change the
+	 * Override the Scroller instance with our own class so that we can change the
 	 * duration
 	 */
 	private void init() {
@@ -50,8 +50,11 @@ public class ViewPagerCustomDuration extends ViewPager {
 		mScroller.setScrollDuration(duration);
 	}
 
-	private class FixedSpeedScroller extends Scroller {
 
+	/**
+	 * Fixed speed scroller for the viewPager animation
+	 */
+	private class FixedSpeedScroller extends Scroller {
 		private int mDuration = 500;
 
 		public FixedSpeedScroller(Context context) {

@@ -22,8 +22,8 @@ import java.util.Map;
 
 import es.udc.psi1718.project.storage.UserPreferencesManager;
 import es.udc.psi1718.project.util.Constants;
-import es.udc.psi1718.project.view.activities.PanelActivity;
 import es.udc.psi1718.project.view.activities.MainActivity;
+import es.udc.psi1718.project.view.activities.PanelActivity;
 
 import static android.content.Context.USB_SERVICE;
 import static android.hardware.usb.UsbManager.ACTION_USB_DEVICE_ATTACHED;
@@ -70,6 +70,10 @@ public class ArduinoUSBCommunicationManager extends AbstractArduinoCommunication
 	private byte[] buffer = new byte[0];
 	private int bufferSize;
 	private Boolean startbytefound = false;
+
+	public BroadcastReceiver getUsbConnectionReceiver() {
+		return usbConnectionReceiver;
+	}
 
 
 	/**
@@ -131,6 +135,7 @@ public class ArduinoUSBCommunicationManager extends AbstractArduinoCommunication
 			}
 		}
 	};
+
 
 	/**
 	 * Broadcast Receiver to listen for permission
@@ -294,7 +299,6 @@ public class ArduinoUSBCommunicationManager extends AbstractArduinoCommunication
 	 * @return
 	 */
 	private boolean isStartByte(byte firstChar) {
-		// TODO IT3 Comprobar si funciona bien cambiando '*' por la constante COMMAND_FIRST_BYTE
 		if (firstChar == '*') {
 			return true;
 		} else {
@@ -432,8 +436,6 @@ public class ArduinoUSBCommunicationManager extends AbstractArduinoCommunication
 		HashMap<String, UsbDevice> usbDevices = usbManager.getDeviceList();
 		PendingIntent pi = PendingIntent.getBroadcast(fromContext, 0, new Intent(Constants.ACTION_USB_PERMISSION), 0);
 
-		// TODO allow only one call to this function at a time
-
 		if (!usbDevices.isEmpty()) {
 			for (Map.Entry<String, UsbDevice> entry : usbDevices.entrySet()) {
 				UsbDevice device = entry.getValue();
@@ -551,7 +553,9 @@ public class ArduinoUSBCommunicationManager extends AbstractArduinoCommunication
 						String command = commandBuffer.get(commandBuffer.size() - 1);
 						commandBuffer.remove(commandBuffer.size() - 1);
 						Log.e(TAG, "Sending command : " + command);
-						serialPort.write(command.getBytes());
+						if (command != null) {
+							serialPort.write(command.getBytes());
+						}
 						Thread.sleep(20);
 					}
 					// Log.e(TAG, "Running");

@@ -141,6 +141,12 @@ v0.1.4.6
 v0.1.4.7
 - Completed translation and minor bug fixes
 
+v0.1.4.8
+- Translated app theme name's array
+- Fixed multiple fatal errors (BR leakage, trying to send 'null' command...)
+- Added more string resources
+- Finished tutorial
+
 
 
 

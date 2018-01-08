@@ -21,7 +21,7 @@ public class Controller {
 		this.position = position;
 		this.panelId = panelId;
 		this.controllerType = controllerType;
-		this.data=data;
+		this.data = data;
 	}
 
 	public Controller(String name, int controllerType, String dataType, String pinType, String pinNumber,
@@ -33,7 +33,7 @@ public class Controller {
 		this.pinNumber = pinNumber;
 		this.position = position;
 		this.panelId = panelId;
-		this.data=data;
+		this.data = data;
 	}
 
 	public int getId() {

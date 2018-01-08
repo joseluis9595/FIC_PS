@@ -326,6 +326,11 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 
+	/**
+	 * Inflate a dialog to allow the user to edit the panel selected
+	 *
+	 * @param listPosition position of the list selected
+	 */
 	private void inflateEditPanelDialog(final int listPosition) {
 		// Initialize variables
 		Cursor cursor = (Cursor) lvPannels.getItemAtPosition(listPosition);
@@ -397,7 +402,7 @@ public class MainActivity extends AppCompatActivity {
 		Cursor cursor = mySQLiteHelper.getAllPanels();
 		lvPannels.setAdapter(new PanelCursorAdapter(context, cursor));
 
-		// TODO debug
+		// Uncomment these lines for debugging purposes
 		// String cursorString = DatabaseUtils.dumpCursorToString(cursor);
 		// Log.e(TAG, cursorString);
 	}

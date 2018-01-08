@@ -86,22 +86,6 @@ public class ControllerAnalogWriteView extends ControllerView {
 			}
 		});
 
-
-		// OnLongClickListener onLongClickListener = new OnLongClickListener() {
-		// 	@Override
-		// 	public boolean onLongClick(View view) {
-		// 		switch (view.getId()) {
-		// 			case R.id.card_view_main_layout:
-		// 				// TODO IT2 edit cardView
-		// 				ControllerSliderView.super.optionsButtonClicked();
-		// 				return true;
-		// 			default:
-		// 				break;
-		// 		}
-		// 		return false;
-		// 	}
-		// };
-
 		// Modify layout
 		mSeekbar.setProgress(data);
 		mSeekbar.setEnabled(false);

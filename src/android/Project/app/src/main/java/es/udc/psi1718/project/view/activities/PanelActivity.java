@@ -23,7 +23,6 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import es.udc.psi1718.project.R;
-import es.udc.psi1718.project.arduinomanager.AbstractArduinoCommunicationManager;
 import es.udc.psi1718.project.arduinomanager.ArduinoResponseCodes;
 import es.udc.psi1718.project.arduinomanager.ArduinoSerialConnectionListener;
 import es.udc.psi1718.project.arduinomanager.ArduinoUSBCommunicationManager;
@@ -64,7 +63,7 @@ public class PanelActivity extends AppCompatActivity implements ArduinoSerialCon
 	private ControllerViewManager controllerViewManager;
 
 	// Arduino communication Manager
-	private AbstractArduinoCommunicationManager arduinoCommunication;
+	private ArduinoUSBCommunicationManager arduinoCommunication;
 	// private BroadcastReceiver broadcastReceiver;
 	// private IntentFilter intentFilter;
 	private Boolean connectionIsActive = false;
@@ -72,9 +71,7 @@ public class PanelActivity extends AppCompatActivity implements ArduinoSerialCon
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
-		if (connectionIsActive || Constants.DEBUG) {
-			this.recreate();
-		}
+		this.recreate();
 	}
 
 	@Override
@@ -88,7 +85,7 @@ public class PanelActivity extends AppCompatActivity implements ArduinoSerialCon
 		// Set active flag to true
 		active = true;
 
-		// TODO tutorial, indicar como mover controllers de sitio, como crearlos, etc...
+		// TODO crear otro tutorial, indicar como mover controllers de sitio, como crearlos, etc...
 
 		// Intent communication
 		panelId = getIntent().getIntExtra(Constants.INTENTCOMM_PANELID, -1);
@@ -167,11 +164,12 @@ public class PanelActivity extends AppCompatActivity implements ArduinoSerialCon
 		Log.e(TAG, "onDestroy : UNREGISTER RECEIVER USB");
 
 		// Unregister broadcast receiver
-		// try {
-		// 	unregisterReceiver(broadcastReceiver);
-		// } catch (Exception e) {
-		// 	Log.e(TAG, e.toString());
-		// }
+		try {
+			// unregisterReceiver(broadcastReceiver);
+			unregisterReceiver(arduinoCommunication.getUsbConnectionReceiver());
+		} catch (Exception e) {
+			Log.e(TAG, e.toString());
+		}
 
 		// End communication with Arduino
 		endCommunication();
@@ -325,7 +323,7 @@ public class PanelActivity extends AppCompatActivity implements ArduinoSerialCon
 		myCustomAlertDialog.setView(initializeCustomAlertDialogView());
 
 		// Changing the title
-		myCustomAlertDialog.setTitle("Prueba de funcionamiento");
+		myCustomAlertDialog.setTitle(getString(R.string.alertdialog_newcontroller_title));
 
 		// Changing onClickListener
 		myCustomAlertDialog.setPositiveClickListener(new View.OnClickListener() {

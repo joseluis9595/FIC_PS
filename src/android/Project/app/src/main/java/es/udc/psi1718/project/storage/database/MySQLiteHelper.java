@@ -121,6 +121,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 		String cursorString = DatabaseUtils.dumpCursorToString(cursor1);
 		Log.e(TAG, cursorString);
 
+		// For debugging purposes uncomment these lines
 		// Cursor cursor2 = db.rawQuery("SELECT * FROM " + TABLE_CONTROLLERS, null);
 		// String cursorString2 = DatabaseUtils.dumpCursorToString(cursor2);
 		// Log.e(TAG, cursorString2);
@@ -315,7 +316,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 						String.valueOf(panelId)
 				});
 
-		// TODO debug
+		// For debugging purposes uncomment these lines
 		// Cursor cursor = getControllersByPanelId(panelId);
 		// Log.e(TAG, DatabaseUtils.dumpCursorToString(cursor));
 	}

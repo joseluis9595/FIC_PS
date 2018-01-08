@@ -49,6 +49,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="40dp"
+            android:src="@drawable/tutorial_img_3"
             />
         <!--android:src="@drawable/img_not_available"-->
 

@@ -66,4 +66,10 @@
     <string name="tutorial_screen5_step1">Ahora sencillamente activa o desactiva el interruptor para encender el LED</string>
     <string name="alertdialog_title_editpanel">Editar panel</string>
     <string name="alertdialog_title_editcontroller">Editar controlador</string>
+    <string-array name="userprefs_theme_entries">
+        <item>Tema por defecto</item>
+        <item>Tema claro</item>
+        <item>Tema oscuro</item>
+        <item>Tema Azul-Naranja</item>
+    </string-array>
 </resources>
