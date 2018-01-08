@@ -1,10 +1,6 @@
 
 Active
-
-- Tutorial incomplete
-- User cannot modify panels
 - Status bar flickers when passing through activities (very subtle)
-
 
 
 
@@ -18,3 +14,5 @@ Completed
 - User cannot delete panels
 - Read controllers don't start when newly created (simply call controllerViewManager.startController())
 - User cannot modify controllers
+- User cannot modify panels
+- Tutorial incomplete

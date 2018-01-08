@@ -72,4 +72,5 @@
         <item>Tema oscuro</item>
         <item>Tema Azul-Naranja</item>
     </string-array>
+    <string name="alertdialog_newcontroller_title">Añadir nuevo controlador</string>
 </resources>
