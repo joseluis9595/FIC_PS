@@ -147,9 +147,6 @@ v0.1.4.8
 - Added more string resources
 - Finished tutorial
 
-v0.2.0.0
-- Last iteration of the project
-
 
 
 
